@@ -8,5 +8,15 @@
     "handlerName": "test/index2.add",
     "timeLimitInMilliSeconds": 1000,
     "authenticationMode": "PUBLIC"
+  },
+  "SubjectRecommender": {
+    "handlerName": "game/subject.recommend",
+    "timeLimitInMilliSeconds": 1000,
+    "authenticationMode": "PUBLIC"
+  },
+  "SubjectSelecter": {
+    "handlerName": "game/subject.select",
+    "timeLimitInMilliSeconds": 1000,
+    "authenticationMode": "PUBLIC"
   }
 }
