@@ -1,0 +1,11 @@
+{
+    "integratedInstances":[
+        {"id":"59646044e4b0a69c4960b0bb", "type":"auth"},
+        {"id":"59646045e4b0d930359bd671", "type":"database"},
+        {"id":"59646045e4b0d930359bd672", "type":"game"},
+        {"id":"59647a5de4b0a69c4960dd8f", "type":"realtime"},
+        {"id":"59646045e4b0a69c4960b0bd", "type":"cloud-code"},
+        {"id":"59647b82e4b0d930359bfd51", "type":"file-storage"}
+    ],
+    "integratedMasterKey": "d5f7bc56ed71443592394b30"
+}
