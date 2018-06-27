@@ -75,12 +75,14 @@ exports.recommend = function (requestBody, context) {
 
     console.log(rndNumbers);
     console.log(result);
+
+    var finalResult = {
+        welcomeMessage: "Welcome to this match",
+        topics: result
+    }
     
     // Return selected questions for this challenge
-    context.succeed({
-        welcomeMessage: "Welcome to this match",
-        topics: JSON.stringify(result)
-    });
+    context.succeed(JSON.stringify(finalResult));
 };
 
 exports.gameEventController = function (requestBody, context) {
