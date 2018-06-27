@@ -10,12 +10,12 @@
     "authenticationMode": "PUBLIC"
   },
   "SubjectRecommender": {
-    "handlerName": "game/subject.recommend",
+    "handlerName": "game/logic.recommend",
     "timeLimitInMilliSeconds": 1000,
     "authenticationMode": "PUBLIC"
   },
-  "SubjectSelecter": {
-    "handlerName": "game/subject.select",
+  "gameEventController": {
+    "handlerName": "game/logic.gameEventController",
     "timeLimitInMilliSeconds": 1000,
     "authenticationMode": "PUBLIC"
   }

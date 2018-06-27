@@ -31,7 +31,7 @@ var topics =
     "Selling a House"
 ];
 
-// on Match Found we call this function
+// on MatchFound we call this function
 exports.recommend = function (requestBody, context) {
 
     /* requestBody is like this:
@@ -79,7 +79,36 @@ exports.recommend = function (requestBody, context) {
     // Return selected questions for this challenge
     context.succeed({
         welcomeMessage: "Welcome to this match",
-        topics: result
+        topics: JSON.stringify(result)
+    });
+};
+
+exports.gameEventController = function (requestBody, context) {
+    /* requestBody is like this:
+   * {
+   *   "userId": "1234",
+   *   "challengeId": "<UNIQUE-MATCH-ID>",
+   *   "message": {
+   *      "myChoice": 3,
+   *      "someOtherField": "sample text",
+   *      ....  
+   *    },
+   *    "data": { ... }
+   * }
+   */
+
+    var userId = requestBody.userId;
+    var choice = requestBody.message.myChoice;
+
+    // 2. Check correct answer
+    if (hisChoice == 3) {
+        result = { operation: 'addScore', userId: userId, score: 10 };
+    } else {
+        result = { operation: 'doNothing' };
+    }
+
+    context.succeed({
+        message: JSON.stringify(result)
     });
 };
 
