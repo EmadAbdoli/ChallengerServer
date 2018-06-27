@@ -76,10 +76,12 @@ exports.recommend = function (requestBody, context) {
     console.log(rndNumbers);
     console.log(result);
 
-    var finalResult = {
-        welcomeMessage: "Welcome to this match",
-        topics: result
-    }
+    //var finalResult = {
+    //    welcomeMessage: "Welcome to this match",
+    //    topics: result
+    //}
+
+    var finalResult = { result };
     
     // Return selected questions for this challenge
     context.succeed(JSON.stringify(finalResult));
