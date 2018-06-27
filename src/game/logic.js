@@ -80,11 +80,9 @@ exports.recommend = function (requestBody, context) {
     //    welcomeMessage: "Welcome to this match",
     //    topics: result
     //}
-
-    var finalResult = { result };
     
     // Return selected questions for this challenge
-    context.succeed(JSON.stringify(finalResult));
+    context.succeed(JSON.stringify(result));
 };
 
 exports.gameEventController = function (requestBody, context) {
