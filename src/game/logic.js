@@ -86,6 +86,7 @@ exports.recommend = function (requestBody, context) {
 };
 
 exports.gameEventController = function (requestBody, context) {
+
     /* requestBody is like this:
    * {
    *   "userId": "1234",
@@ -100,14 +101,28 @@ exports.gameEventController = function (requestBody, context) {
    */
 
     var userId = requestBody.userId;
-    var choice = requestBody.message.myChoice;
+    var challengeId = requestBody.challengeId;
+    var eventType = requestBody.message;
+    var result;
 
-    // 2. Check correct answer
-    if (hisChoice == 3) {
-        result = { operation: 'addScore', userId: userId, score: 10 };
-    } else {
-        result = { operation: 'doNothing' };
+    switch (eventType) {
+        case "SubjectSelection":
+
+            var choice = requestBody.data.choice;
+            result = { operation : 'subjectSelection', userId: userId, choice: choice};
+
+            break;
+    
+        default:
+            break;
     }
+
+    //// 2. Check correct answer
+    //if (hisChoice == 3) {
+    //    result = { operation: 'addScore', userId: userId, score: 10 };
+    //} else {
+    //    result = { operation: 'doNothing' };
+    //}
 
     context.succeed({
         message: JSON.stringify(result)
