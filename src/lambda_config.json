@@ -9,7 +9,7 @@
     "timeLimitInMilliSeconds": 1000,
     "authenticationMode": "PUBLIC"
   },
-  "SubjectRecommender": {
+  "matchFoundController": {
     "handlerName": "game/logic.onMatchFoundController",
     "timeLimitInMilliSeconds": 1000,
     "authenticationMode": "PUBLIC"
