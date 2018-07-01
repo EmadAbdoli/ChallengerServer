@@ -10,7 +10,7 @@
     "authenticationMode": "PUBLIC"
   },
   "SubjectRecommender": {
-    "handlerName": "game/logic.recommend",
+    "handlerName": "game/logic.onMatchFoundController",
     "timeLimitInMilliSeconds": 1000,
     "authenticationMode": "PUBLIC"
   },

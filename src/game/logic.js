@@ -31,8 +31,14 @@ var topics =
     "Selling a House"
 ];
 
+var gameType = function(matchName)
+{
+    var arr = matchName.split("Matching");
+    return arr[1];
+}
+
 // on MatchFound we call this function
-exports.recommend = function (requestBody, context) {
+exports.onMatchFoundController = function (requestBody, context) {
 
     /* requestBody is like this:
    * {
@@ -48,8 +54,63 @@ exports.recommend = function (requestBody, context) {
 
     var matchId = requestBody.realtimeChallengeId;
     var participants = requestBody.participants;
+    var matchmakingName = requestBody.matchmakingName;
+    var gameTypeId = gameType(matchmakingName);
+
+    console.log(matchmakingName);
+    console.log(gameTypeId);
+    console.log(participants);
 
     // TODO: save matchid and participants if needed.
+
+    // fetch players
+
+    var Players = Backtory.Object.extend("players");
+    myPlayers = new Players();
+
+    var players = [];
+    for (let index = 0; index < 4; index++) {
+
+        myPlayers.get(participants[index].userId,{
+            success: function(tempPlayer) {
+                // The object was retrieved successfully.
+                players[index] = tempPlayer;
+            },
+            error: function(error) {
+                // The object was not retrieved successfully.
+                index--;
+            }
+        });
+    }
+
+    // create game
+
+    var Game = Backtory.Object.extend("games");
+    var game = new Game();
+
+    game.set("gameType", gameTypeId);
+    game.set("tableValue", 0);
+    game.set("players", players);
+
+    game.save({
+        success: function(game) {
+            // Execute any logic that should take place after the object is saved.
+            context.log('New object created with _id: ' + game.get("_id"));
+        },
+
+        error: function(error) {
+            // Execute any logic that should take place if the save fails.
+                context.log('Failed to create new object, with error code: ' + error.code);
+        }
+    });
+
+    // create rounds
+
+    // create participants
+
+    
+
+    // save data finished
     
     var rndNumbers = [];
     rndNumbers[0] = utility.getRandomInt(25);
@@ -66,7 +127,7 @@ exports.recommend = function (requestBody, context) {
         rndNumbers[2] = utility.getRandomInt(25);
     }
 
-    var result = 
+    var selectedTopics = 
     [
         topics[rndNumbers[0]],
         topics[rndNumbers[1]],
@@ -74,7 +135,7 @@ exports.recommend = function (requestBody, context) {
     ];
 
     console.log(rndNumbers);
-    console.log(result);
+    console.log(selectedTopics);
 
     //var finalResult = {
     //    welcomeMessage: "Welcome to this match",
@@ -82,7 +143,7 @@ exports.recommend = function (requestBody, context) {
     //}
     
     // Return selected questions for this challenge
-    context.succeed(JSON.stringify(result));
+    context.succeed(JSON.stringify(selectedTopics));
 };
 
 exports.gameEventController = function (requestBody, context) {
