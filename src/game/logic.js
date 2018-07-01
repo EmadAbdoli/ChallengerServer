@@ -1,5 +1,5 @@
 var utility = require("./utility");
-//var sdk = require("backtory-sdk");
+var Backtory = require("backtory-sdk");
 //sdk.setConfigFileLocation("../backtory_config.json");
 
 var topics = 
