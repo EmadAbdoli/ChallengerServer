@@ -52,6 +52,8 @@ exports.onMatchFoundController = function (requestBody, context) {
    * }
    */
 
+   console.log(requestBody);
+
     var matchId = requestBody.realtimeChallengeId;
     var participants = requestBody.participants;
     var matchmakingName = requestBody.matchmakingName;
