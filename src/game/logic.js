@@ -1,4 +1,5 @@
 var utility = require("./utility");
+//var Backtory = require("node_modules/backtory-sdk");
 var Backtory = require("backtory-sdk");
 //sdk.setConfigFileLocation("../backtory_config.json");
 
@@ -30,8 +31,13 @@ var topics =
     "Dating",
     "Selling a House"
 ];
+var gameTypesIds = 
+{
+    "1" : "5ae58c6f77e6b100010d11c5",
+    "2" : "5ae58c21790c0c0001d2387b"
+}
 
-var gameType = function(matchName)
+var gameTypeIdFinder = function(matchName)
 {
     var arr = matchName.split("Matching");
     return arr[1];
@@ -40,73 +46,57 @@ var gameType = function(matchName)
 // on MatchFound we call this function
 exports.onMatchFoundController = function (requestBody, context) {
 
-    /* requestBody is like this:
-   * {
-   *   "realtimeChallengeId": "<REALTIME-GAME-ID>",
-   *   "matchmakingName": "<NAME-OF-MATCH-MAKING>",
-   *   "participants": [
-   *     { "userId": "<USER-ID-1>", "skill": 110, "metaData": "<META-DATA>" },
-   *     { "userId": "<USER-ID-2>", "skill": 120, "metaData": "<META-DATA>" },
-   *     { "userId": "<USER-ID-3>", "skill": 130, "metaData": "<META-DATA>" }
-   *   ]
-   * }
-   */
-
-   console.log(requestBody);
-   console.log(requestBody.matchmakingName);
-   consoel.log(requestBody.participants);
-
     var matchId = requestBody.realtimeChallengeId;
     var participants = requestBody.participants;
     var matchmakingName = requestBody.matchmakingName;
-    var gameTypeId = gameType(matchmakingName);
+    var gameTypeId = gameTypeIdFinder(matchmakingName);
 
-    console.log(matchmakingName);
-    console.log(gameTypeId);
-    console.log(participants);
+    // fetch gameType
 
-    // TODO: save matchid and participants if needed.
+    var GameType = Backtory.Object.extend("gameType");
+    var gameTypeQuery = new Backtory.Query(GameType);
 
-    // fetch players
+    gameTypeQuery.equalTo("gameTypeId", "1");
+    gameTypeQuery.find({
+        success: function(results) {
+            var gameType = results[0]; // Backtory.Object
 
-    var Players = Backtory.Object.extend("players");
-    myPlayers = new Players();
+            var prize = gameType.get("prize");
+            var rounds = gameType.get("round");
+            var level = gameType.get("level");
+            var coin = gameType.get("coin");
 
-    var players = [];
-    for (let index = 0; index < 4; index++) {
+            gameType.set("coin", coin + 2);
+            gameType.save();
+        },
+        error: function(error)
+        {
 
-        myPlayers.get(participants[index].userId,{
-            success: function(tempPlayer) {
-                // The object was retrieved successfully.
-                players[index] = tempPlayer;
-            },
-            error: function(error) {
-                // The object was not retrieved successfully.
-                index--;
-            }
-        });
-    }
+        }
+    });
+    /*
+    gameTypeQuery.get(gameTypesIds[gameTypeId] , {
+        success:function(gameType)
+        {
+            var prize = gameType.get("prize");
+            var rounds = gameType.get("round");
+            var level = gameType.get("level");
+            var coin = gameType.get("coin");
+
+            gameType.set("coin", coin + 2);
+            gameType.save();
+        },
+        error:function(error)
+        {
+            context.error("Error in gameTypeQuery");
+        }
+    });
+*/
+    context.log("Hi There");
 
     // create game
 
-    var Game = Backtory.Object.extend("games");
-    var game = new Game();
-
-    game.set("gameType", gameTypeId);
-    game.set("tableValue", 0);
-    game.set("players", players);
-
-    game.save({
-        success: function(game) {
-            // Execute any logic that should take place after the object is saved.
-            context.log('New object created with _id: ' + game.get("_id"));
-        },
-
-        error: function(error) {
-            // Execute any logic that should take place if the save fails.
-                context.log('Failed to create new object, with error code: ' + error.code);
-        }
-    });
+    // fetch players
 
     // create rounds
 
@@ -115,7 +105,7 @@ exports.onMatchFoundController = function (requestBody, context) {
     
 
     // save data finished
-    
+
     var rndNumbers = [];
     rndNumbers[0] = utility.getRandomInt(25);
 
@@ -138,8 +128,8 @@ exports.onMatchFoundController = function (requestBody, context) {
         topics[rndNumbers[2]],
     ];
 
-    console.log(rndNumbers);
-    console.log(selectedTopics);
+    context.log(rndNumbers);
+    context.log(selectedTopics);
 
     //var finalResult = {
     //    welcomeMessage: "Welcome to this match",
@@ -194,6 +184,24 @@ exports.gameEventController = function (requestBody, context) {
     });
 };
 
-exports.select = function(requestBody, context) {
-    console.log("alaki");
+var reqbody = {
+    "realtimeChallengeId": "123123",
+    "matchmakingName": "GameMatching1",
+    "participants": [
+      { "userId": "12345123", "skill": 110, "metaData": "" },
+      { "userId": "12375123", "skill": 120, "metaData": "" },
+      { "userId": "12385123", "skill": 130, "metaData": "" }
+    ]
 };
+
+var reqbody1 = {
+       "userId": "1234",
+       "challengeId": "dsfgsdgf",
+       "message": {
+          "myChoice": 3,
+          "someOtherField": "sample text",
+        }
+     };
+
+//this.onMatchFoundController(reqbody, "");
+//this.gameEventController(reqbody1, "");
