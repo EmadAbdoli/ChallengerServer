@@ -1,6 +1,7 @@
 var utility = require("./utility");
 //var Backtory = require("node_modules/backtory-sdk");
 var Backtory = require("backtory-sdk");
+//var fs = require('fs');
 //sdk.setConfigFileLocation("../backtory_config.json");
 
 var topics = 
@@ -43,6 +44,22 @@ var gameTypeIdFinder = function(matchName)
     return arr[1];
 }
 
+var getLog = function(content,context)
+{
+    console.log("in GetLog");
+    context.log("in GetLog");
+
+    fs.appendFile('log.txt', content, function (err) {
+        if (err) {
+            console.log("errerrror");
+            context.log("errrrror");
+            throw err;
+        }
+        console.log('Saved!');
+        context.log('Saved!');
+    });
+}
+
 // on MatchFound we call this function
 exports.onMatchFoundController = function (requestBody, context) {
 
@@ -55,10 +72,13 @@ exports.onMatchFoundController = function (requestBody, context) {
 
     var GameType = Backtory.Object.extend("gameType");
     var gameTypeQuery = new Backtory.Query(GameType);
-
+/*
     gameTypeQuery.equalTo("gameTypeId", "1");
     gameTypeQuery.find({
         success: function(results) {
+            
+            context.log("bebinim chi mishe...");
+
             var gameType = results[0]; // Backtory.Object
 
             var prize = gameType.get("prize");
@@ -74,7 +94,7 @@ exports.onMatchFoundController = function (requestBody, context) {
 
         }
     });
-    /*
+  */  
     gameTypeQuery.get(gameTypesIds[gameTypeId] , {
         success:function(gameType)
         {
@@ -83,15 +103,37 @@ exports.onMatchFoundController = function (requestBody, context) {
             var level = gameType.get("level");
             var coin = gameType.get("coin");
 
-            gameType.set("coin", coin + 2);
-            gameType.save();
+            gameType.set("coin", coin + 4);
+            gameType.save({
+                success:function(gameType) {
+                    
+                    var Game = Backtory.Object.extend("games");
+                    var game = new Game();
+                    game.set("gameType", gameType);
+                    game.set("tableValue", 0);
+                    game.set("challengeId",matchId);
+
+                    game.save({
+                        success:function(game)
+                        {   
+                            var gamesRelation = gameType.relation("games");
+                            gamesRelation.add(game);
+                            
+                            gameType.save();
+                            //var tableValue = game.get("tableValue");
+                            //game.set("tableValue", tableValue + 1);
+                            //game.save();
+                        }
+                    });
+                }
+            });
         },
         error:function(error)
         {
             context.error("Error in gameTypeQuery");
         }
     });
-*/
+    
     context.log("Hi There");
 
     // create game
@@ -185,12 +227,12 @@ exports.gameEventController = function (requestBody, context) {
 };
 
 var reqbody = {
-    "realtimeChallengeId": "123123",
+    "realtimeChallengeId": "123123edf456",
     "matchmakingName": "GameMatching1",
     "participants": [
-      { "userId": "12345123", "skill": 110, "metaData": "" },
-      { "userId": "12375123", "skill": 120, "metaData": "" },
-      { "userId": "12385123", "skill": 130, "metaData": "" }
+      { "userId": "5b38a1d2fe76c80001f30e3e", "skill": 110, "metaData": "" },
+      { "userId": "5b38a1542279be00016a712c", "skill": 120, "metaData": "" },
+      { "userId": "5b31f8e82279be00011dad75", "skill": 130, "metaData": "" }
     ]
 };
 
