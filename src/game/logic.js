@@ -1,6 +1,6 @@
 var utility = require("./utility");
-//var Backtory = require("node_modules/backtory-sdk");
 var Backtory = require("backtory-sdk");
+//var Backtory = require("./../../api/node_modules/backtory-sdk");
 //var fs = require('fs');
 //sdk.setConfigFileLocation("../backtory_config.json");
 
@@ -60,6 +60,45 @@ var getLog = function(content,context)
     });
 }
 
+var setGameRelations = function(game, participants, context)
+{
+    var tableValue = game.get("tableValue");
+    game.set("tableValue", tableValue + 2);
+    game. save({
+        success:function(game)
+        {
+            var Player = Backtory.Object.extend("players");
+            var playersQuery = new Backtory.Query(Player);
+            var players = [];
+
+            var pids = 
+            [
+                participants[0].userId.toString(),
+                participants[1].userId.toString(),
+                participants[2].userId.toString(),
+            ];
+
+            playersQuery.containedIn("_id", pids);
+            playersQuery.find({
+                success:function(plist)
+                {
+                    for(var i = 0; i < plist.length; i++)
+                    {
+                        var coin = plist[i].get("coin");
+                        plist[i].set("coin", coin + 2);
+                        plist[i].save();
+                    }
+                }
+            });
+            /*
+            var playerGamesRelation = player.relation("games");
+            playerGamesRelation.add(game);
+            player.save();
+            */
+        }
+    });
+}
+
 // on MatchFound we call this function
 exports.onMatchFoundController = function (requestBody, context) {
 
@@ -72,29 +111,10 @@ exports.onMatchFoundController = function (requestBody, context) {
 
     var GameType = Backtory.Object.extend("gameType");
     var gameTypeQuery = new Backtory.Query(GameType);
-/*
-    gameTypeQuery.equalTo("gameTypeId", "1");
-    gameTypeQuery.find({
-        success: function(results) {
-            
-            context.log("bebinim chi mishe...");
 
-            var gameType = results[0]; // Backtory.Object
+    var Game = Backtory.Object.extend("games");
+    var game = new Game();
 
-            var prize = gameType.get("prize");
-            var rounds = gameType.get("round");
-            var level = gameType.get("level");
-            var coin = gameType.get("coin");
-
-            gameType.set("coin", coin + 2);
-            gameType.save();
-        },
-        error: function(error)
-        {
-
-        }
-    });
-  */  
     gameTypeQuery.get(gameTypesIds[gameTypeId] , {
         success:function(gameType)
         {
@@ -102,31 +122,32 @@ exports.onMatchFoundController = function (requestBody, context) {
             var rounds = gameType.get("round");
             var level = gameType.get("level");
             var coin = gameType.get("coin");
-
+            var gamesRelation = gameType.relation("games");
+            
+            gamesRelation.add(game);
             gameType.set("coin", coin + 4);
+            
             gameType.save({
                 success:function(gameType) {
-                    
-                    var Game = Backtory.Object.extend("games");
-                    var game = new Game();
+
                     game.set("gameType", gameType);
-                    game.set("tableValue", 0);
+                    game.set("tableValue", 1);
                     game.set("challengeId",matchId);
 
                     game.save({
-                        success:function(game)
+                        success:function(tgame)
                         {
-                            var gameType = new Backtory.Object.extend("gameType");
-                            gameType.set("_id",gameTypesIds[gameTypeId]);
-                            gameType.fetch({
-                                success:function(gameType){
-                                    var gamesRelation = gameType.relation("games");
-                                    gamesRelation.add(game);
-                                    gameType.save();
-                                }
-                            });
+                            setGameRelations(tgame, participants, context);
+                        },
+                        error:function(err)
+                        {
+                            context.log("error in saving game");
                         }
-                    });
+                    })
+                },
+                error:function(err)
+                {
+                    context.log("error in gameType save");
                 }
             });
         },
@@ -135,20 +156,10 @@ exports.onMatchFoundController = function (requestBody, context) {
             context.error("Error in gameTypeQuery");
         }
     });
-    
+
     context.log("Hi There");
 
-    // create game
-
-    // fetch players
-
-    // create rounds
-
-    // create participants
-
-    
-
-    // save data finished
+    context.succeed("succeedam");
 
     var rndNumbers = [];
     rndNumbers[0] = utility.getRandomInt(25);
@@ -247,5 +258,5 @@ var reqbody1 = {
         }
      };
 
-//this.onMatchFoundController(reqbody, "");
+//this.onMatchFoundController(reqbody);
 //this.gameEventController(reqbody1, "");
