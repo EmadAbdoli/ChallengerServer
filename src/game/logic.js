@@ -115,14 +115,16 @@ exports.onMatchFoundController = function (requestBody, context) {
 
                     game.save({
                         success:function(game)
-                        {   
-                            var gamesRelation = gameType.relation("games");
-                            gamesRelation.add(game);
-                            
-                            gameType.save();
-                            //var tableValue = game.get("tableValue");
-                            //game.set("tableValue", tableValue + 1);
-                            //game.save();
+                        {
+                            var gameType = new Backtory.Object.extend("gameType");
+                            gameType.set("_id",gameTypesIds[gameTypeId]);
+                            gameType.fetch({
+                                success:function(gameType){
+                                    var gamesRelation = gameType.relation("games");
+                                    gamesRelation.add(game);
+                                    gameType.save();
+                                }
+                            });
                         }
                     });
                 }
