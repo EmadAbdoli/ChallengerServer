@@ -1,6 +1,6 @@
 var utility = require("./utility");
 var Backtory = require("backtory-sdk");
-var waitUntil = require("wait-until");
+var waitUntil = require("./myLibs/wait-until");
 //var Backtory = require("./../../api/node_modules/backtory-sdk");
 //var waitUntil = require("./../../api/node_modules/wait-until");
 //var fs = require('fs');
