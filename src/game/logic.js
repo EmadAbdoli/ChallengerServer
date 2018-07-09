@@ -1,8 +1,10 @@
 var utility = require("./utility");
 var Backtory = require("backtory-sdk");
+var waitUntil = require("wait-until");
 //var Backtory = require("./../../api/node_modules/backtory-sdk");
+//var waitUntil = require("./../../api/node_modules/wait-until");
 //var fs = require('fs');
-//sdk.setConfigFileLocation("../backtory_config.json");
+//Backtory.setConfigFileLocation("C:/Users/Emad/Downloads/Compressed/Ubuntu.1604.2017.711.0_v1/rootfs/home/Emad/Server_backtory/src/backtory_config.json");
 
 var topics = 
 [
@@ -44,59 +46,67 @@ var gameTypeIdFinder = function(matchName)
     return arr[1];
 }
 
-var getLog = function(content,context)
+var setGameRelations = function(gid, participants)
 {
-    console.log("in GetLog");
-    context.log("in GetLog");
+    var Game = Backtory.Object.extend("games");
+    var game = new Game();
+    var gamePlayerRelation = game.relation("players");
+    game.set("_id", gid);
 
-    fs.appendFile('log.txt', content, function (err) {
-        if (err) {
-            console.log("errerrror");
-            context.log("errrrror");
-            throw err;
-        }
-        console.log('Saved!');
-        context.log('Saved!');
+    var Player = Backtory.Object.extend("players");
+    for(var i = 0; i < participants.length; i++)
+    {
+        var tempPlayer = new Player();
+        tempPlayer.set("_id", participants[i].userId.toString());
+        gamePlayerRelation.add(tempPlayer);
+    }
+
+    game.save({
+        success:function(game){}
     });
 }
 
-var setGameRelations = function(game, participants, context)
+var setGameTypeRelations = function(game, gameTypeId, matchId)
 {
-    var tableValue = game.get("tableValue");
-    game.set("tableValue", tableValue + 2);
-    game. save({
-        success:function(game)
+    var GameType = Backtory.Object.extend("gameType");
+
+    var myGameType = new GameType();
+    myGameType.set("_id", gameTypesIds[gameTypeId]);
+    var gamesRelation = myGameType.relation("games");
+    gamesRelation.add(game);
+
+    myGameType.save({
+        success:function(gameType)
         {
-            var Player = Backtory.Object.extend("players");
-            var playersQuery = new Backtory.Query(Player);
-            var players = [];
+            game.set("gameType", gameType);
+            game.set("tableValue", 1);
+            game.set("challengeId",matchId);
 
-            var pids = 
-            [
-                participants[0].userId.toString(),
-                participants[1].userId.toString(),
-                participants[2].userId.toString(),
-            ];
-
-            playersQuery.containedIn("_id", pids);
-            playersQuery.find({
-                success:function(plist)
-                {
-                    for(var i = 0; i < plist.length; i++)
-                    {
-                        var coin = plist[i].get("coin");
-                        plist[i].set("coin", coin + 2);
-                        plist[i].save();
-                    }
-                }
-            });
-            /*
-            var playerGamesRelation = player.relation("games");
-            playerGamesRelation.add(game);
-            player.save();
-            */
+            game.save();
         }
     });
+}
+
+var setPlayersRelations = function(gid, participants)
+{
+    var Game = Backtory.Object.extend("games");
+    var Player = Backtory.Object.extend("players");
+    
+    var game = new Game();
+    game.set("_id", gid);
+
+    for(var i = 0; i < participants.length; i++)
+    {
+        var tempPlayer = new Player();
+        tempPlayer.set("_id", participants[i].userId.toString());
+        var pGames = tempPlayer.relation("games");
+        pGames.add(game);
+        tempPlayer.save({
+            success:function(tempPlayer){}
+        });        
+    }
+
+    console.log("players' games saved");
 }
 
 // on MatchFound we call this function
@@ -107,59 +117,30 @@ exports.onMatchFoundController = function (requestBody, context) {
     var matchmakingName = requestBody.matchmakingName;
     var gameTypeId = gameTypeIdFinder(matchmakingName);
 
-    // fetch gameType
-
-    var GameType = Backtory.Object.extend("gameType");
-    var gameTypeQuery = new Backtory.Query(GameType);
-
     var Game = Backtory.Object.extend("games");
     var game = new Game();
 
-    gameTypeQuery.get(gameTypesIds[gameTypeId] , {
-        success:function(gameType)
-        {
-            var prize = gameType.get("prize");
-            var rounds = gameType.get("round");
-            var level = gameType.get("level");
-            var coin = gameType.get("coin");
-            var gamesRelation = gameType.relation("games");
-            
-            gamesRelation.add(game);
-            gameType.set("coin", coin + 4);
-            
-            gameType.save({
-                success:function(gameType) {
-
-                    game.set("gameType", gameType);
-                    game.set("tableValue", 1);
-                    game.set("challengeId",matchId);
-
-                    game.save({
-                        success:function(tgame)
-                        {
-                            setGameRelations(tgame, participants, context);
-                        },
-                        error:function(err)
-                        {
-                            context.log("error in saving game");
-                        }
-                    })
-                },
-                error:function(err)
-                {
-                    context.log("error in gameType save");
-                }
-            });
-        },
-        error:function(error)
-        {
-            context.error("Error in gameTypeQuery");
-        }
+    setGameTypeRelations(game, gameTypeId, matchId);
+ 
+    waitUntil()
+        .interval(100)
+        .times(10)
+        .condition(function() {
+            return (game.get("_id") != undefined ? true : false);
+        })
+        .done(function(result) {
+            setGameRelations(game.get("_id"), participants);
     });
 
-    context.log("Hi There");
-
-    context.succeed("succeedam");
+    waitUntil()
+    .interval(1000)
+    .times(1)
+    .condition(function() {
+        return (true ? true : false);
+    })
+    .done(function(result) {
+        setPlayersRelations(game.get("_id"), participants);
+    });
 
     var rndNumbers = [];
     rndNumbers[0] = utility.getRandomInt(25);
@@ -182,16 +163,8 @@ exports.onMatchFoundController = function (requestBody, context) {
         topics[rndNumbers[1]],
         topics[rndNumbers[2]],
     ];
-
-    context.log(rndNumbers);
-    context.log(selectedTopics);
-
-    //var finalResult = {
-    //    welcomeMessage: "Welcome to this match",
-    //    topics: result
-    //}
     
-    // Return selected questions for this challenge
+    // Return selected topics for this challenge
     context.succeed(JSON.stringify(selectedTopics));
 };
 
