@@ -50,6 +50,14 @@ var gameTypeIdFinder = function(matchName)
     return arr[1];
 }
 
+var getUserPid = function(participant)
+{
+    var metastring = participant.metaData;
+    var myMetadata = JSON.parse(metastring);
+
+    return myMetadata[1];
+}
+
 var setGameRelations = function(gid, participants)
 {
     var Game = Backtory.Object.extend("games");
@@ -61,7 +69,9 @@ var setGameRelations = function(gid, participants)
     for(var i = 0; i < participants.length; i++)
     {
         var tempPlayer = new Player();
-        tempPlayer.set("_id", participants[i].metaData.pid.toString());
+        var pid = getUserPid(participants[i]);
+
+        tempPlayer.set("_id", pid);
         gamePlayerRelation.add(tempPlayer);
     }
 
@@ -102,9 +112,9 @@ var setPlayersRelations = function(gid, participants)
     for(var i = 0; i < participants.length; i++)
     {
         var tempPlayer = new Player();
-        console.log("player pid:" + participants[i].metaData.pid.toString());
+        var pid = getUserPid(participants[i]);
 
-        tempPlayer.set("_id", participants[i].metaData.pid.toString());
+        tempPlayer.set("_id", pid);
         var pGames = tempPlayer.relation("games");
         pGames.add(game);
         tempPlayer.save({
@@ -126,7 +136,7 @@ exports.onMatchFoundController = function (requestBody, context) {
     var matchmakingName = requestBody.matchmakingName;
     var gameTypeId = gameTypeIdFinder(matchmakingName);
 
-    context.log(participants);
+    context.log(participants[0].metaData);
 
     var Game = Backtory.Object.extend("games");
     var game = new Game();
@@ -227,29 +237,22 @@ exports.gameEventController = function (requestBody, context) {
 var reqbody = {
     "realtimeChallengeId": "123123edf456",
     "matchmakingName": "GameMatching1",
-    "participants": [
-      { "userId": "5b43b32ee4b09c84b57474ec", "skill": 110, 
-        "metaData": 
+    "participants":
+        [
+            {"userId":"5b445c62e4b0a2a06398f896",
+            "skill":0,
+            "metaData":'["milad222","5b445c624f83de0001e9d101"]'
+        },
+            {"userId":"5b445c73e4b0a2a06398f8a0",
+            "skill":0,
+            "metaData":'["zahra222","5b445c735ce7180001bfaf7c"]'
+        },
         {
-            "username" : "emad111",
-            "pid" : "5b43b32e54a773000116bf7a"
+            "userId":"5b4457b7e4b0712f42bad646",
+            "skill":0,
+            "metaData": '["emad666","5b4457b74f83de0001e9bd59"]'
         }
-    },
-      { "userId": "5b43b690e4b0a2a06398bb8b", "skill": 120, 
-        "metaData": 
-        {
-            "username" : "milad111",
-            "pid" : "5b43b6904f83de0001e7a3c3"
-        } 
-    },
-      { "userId": "5b43b6c1e4b0712f42ba9c77", "skill": 130,
-        "metaData": 
-        {
-            "username" : "zahra111",
-            "pid" : "5b43b6c154a77300016ed6b8"
-        } 
-    }
-    ]
+        ]
 };
 
 var reqbody1 = {
