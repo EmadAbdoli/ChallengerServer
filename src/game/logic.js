@@ -126,6 +126,8 @@ exports.onMatchFoundController = function (requestBody, context) {
     var matchmakingName = requestBody.matchmakingName;
     var gameTypeId = gameTypeIdFinder(matchmakingName);
 
+    context.log(participants);
+
     var Game = Backtory.Object.extend("games");
     var game = new Game();
 
