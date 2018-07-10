@@ -1,7 +1,11 @@
 var utility = require("./utility");
+
+// For server
 var Backtory = require("backtory-sdk");
-var waitUntil = require("./myLibs/wait-until");
+// For Local
 //var Backtory = require("./../../api/node_modules/backtory-sdk");
+var waitUntil = require("./myLibs/wait-until");
+
 //var waitUntil = require("./../../api/node_modules/wait-until");
 //var fs = require('fs');
 //Backtory.setConfigFileLocation("C:/Users/Emad/Downloads/Compressed/Ubuntu.1604.2017.711.0_v1/rootfs/home/Emad/Server_backtory/src/backtory_config.json");
@@ -57,7 +61,7 @@ var setGameRelations = function(gid, participants)
     for(var i = 0; i < participants.length; i++)
     {
         var tempPlayer = new Player();
-        tempPlayer.set("_id", participants[i].userId.toString());
+        tempPlayer.set("_id", participants[i].metaData.pid.toString());
         gamePlayerRelation.add(tempPlayer);
     }
 
@@ -98,7 +102,9 @@ var setPlayersRelations = function(gid, participants)
     for(var i = 0; i < participants.length; i++)
     {
         var tempPlayer = new Player();
-        tempPlayer.set("_id", participants[i].userId.toString());
+        console.log("player pid:" + participants[i].metaData.pid.toString());
+
+        tempPlayer.set("_id", participants[i].metaData.pid.toString());
         var pGames = tempPlayer.relation("games");
         pGames.add(game);
         tempPlayer.save({
@@ -110,7 +116,10 @@ var setPlayersRelations = function(gid, participants)
 }
 
 // on MatchFound we call this function
+// For server
 exports.onMatchFoundController = function (requestBody, context) {
+// For Local
+//exports.onMatchFoundController = function (requestBody) {
 
     var matchId = requestBody.realtimeChallengeId;
     var participants = requestBody.participants;
@@ -165,6 +174,7 @@ exports.onMatchFoundController = function (requestBody, context) {
     ];
     
     // Return selected topics for this challenge
+    // Todo: for push code on server uncomment this line
     context.succeed(JSON.stringify(selectedTopics));
 };
 
@@ -216,9 +226,27 @@ var reqbody = {
     "realtimeChallengeId": "123123edf456",
     "matchmakingName": "GameMatching1",
     "participants": [
-      { "userId": "5b38a1d2fe76c80001f30e3e", "skill": 110, "metaData": "" },
-      { "userId": "5b38a1542279be00016a712c", "skill": 120, "metaData": "" },
-      { "userId": "5b31f8e82279be00011dad75", "skill": 130, "metaData": "" }
+      { "userId": "5b43b32ee4b09c84b57474ec", "skill": 110, 
+        "metaData": 
+        {
+            "username" : "emad111",
+            "pid" : "5b43b32e54a773000116bf7a"
+        }
+    },
+      { "userId": "5b43b690e4b0a2a06398bb8b", "skill": 120, 
+        "metaData": 
+        {
+            "username" : "milad111",
+            "pid" : "5b43b6904f83de0001e7a3c3"
+        } 
+    },
+      { "userId": "5b43b6c1e4b0712f42ba9c77", "skill": 130,
+        "metaData": 
+        {
+            "username" : "zahra111",
+            "pid" : "5b43b6c154a77300016ed6b8"
+        } 
+    }
     ]
 };
 
