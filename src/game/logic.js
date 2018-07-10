@@ -136,8 +136,6 @@ exports.onMatchFoundController = function (requestBody, context) {
     var matchmakingName = requestBody.matchmakingName;
     var gameTypeId = gameTypeIdFinder(matchmakingName);
 
-    context.log(participants[0].metaData);
-
     var Game = Backtory.Object.extend("games");
     var game = new Game();
 
@@ -190,7 +188,10 @@ exports.onMatchFoundController = function (requestBody, context) {
     context.succeed(JSON.stringify(selectedTopics));
 };
 
+// For server
 exports.gameEventController = function (requestBody, context) {
+// For local
+//exports.gameEventController = function (requestBody) {
 
     /* requestBody is like this:
    * {
@@ -201,19 +202,38 @@ exports.gameEventController = function (requestBody, context) {
    *      "someOtherField": "sample text",
    *      ....  
    *    },
-   *    "data": { ... }
+   *    "data": { ... },
+   *    "properties": { ... },
    * }
    */
+
+    context.log(requestBody);
+    context.log(requestBody.properties);
 
     var userId = requestBody.userId;
     var challengeId = requestBody.challengeId;
     var eventType = requestBody.message;
+    var props;
+    if (requestBody.properties == undefined)
+        {
+            props = {
+                "choices": [],
+            };
+        }
+    else
+        {
+            props = requestBody.properties;
+        }
+
     var result;
 
     switch (eventType) {
         case "SubjectSelection":
 
             var choice = requestBody.data.choice;
+            var choices = props.choices;
+            choices.push(choice);
+
             result = { operation : 'subjectSelection', userId: userId, choice: choice};
 
             break;
@@ -222,16 +242,12 @@ exports.gameEventController = function (requestBody, context) {
             break;
     }
 
-    //// 2. Check correct answer
-    //if (hisChoice == 3) {
-    //    result = { operation: 'addScore', userId: userId, score: 10 };
-    //} else {
-    //    result = { operation: 'doNothing' };
-    //}
-
-    context.succeed({
-        message: JSON.stringify(result)
-    });
+    context.log(props);
+    var tResult = {message: JSON.stringify(result),properties: JSON.stringify(props)};
+    // For Local
+    //console.log(JSON.stringify(tResult));
+    // For Server
+    context.succeed(tResult);
 };
 
 var reqbody = {
@@ -261,8 +277,21 @@ var reqbody1 = {
        "message": {
           "myChoice": 3,
           "someOtherField": "sample text",
-        }
+        },
+        "data":
+        {
+            "choice" : "School"
+        },
+        "properties": {}
      };
 
+var reqBody2 = {
+    "message": "SubjectSelection",
+    "data": {
+      "choice": "1"
+    },
+    "clientRequestId": "48148630-96cf-4344-87c5-8dc94ccbd02c"
+  }
+
 //this.onMatchFoundController(reqbody);
-//this.gameEventController(reqbody1, "");
+//this.gameEventController(reqBody2);
