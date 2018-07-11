@@ -211,13 +211,13 @@ exports.gameEventController = function (requestBody, context) {
     context.log(requestBody.properties);
 
     var userId = requestBody.userId;
-    var challengeId = requestBody.challengeId;
     var eventType = requestBody.message;
     var props;
     if (requestBody.properties == undefined)
         {
             props = {
                 "choices": [],
+                "topics": []
             };
         }
     else
@@ -230,11 +230,16 @@ exports.gameEventController = function (requestBody, context) {
     switch (eventType) {
         case "SubjectSelection":
 
-            var choice = requestBody.data.choice;
-            var choices = props.choices;
-            choices.push(choice);
+            //var choice = requestBody.data.choice;
+            //var choicesStr = props.choices;
+            //var choices = JSON.parse(choicesStr);
+            //choices.push(choice);
+            props.choices.push(requestBody.data.choice);
+            props.topics = JSON.parse(requestBody.data.topics);
 
-            result = { operation : 'subjectSelection', userId: userId, choice: choice};
+            result = { operation : 'subjectSelection', userId: userId, choice: requestBody.data.choice};
+
+            //props.choices = JSON.stringify(choices);
 
             break;
     
@@ -243,9 +248,10 @@ exports.gameEventController = function (requestBody, context) {
     }
 
     context.log(props);
-    var tResult = {message: JSON.stringify(result),properties: JSON.stringify(props)};
+
+    var tResult = {message: JSON.stringify(result),properties: props};
     // For Local
-    //console.log(JSON.stringify(tResult));
+    //console.log(tResult);
     // For Server
     context.succeed(tResult);
 };
@@ -288,10 +294,11 @@ var reqbody1 = {
 var reqBody2 = {
     "message": "SubjectSelection",
     "data": {
-      "choice": "1"
+        "choice": "2",
+        "topics": '["Selling a House","At the Bank","Health"]'
     },
-    "clientRequestId": "48148630-96cf-4344-87c5-8dc94ccbd02c"
-  }
+    "clientRequestId": "26e7379d-f2e6-46d3-be78-3f300345517e"
+}
 
 //this.onMatchFoundController(reqbody);
 //this.gameEventController(reqBody2);
