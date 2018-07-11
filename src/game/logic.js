@@ -43,6 +43,7 @@ var gameTypesIds =
     "1" : "5ae58c6f77e6b100010d11c5",
     "2" : "5ae58c21790c0c0001d2387b"
 }
+var playerCounts = 3;
 
 var gameTypeIdFinder = function(matchName)
 {
@@ -56,6 +57,27 @@ var getUserPid = function(participant)
     var myMetadata = JSON.parse(metastring);
 
     return myMetadata[1];
+}
+
+var calcTopic = function (choices) // Designed for 3 Topics
+{
+    var res = [0,0,0];
+    for (var uid in choices)
+    {
+        res[choices[uid]] = res[choices[uid]] + 1;
+    }
+
+    var result = 0;
+    if(res[1] > res[0]) result = 1;
+    if(res[1] == res[0]) result = utility.getRandomInt(2);
+    if(res[2] > res[result]) result = 2;
+    if(res[2] == res[result]) 
+    {
+        if (utility.getRandomInt(2) == 0)
+            result = 2;
+    }
+
+    return result;
 }
 
 var setGameRelations = function(gid, participants)
@@ -208,7 +230,7 @@ exports.gameEventController = function (requestBody, context) {
    */
 
     context.log(requestBody);
-    context.log(requestBody.properties);
+    //context.log(requestBody.properties);
 
     var userId = requestBody.userId;
     var eventType = requestBody.message;
@@ -216,7 +238,7 @@ exports.gameEventController = function (requestBody, context) {
     if (requestBody.properties == undefined)
         {
             props = {
-                "choices": [],
+                "choices": {},
                 "topics": []
             };
         }
@@ -227,19 +249,27 @@ exports.gameEventController = function (requestBody, context) {
 
     var result;
 
-    switch (eventType) {
+    switch (eventType) 
+    {
         case "SubjectSelection":
 
-            //var choice = requestBody.data.choice;
-            //var choicesStr = props.choices;
-            //var choices = JSON.parse(choicesStr);
-            //choices.push(choice);
-            props.choices.push(requestBody.data.choice);
+            if ((userId in props.choices) == false)
+                props.choices[userId] = requestBody.data.choice;
+            else
+                props.choices[userId] = requestBody.data.choice;
+            
             props.topics = JSON.parse(requestBody.data.topics);
 
-            result = { operation : 'subjectSelection', userId: userId, choice: requestBody.data.choice};
-
-            //props.choices = JSON.stringify(choices);
+            if (Object.keys(props.choices).length == playerCounts)
+            {
+                var topicIndex = calcTopic(props.choices);
+                props["topic"]=  props.topics[topicIndex];
+                result = {operation: 'subjectSelected', topic : topicIndex};
+            }
+            else
+            {
+                result = { operation : 'subjectSelection', userId: userId, choice: requestBody.data.choice};
+            }
 
             break;
     
@@ -249,7 +279,7 @@ exports.gameEventController = function (requestBody, context) {
 
     context.log(props);
 
-    var tResult = {message: JSON.stringify(result),properties: props};
+    var tResult = {message: JSON.stringify(result), properties: props};
     // For Local
     //console.log(tResult);
     // For Server
@@ -293,8 +323,13 @@ var reqbody1 = {
 
 var reqBody2 = {
     "message": "SubjectSelection",
-    "data": {
-        "choice": "2",
+    "userId" : "4",
+    "properties": {
+        "choices": {1:2,2:2,3:1},
+        "topics": ["Selling a House","At the Bank","Health"]
+    },
+    "data" :{
+        "choice":0,
         "topics": '["Selling a House","At the Bank","Health"]'
     },
     "clientRequestId": "26e7379d-f2e6-46d3-be78-3f300345517e"
