@@ -239,7 +239,8 @@ exports.gameEventController = function (requestBody, context) {
         {
             props = {
                 "choices": {},
-                "topics": []
+                "topics": [],
+                "topic" : ""
             };
         }
     else
@@ -253,23 +254,31 @@ exports.gameEventController = function (requestBody, context) {
     {
         case "SubjectSelection":
 
-            if ((userId in props.choices) == false)
-                props.choices[userId] = requestBody.data.choice;
+            if (props.topic != "")
+            {
+                result = {operation: 'invalidOperation', userId: userId};
+            }
             else
-                props.choices[userId] = requestBody.data.choice;
-            
-            props.topics = JSON.parse(requestBody.data.topics);
+            {
+                if ((userId in props.choices) == false)
+                    props.choices[userId] = requestBody.data.choice;
+                else
+                    props.choices[userId] = requestBody.data.choice;
+                
+                props.topics = JSON.parse(requestBody.data.topics);
 
-            if (Object.keys(props.choices).length == playerCounts)
-            {
-                var topicIndex = calcTopic(props.choices);
-                props["topic"]=  props.topics[topicIndex];
-                result = {operation: 'subjectSelected', topic : topicIndex};
-            }
-            else
-            {
-                result = { operation : 'subjectSelection', userId: userId, choice: requestBody.data.choice};
-            }
+                if (Object.keys(props.choices).length == playerCounts)
+                {
+                    var topicIndex = calcTopic(props.choices);
+                    props["topic"]=  props.topics[topicIndex];
+                    result = {operation: 'subjectSelected', 
+                                userId: userId, choice: requestBody.data.choice, topic : topicIndex};
+                }
+                else
+                {
+                    result = { operation : 'subjectSelection', userId: userId, choice: requestBody.data.choice};
+                }
+            }            
 
             break;
     
