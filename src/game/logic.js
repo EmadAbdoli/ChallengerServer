@@ -7,10 +7,10 @@ var Backtory = require("backtory-sdk");
 //var Backtory = require("./../../api/node_modules/backtory-sdk");
 var waitUntil = require("./myLibs/wait-until");
 
-//var waitUntil = require("./../../api/node_modules/wait-until");
 //var fs = require('fs');
 //Backtory.setConfigFileLocation("C:/Users/Emad/Downloads/Compressed/Ubuntu.1604.2017.711.0_v1/rootfs/home/Emad/Server_backtory/src/backtory_config.json");
 var playerCounts = 3;
+var topicCount = 11;
 
 
 //********************************************************************************************************** */
@@ -54,18 +54,18 @@ exports.onMatchFoundController = function (requestBody, context) {
     });
 
     var rndNumbers = [];
-    rndNumbers[0] = utility.getRandomInt(25);
+    rndNumbers[0] = utility.getRandomInt(topicCount);
 
-    rndNumbers[1] = utility.getRandomInt(25);
+    rndNumbers[1] = utility.getRandomInt(topicCount);
     while (rndNumbers[1] == rndNumbers[0])
     {
-        rndNumbers[1] = utility.getRandomInt(25);
+        rndNumbers[1] = utility.getRandomInt(topicCount);
     }
 
-    rndNumbers[2] = utility.getRandomInt(25);
+    rndNumbers[2] = utility.getRandomInt(topicCount);
     while (rndNumbers[2] == rndNumbers[1] || rndNumbers[2] == rndNumbers[0])
     {
-        rndNumbers[2] = utility.getRandomInt(25);
+        rndNumbers[2] = utility.getRandomInt(topicCount);
     }
 
     var selectedTopics = 
@@ -77,6 +77,9 @@ exports.onMatchFoundController = function (requestBody, context) {
     
     // Return selected topics for this challenge
     // Todo: for push code on server uncomment this line
+    // For Local
+    //console.log(JSON.stringify(selectedTopics));
+    // For Server
     context.succeed(JSON.stringify(selectedTopics));
 };
 
@@ -124,8 +127,14 @@ exports.gameEventController = function (requestBody, context) {
 
     var result;
 
+
+
     switch (eventType) 
     {
+
+        /****************************************************** */
+        /****************************************************** */
+
         case "SubjectSelection":
 
             if (props.topic != "")
@@ -145,8 +154,11 @@ exports.gameEventController = function (requestBody, context) {
                 {
                     var topicIndex = utility.calcTopic(props.choices);
                     props["topic"]=  props.topics[topicIndex];
+
+                    var tKeywords = utility.getTopicKeywords(props["topic"], topicIndex);
+
                     result = {operation: 'subjectSelected', 
-                                userId: userId, choice: requestBody.data.choice, topic : topicIndex};
+                                userId: userId, choice: requestBody.data.choice, topic : topicIndex, keywords: tKeywords};
                 }
                 else
                 {
@@ -155,6 +167,18 @@ exports.gameEventController = function (requestBody, context) {
             }            
 
             break;
+
+        /****************************************************** */
+        /****************************************************** */
+
+        case "selectedKeywords":
+
+
+
+            break;
+
+        /****************************************************** */
+        /****************************************************** */
     
         default:
             break;
@@ -195,32 +219,29 @@ var reqbody = {
 };
 
 var reqbody1 = {
-       "userId": "1234",
-       "challengeId": "dsfgsdgf",
-       "message": {
-          "myChoice": 3,
-          "someOtherField": "sample text",
-        },
-        "data":
-        {
-            "choice" : "School"
-        },
-        "properties": {}
-     };
+    "message": "SubjectSelection",
+    "userId" : "3",
+    "properties": null,
+    "data" :{
+        "choice": 0,
+        "topics": '["Selling a House","At the Bank","Health"]',
+    }
+};
 
-var reqBody2 = {
+var reqbody2 = {
     "message": "SubjectSelection",
     "userId" : "4",
     "properties": {
-        "choices": {1:2,2:2,3:1},
-        "topics": ["Selling a House","At the Bank","Health"]
+        "choices": {1:1,2:1,3:1},
+        "topics": ["Selling a House","At the Bank","Health"],
+        "topic" : ""
     },
     "data" :{
-        "choice":0,
-        "topics": '["Selling a House","At the Bank","Health"]'
+        "choice": 0,
+        "topics": '["Selling a House","At the Bank","Health"]',
     },
     "clientRequestId": "26e7379d-f2e6-46d3-be78-3f300345517e"
 }
 
 //this.onMatchFoundController(reqbody);
-//this.gameEventController(reqBody2);
+//this.gameEventController(reqbody2);

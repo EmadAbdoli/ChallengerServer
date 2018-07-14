@@ -1,4 +1,4 @@
-var topics = 
+exports.topics = 
 [
     "Travel",
     "College Life",
@@ -27,7 +27,7 @@ var topics =
     //"Selling a House"
 ];
 
-var AtTheBank =
+exports.AtTheBank =
 [
 "account",
 "problem",
@@ -84,7 +84,7 @@ var AtTheBank =
 "fined"
 ];
 
-var CollegeLife = 
+exports.CollegeLife = 
 [
 "class",
 "professor",
@@ -145,7 +145,7 @@ var CollegeLife =
 "buses"
 ];
 
-var Crime = 
+exports.Crime = 
 [
 "robbery",
 "court",
@@ -207,7 +207,7 @@ var Crime =
 "hopefully"
 ];
 
-var Driving = 
+exports.Driving = 
 [
 "parking",
 "ticket",
@@ -259,7 +259,7 @@ var Driving =
 "attention"
 ];
 
-var Employment = 
+exports.Employment = 
 [
 "company",
 "interview",
@@ -314,7 +314,7 @@ var Employment =
 "enterprises"
 ];
 
-var Food = 
+exports.Food = 
 [
 "chicken",
 "dinner",
@@ -383,7 +383,7 @@ var Food =
 "fairly"
 ];
 
-var Health = 
+exports.Health = 
 [
 "doctor",
 "problem",
@@ -456,7 +456,7 @@ var Health =
 "doctors"
 ];
 
-var Shopping = 
+exports.Shopping = 
 [
 "something",
 "today",
@@ -521,7 +521,7 @@ var Shopping =
 "customers"
 ];
 
-var SmallTalk = 
+exports.SmallTalk = 
 [
 "school",
 "today",
@@ -567,7 +567,7 @@ var SmallTalk =
 "enjoy"
 ];
 
-var Travel = 
+exports.Travel = 
 [
 "flight",
 "airport",
@@ -628,7 +628,7 @@ var Travel =
 "station"
 ];
 
-var Voting =
+exports.Voting =
 [
 "president",
 "election",

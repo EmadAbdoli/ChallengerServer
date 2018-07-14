@@ -3,6 +3,13 @@ var Backtory = require("backtory-sdk");
 // For Local
 //var Backtory = require("./../../api/node_modules/backtory-sdk");
 
+var keywordsFile = require("./keywords");
+
+/********************************************************************************** */
+/********************************************************************************** */
+
+var randomKeywordCounts = 20;
+
 /********************************************************************************** */
 /********************************************************************************** */
 
@@ -52,11 +59,11 @@ exports.calcTopic = function (choices) // Designed for 3 Topics
 
     var result = 0;
     if(res[1] > res[0]) result = 1;
-    if(res[1] == res[0]) result = utility.getRandomInt(2);
+    if(res[1] == res[0]) result = this.getRandomInt(2);
     if(res[2] > res[result]) result = 2;
     if(res[2] == res[result]) 
     {
-        if (utility.getRandomInt(2) == 0)
+        if (this.getRandomInt(2) == 0)
             result = 2;
     }
 
@@ -137,6 +144,48 @@ exports.setPlayersRelations = function(gid, participants)
     }
 
     console.log("players' games saved");
+}
+
+/********************************************************************************** */
+/********************************************************************************** */
+
+exports.getTopicKeywords = function(topic)
+{
+    var topicKeywordDict = {};
+    topicKeywordDict["Travel"] = keywordsFile.Travel;
+    topicKeywordDict["College Life"] = keywordsFile.CollegeLife;
+    topicKeywordDict["Employment"] = keywordsFile.Employment;
+    topicKeywordDict["Voting"] = keywordsFile.Voting;
+    topicKeywordDict["Small Talk"] = keywordsFile.SmallTalk;
+    topicKeywordDict["Driving"] = keywordsFile.Driving;
+    topicKeywordDict["At the Bank"] = keywordsFile.AtTheBank;
+    topicKeywordDict["Health"] = keywordsFile.Health;
+    topicKeywordDict["Crime"] = keywordsFile.Crime;
+    topicKeywordDict["Shopping"] = keywordsFile.Shopping;
+    topicKeywordDict["Food"] = keywordsFile.Food;
+
+    var tKeys = topicKeywordDict[topic];
+
+    // get 20 random keyword...
+    var randomKeywords = {};
+
+    for (var i = 0; i < randomKeywordCounts; i++)
+    {
+        var rand = this.getRandomInt(tKeys.length);
+
+        if ((rand in randomKeywords) == false)
+            randomKeywords[rand] = tKeys[rand];
+        else
+            i--;
+    }
+
+    var result = [];
+    for (var index in randomKeywords)
+    {
+        result.push(randomKeywords[index]);
+    }
+
+    return result;
 }
 
 /********************************************************************************** */
