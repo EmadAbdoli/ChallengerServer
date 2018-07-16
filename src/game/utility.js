@@ -142,8 +142,6 @@ exports.setPlayersRelations = function(gid, participants)
             success:function(tempPlayer){}
         });        
     }
-
-    console.log("players' games saved");
 }
 
 /********************************************************************************** */
@@ -190,3 +188,49 @@ exports.getTopicKeywords = function(topic)
 
 /********************************************************************************** */
 /********************************************************************************** */
+
+exports.setgameKeywordsId = function(gameId, keywordsGameId)
+{
+    var Game = Backtory.Object.extend("games");
+    var game = new Game();
+    game.set("_id", gameId);
+    game.set("keywordsGameId", keywordsGameId.toString());
+
+    game.save({
+        success:function(tempGame){}
+    });
+}
+
+/********************************************************************************** */
+/********************************************************************************** */
+
+exports.sendRequest = function(reqType, formParams, tkeywordsGameId)
+{
+    request({
+        url: "http://216.158.80.50/text_parser/" + reqType,
+        headers: {'content-type' : 'application/x-www-form-urlencoded'},
+        method: "POST",
+        form: formParams,
+    }, function (error, response, body){
+        
+        if (error == null)
+        {
+            switch (reqType) {
+                case "new_game":
+
+                    var myBody = JSON.parse(body);
+                    tkeywordsGameId.val = myBody.game_id;
+
+                    break;
+            
+                default:
+                    break;
+            }
+
+        }
+        else
+        {
+            return null;
+        }
+    });
+}
