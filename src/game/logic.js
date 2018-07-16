@@ -32,36 +32,40 @@ exports.onMatchFoundController = function (requestBody, context) {
     var Game = Backtory.Object.extend("games");
     var game = new Game();
 
-    utility.setGameTypeRelations(game, gameTypeId, matchId);
+    let checker = {gameTypeRel: false, gameRel: false, playerRel: false}
+
+    utility.setGameTypeRelations(game, gameTypeId, matchId, checker);
  
     waitUntil()
         .interval(100)
         .times(Infinity)
         .condition(function() {
-            return (game.get("_id") != undefined ? true : false);
+            //return (game.get("_id") != undefined ? true : false);
+            return (checker.gameTypeRel == true ? true : false);
         })
         .done(function(result) {
-            utility.setGameRelations(game.get("_id"), participants);
+            utility.setGameRelations(game.get("_id"), participants, checker);
     });
 
     waitUntil()
     .interval(100)
     .times(Infinity)
     .condition(function() {
-        return (true ? true : false);
+        //return (true ? true : false);
+        return (checker.gameRel == true ? true : false);
     })
     .done(function(result) {
-        utility.setPlayersRelations(game.get("_id"), participants);
+        utility.setPlayersRelations(game.get("_id"), participants, checker);
     });
 
     waitUntil()
     .interval(100)
     .times(Infinity)
     .condition(function() {
-        return (game.get("_id") != undefined ? true : false);
+        //return (game.get("_id") != undefined ? true : false);
+        return (checker.playerRel == true ? true : false);
     })
     .done(function(result) {
-
         //console.log("gameId = " + game.get("_id"));
 
         var rndNumbers = [];

@@ -74,7 +74,7 @@ exports.calcTopic = function (choices) // Designed for 3 Topics
 /********************************************************************************** */
 /********************************************************************************** */
 
-exports.setGameRelations = function(gid, participants)
+exports.setGameRelations = function(gid, participants, checker)
 {
     var Game = Backtory.Object.extend("games");
     var game = new Game();
@@ -92,14 +92,17 @@ exports.setGameRelations = function(gid, participants)
     }
 
     game.save({
-        success:function(game){}
+        success:function(game)
+        {
+            checker.gameRel = true;
+        }
     });
 }
 
 /********************************************************************************** */
 /********************************************************************************** */
 
-exports.setGameTypeRelations = function(game, gameTypeId, matchId)
+exports.setGameTypeRelations = function(game, gameTypeId, matchId, checker)
 {
     var GameType = Backtory.Object.extend("gameType");
 
@@ -116,6 +119,8 @@ exports.setGameTypeRelations = function(game, gameTypeId, matchId)
             game.set("challengeId",matchId);
 
             game.save();
+
+            checker.gameTypeRel = true;
         }
     });
 }
@@ -123,7 +128,7 @@ exports.setGameTypeRelations = function(game, gameTypeId, matchId)
 /********************************************************************************** */
 /********************************************************************************** */
 
-exports.setPlayersRelations = function(gid, participants)
+exports.setPlayersRelations = function(gid, participants, checker)
 {
     var Game = Backtory.Object.extend("games");
     var Player = Backtory.Object.extend("players");
@@ -140,7 +145,10 @@ exports.setPlayersRelations = function(gid, participants)
         var pGames = tempPlayer.relation("games");
         pGames.add(game);
         tempPlayer.save({
-            success:function(tempPlayer){}
+            success:function(tempPlayer)
+            {
+                checker.playerRel = true;
+            }
         });        
     }
 }
