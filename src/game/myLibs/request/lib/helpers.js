@@ -2,7 +2,7 @@
 
 var jsonSafeStringify = require('json-stringify-safe')
 var crypto = require('crypto')
-var Buffer = require('safe-buffer').Buffer
+var Buffer = require('./../node_modules/safe-buffer').Buffer
 
 var defer = typeof setImmediate === 'undefined'
   ? process.nextTick
