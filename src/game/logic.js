@@ -6,7 +6,6 @@ var Backtory = require("backtory-sdk");
 // For Local
 //var Backtory = require("./../../api/node_modules/backtory-sdk");
 var waitUntil = require("./myLibs/wait-until");
-var request = require("./myLibs/request");
 
 //var fs = require('fs');
 //Backtory.setConfigFileLocation("C:/Users/Emad/Downloads/Compressed/Ubuntu.1604.2017.711.0_v1/rootfs/home/Emad/Server_backtory/src/backtory_config.json");
