@@ -10,12 +10,12 @@
     "authenticationMode": "PUBLIC"
   },
   "matchFoundController": {
-    "handlerName": "game/logic.onMatchFoundController",
+    "handlerName": "game/matchFound.onMatchFoundController",
     "timeLimitInMilliSeconds": 10000,
     "authenticationMode": "PUBLIC"
   },
   "gameEventController": {
-    "handlerName": "game/logic.gameEventController",
+    "handlerName": "game/gameEvent.gameEventController",
     "timeLimitInMilliSeconds": 5000,
     "authenticationMode": "PUBLIC"
   }

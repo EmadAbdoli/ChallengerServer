@@ -3,7 +3,6 @@ var Backtory = require("backtory-sdk");
 // For Local
 //var Backtory = require("./../../api/node_modules/backtory-sdk");
 var request = require("./myLibs/request");
-
 var keywordsFile = require("./keywords");
 
 /********************************************************************************** */
