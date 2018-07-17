@@ -87,14 +87,24 @@ exports.onMatchFoundController = function (requestBody, context) {
             rndNumbers[2] = utility.getRandomInt(topicCount);
         }
 
-        props = {
-            "choices": {},
-            "topics": [],
-            "topic" : "",
-            "chosenKeywords": {},
-            "keywordsGameId" : "",
-            "gameId" : game.get("_id")
-        };
+        var realtimeGame = new Backtory.RealtimeGame(matchId);
+        realtimeGame.setProperties({
+            choices: {},
+            topics: [],
+            topic: "",
+            chosenKeywords: {},
+            keywordsGameId: "",
+            gameId: game.get("_id")
+        });
+
+        //props = {
+        //    "choices": {},
+        //    "topics": [],
+        //    "topic" : "",
+        //    "chosenKeywords": {},
+        //    "keywordsGameId" : "",
+        //    "gameId" : game.get("_id")
+        //};
 
         var selectedTopics = 
         [
@@ -103,7 +113,22 @@ exports.onMatchFoundController = function (requestBody, context) {
             keywordsFile.topics[rndNumbers[2]],
         ];
 
-        var tResult = {message: selectedTopics, properties: props};
+        //var tResult = {message: selectedTopics, properties: props};
+        var tResult = {message: selectedTopics};
+
+        /*
+        {
+            "message":["Voting","College Life","Small Talk"],
+            "properties":{
+                "choices":{},
+                "topics":[],
+                "topic":"",
+                "chosenKeywords":{},
+                "keywordsGameId":"",
+                "gameId":"5b4e1ff50f747e00015a75cf"
+            }
+        }
+        */
         
         // Return selected topics for this challenge
         // Todo: for push code on server uncomment this line
