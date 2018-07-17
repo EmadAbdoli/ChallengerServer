@@ -32,7 +32,7 @@ exports.onMatchFoundController = function (requestBody, context) {
     var Game = Backtory.Object.extend("games");
     var game = new Game();
 
-    let checker = {gameTypeRel: false, gameRel: false}
+    let checker = {gameTypeRel: false, gameRel: false};
 
     context.log("before setGameTypeRelations...");
 
@@ -68,7 +68,7 @@ exports.onMatchFoundController = function (requestBody, context) {
     .condition(function() {
         return (checker.gameTypeRel == true ? true : false);
     })
-    .done(function(result) {
+    .done(function(tt) {
 
         context.log("After All....");
 
@@ -110,6 +110,7 @@ exports.onMatchFoundController = function (requestBody, context) {
         // For Local
         //console.log(tResult);
         // For Server
+        context.log(tResult);
         context.succeed(tResult);
     });
 };
@@ -274,6 +275,16 @@ exports.gameEventController = function (requestBody, context) {
 //********************************************************************************************************** */
 //********************************************************************************************************** */
 
+var reqbody0 = {
+    "realtimeChallengeId":"5b4dde7de4b0115f590b850f",
+    "matchmakingName":"GameMatching1",
+    "participants":[
+        {"userId":"5b4457b7e4b0712f42bad646","skill":0,"metaData":"[\"emad666\",\"5b4457b74f83de0001e9bd59\"]"},
+        {"userId":"5b445c62e4b0a2a06398f896","skill":0,"metaData":"[\"milad222\",\"5b445c624f83de0001e9d101\"]"},
+        {"userId":"5b445c73e4b0a2a06398f8a0","skill":0,"metaData":"[\"zahra222\",\"5b445c735ce7180001bfaf7c\"]"}
+    ]
+}
+
 var reqbody = {
     "realtimeChallengeId": "123123edf456",
     "matchmakingName": "GameMatching1",
@@ -314,7 +325,7 @@ var reqbody2 = {
         "topic" : "",
         "chosenKeywords": {},
         "keywordsGameId" : "",
-        "gameId" : "5b4c9bcd0f747e0001d8f5b6"
+        "gameId" : "5b4dde7d0f747e00014d84e9"
     },
     "data" :{
         "choice": 0,
@@ -328,5 +339,5 @@ formParams.topic = "Health";
 formParams.keywords = '["doctor","problem","blood","appointment","results","emergency","medication","test","insurance","pressure","problems","stomach","professor","stress","antihistamine","sleep","breath","medicine","feeling","good","lately","health","effects","infection","chest","information","prescription","itching","trouble"]';
 
 //this.sendRequest("new_game", formParams);
-//this.onMatchFoundController(reqbody);
+//this.onMatchFoundController(reqbody0);
 //this.gameEventController(reqbody2);
