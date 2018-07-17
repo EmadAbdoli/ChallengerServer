@@ -87,15 +87,15 @@ exports.onMatchFoundController = function (requestBody, context) {
             rndNumbers[2] = utility.getRandomInt(topicCount);
         }
 
-        var realtimeGame = new Backtory.RealtimeGame(matchId);
-        realtimeGame.setProperties({
-            choices: {},
-            topics: [],
-            topic: "",
-            chosenKeywords: {},
-            keywordsGameId: "",
-            gameId: game.get("_id")
-        });
+        //var realtimeGame = new Backtory.RealtimeGame(matchId);
+        //realtimeGame.setProperties({
+        //    choices: {},
+        //    topics: [],
+        //    topic: "",
+        //    chosenKeywords: {},
+        //    keywordsGameId: "",
+        //    gameId: game.get("_id")
+        //});
 
         //props = {
         //    "choices": {},
