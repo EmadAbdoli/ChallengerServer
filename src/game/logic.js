@@ -32,41 +32,45 @@ exports.onMatchFoundController = function (requestBody, context) {
     var Game = Backtory.Object.extend("games");
     var game = new Game();
 
-    let checker = {gameTypeRel: false, gameRel: false, playerRel: false}
+    let checker = {gameTypeRel: false, gameRel: false}
+
+    context.log("before setGameTypeRelations...");
 
     utility.setGameTypeRelations(game, gameTypeId, matchId, checker);
  
     waitUntil()
-        .interval(100)
+        .interval(50)
         .times(Infinity)
         .condition(function() {
-            //return (game.get("_id") != undefined ? true : false);
             return (checker.gameTypeRel == true ? true : false);
         })
         .done(function(result) {
+
+            context.log("before setGameRelations...");
             utility.setGameRelations(game.get("_id"), participants, checker);
     });
 
     waitUntil()
-    .interval(100)
+    .interval(50)
     .times(Infinity)
     .condition(function() {
-        //return (true ? true : false);
         return (checker.gameRel == true ? true : false);
     })
     .done(function(result) {
-        utility.setPlayersRelations(game.get("_id"), participants, checker);
+
+        context.log("before setPlayersRelations...");
+        utility.setPlayersRelations(game.get("_id"), participants);
     });
 
     waitUntil()
-    .interval(100)
+    .interval(50)
     .times(Infinity)
     .condition(function() {
-        //return (game.get("_id") != undefined ? true : false);
-        return (checker.playerRel == true ? true : false);
+        return (checker.gameTypeRel == true ? true : false);
     })
     .done(function(result) {
-        //console.log("gameId = " + game.get("_id"));
+
+        context.log("After All....");
 
         var rndNumbers = [];
         rndNumbers[0] = utility.getRandomInt(topicCount);
@@ -265,11 +269,6 @@ exports.gameEventController = function (requestBody, context) {
         context.succeed(tResult);
     }
 };
-
-//********************************************************************************************************** */
-//********************************************************************************************************** */
-//********************************************************************************************************** */
-
 
 //********************************************************************************************************** */
 //********************************************************************************************************** */

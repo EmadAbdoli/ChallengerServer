@@ -11,7 +11,7 @@
   },
   "matchFoundController": {
     "handlerName": "game/logic.onMatchFoundController",
-    "timeLimitInMilliSeconds": 2000,
+    "timeLimitInMilliSeconds": 10000,
     "authenticationMode": "PUBLIC"
   },
   "gameEventController": {

@@ -128,7 +128,7 @@ exports.setGameTypeRelations = function(game, gameTypeId, matchId, checker)
 /********************************************************************************** */
 /********************************************************************************** */
 
-exports.setPlayersRelations = function(gid, participants, checker)
+exports.setPlayersRelations = function(gid, participants)
 {
     var Game = Backtory.Object.extend("games");
     var Player = Backtory.Object.extend("players");
@@ -145,10 +145,7 @@ exports.setPlayersRelations = function(gid, participants, checker)
         var pGames = tempPlayer.relation("games");
         pGames.add(game);
         tempPlayer.save({
-            success:function(tempPlayer)
-            {
-                checker.playerRel = true;
-            }
+            success:function(tempPlayer){}
         });        
     }
 }
