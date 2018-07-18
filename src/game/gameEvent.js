@@ -1,7 +1,6 @@
 var utility = require("./utility");
 var waitUntil = require("./myLibs/wait-until");
 
-
 // For server
 var Backtory = require("backtory-sdk");
 // For Local
@@ -119,8 +118,22 @@ exports.gameEventController = function (requestBody, context) {
 
                 if (Object.keys(props.chosenKeywords).length == playerCounts)
                 {
+                    var keywordsUnion = [];
+                    var userKeywords = props.chosenKeywords;
 
-                    // send get_paragraphs for API
+                    for (var i = 0; i < playerCounts; i++)
+                    {
+                        var tUserId = Object.keys(userKeywords)[i];
+                        var tUserKeys = userKeywords[tUserId];
+
+                        for (var j = 0; j < tUserKeys.length; j++)
+                        {
+                            if (keywordsUnion.includes[tUserKeys[j]] == false)
+                                keywordsUnion.push(tUserKeys[j]);
+                        }
+                    }
+
+                    //console.log(keywordsUnion);
                 }
                 else
                 {
@@ -200,6 +213,24 @@ var reqbody2 = {
         "topics": '["Selling a House","At the Bank","Health"]',
     },
     "clientRequestId": "26e7379d-f2e6-46d3-be78-3f300345517e"
+}
+
+var reqbody3 = {
+  "message": "selectedKeywords",
+  "data": {
+    "userKeywords": "[\"yes\",\"mccain\",\"news\",\"mail\",\"policy\",\"privacy\",\"donation\",\"vote\",\"compete\",\"reporter\"]"
+  },
+  "properties":{
+      "choices":{"5b4457b7e4b0712f42bad646":"0","5b445c62e4b0a2a06398f896":"2","5b445c73e4b0a2a06398f8a0":"0"},
+      "topics":["Voting","Crime","Driving"],
+      "topic":"Voting",
+      "chosenKeywords":{
+          "5b4457b7e4b0712f42bad646":["yes","mccain","news","mail","policy","privacy","donation","vote","compete","reporter"]
+        },
+      "keywordsGameId":45,
+      "gameId":"5b4f1d846374f60001d4a8f7"
+  },
+  "clientRequestId": "2321caee-8e04-4904-bfb6-5c7f255e6945"
 }
 
 var formParams = {};
