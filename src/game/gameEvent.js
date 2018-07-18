@@ -8,7 +8,6 @@ var Backtory = require("backtory-sdk");
 
 //var fs = require('fs');
 //Backtory.setConfigFileLocation("C:/Users/Emad/Downloads/Compressed/Ubuntu.1604.2017.711.0_v1/rootfs/home/Emad/Server_backtory/src/backtory_config.json");
-var playerCounts = 3;
 
 
 //********************************************************************************************************** */
@@ -34,6 +33,7 @@ exports.gameEventController = function (requestBody, context) {
    * }
    */
 
+    //console.log(requestBody);
     context.log(requestBody);
     //context.log(requestBody.properties);
 
@@ -67,7 +67,7 @@ exports.gameEventController = function (requestBody, context) {
                 
                 props.topics = JSON.parse(requestBody.data.topics);
 
-                if (Object.keys(props.choices).length == playerCounts)
+                if (Object.keys(props.choices).length == utility.playerCounts)
                 {
                     checkKeywordsGameId = true;
 
@@ -89,6 +89,7 @@ exports.gameEventController = function (requestBody, context) {
                     formParams.keywords += ']';
 
                     utility.sendRequest(reqType, formParams, tkeywordsGameId);
+                    //utility.setRound(props.gameId, props.topic, Object.keys(props.choices), );
 
                     result = {operation: 'subjectSelected', 
                                 userId: userId, choice: requestBody.data.choice, topic : topicIndex, keywords: tKeywords};
@@ -116,24 +117,25 @@ exports.gameEventController = function (requestBody, context) {
             {
                 props.chosenKeywords[userId] = userSelectedKeywords;
 
-                if (Object.keys(props.chosenKeywords).length == playerCounts)
+                if (Object.keys(props.chosenKeywords).length == utility.playerCounts)
                 {
                     var keywordsUnion = [];
-                    var userKeywords = props.chosenKeywords;
 
-                    for (var i = 0; i < playerCounts; i++)
+                    for (var i = 0; i < utility.playerCounts; i++)
                     {
-                        var tUserId = Object.keys(userKeywords)[i];
-                        var tUserKeys = userKeywords[tUserId];
+                        var tUserKeys = props.chosenKeywords[props.uids[i]];
 
                         for (var j = 0; j < tUserKeys.length; j++)
                         {
-                            if (keywordsUnion.includes[tUserKeys[j]] == false)
+                            if (keywordsUnion.includes(tUserKeys[j]) == false)
                                 keywordsUnion.push(tUserKeys[j]);
                         }
                     }
 
-                    //console.log(keywordsUnion);
+                    //context.log("keywrods Union:");
+                    //context.log(keywordsUnion);
+
+                    result = { operation : 'keywordsReady', userId: userId, Union: keywordsUnion};
                 }
                 else
                 {
@@ -201,6 +203,8 @@ var reqbody2 = {
     "message": "SubjectSelection",
     "userId" : "4",
     "properties": {
+        "uids": ["5b4457b7e4b0712f42bad646","5b445c73e4b0a2a06398f8a0","5b445c62e4b0a2a06398f896"],
+        "pids": ["5b4457b74f83de0001e9bd59","5b445c735ce7180001bfaf7c","5b445c624f83de0001e9d101"],
         "choices": {1:1,2:1},
         "topics": ["Selling a House","At the Bank","Health"],
         "topic" : "",
@@ -216,21 +220,29 @@ var reqbody2 = {
 }
 
 var reqbody3 = {
-  "message": "selectedKeywords",
-  "data": {
-    "userKeywords": "[\"yes\",\"mccain\",\"news\",\"mail\",\"policy\",\"privacy\",\"donation\",\"vote\",\"compete\",\"reporter\"]"
-  },
-  "properties":{
-      "choices":{"5b4457b7e4b0712f42bad646":"0","5b445c62e4b0a2a06398f896":"2","5b445c73e4b0a2a06398f8a0":"0"},
-      "topics":["Voting","Crime","Driving"],
-      "topic":"Voting",
-      "chosenKeywords":{
-          "5b4457b7e4b0712f42bad646":["yes","mccain","news","mail","policy","privacy","donation","vote","compete","reporter"]
+    "message":"selectedKeywords",
+    "userId":"5b445c62e4b0a2a06398f896",
+    "challengeId":"5b4f31c7e4b0115f590dda9d",
+    "data":{
+        "userKeywords":"[\"president\",\"obama\",\"voting\",\"year\",\"polling\",\"questions\",\"news\",\"new\",\"faith\",\"volunteering\"]"
+    },
+    "properties":{
+        "uids": ["5b4457b7e4b0712f42bad646","5b445c73e4b0a2a06398f8a0","5b445c62e4b0a2a06398f896"],
+        "pids": ["5b4457b74f83de0001e9bd59","5b445c735ce7180001bfaf7c","5b445c624f83de0001e9d101"],
+        "choices":{
+            "5b4457b7e4b0712f42bad646":"0",
+            "5b445c73e4b0a2a06398f8a0":"1",
+            "5b445c62e4b0a2a06398f896":"2"
         },
-      "keywordsGameId":45,
-      "gameId":"5b4f1d846374f60001d4a8f7"
-  },
-  "clientRequestId": "2321caee-8e04-4904-bfb6-5c7f255e6945"
+        "topics":["Food","Voting","Shopping"],
+        "topic":"Voting",
+        "chosenKeywords":{
+            "5b4457b7e4b0712f42bad646":["president","obama","voting","year","polling","questions","news","new","faith","volunteering"],
+            "5b445c73e4b0a2a06398f8a0":["president","obama","voting","year","polling","questions","news","new","faith","volunteering"]
+        },
+        "keywordsGameId":47,
+        "gameId":"5b4f31c76374f60001d52af9"
+    }
 }
 
 var formParams = {};

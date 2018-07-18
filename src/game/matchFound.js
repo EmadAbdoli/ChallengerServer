@@ -31,7 +31,7 @@ exports.onMatchFoundController = function (requestBody, context) {
 
     let checker = {gameTypeRel: false, gameRel: false};
 
-    context.log("before setGameTypeRelations...");
+    //context.log("before setGameTypeRelations...");
 
     utility.setGameTypeRelations(game, gameTypeId, matchId, checker);
     
@@ -43,7 +43,7 @@ exports.onMatchFoundController = function (requestBody, context) {
         })
         .done(function(result) {
 
-            context.log("before setGameRelations...");
+            //context.log("before setGameRelations...");
             utility.setGameRelations(game.get("_id"), participants, checker);
     });
 
@@ -55,7 +55,7 @@ exports.onMatchFoundController = function (requestBody, context) {
     })
     .done(function(result) {
 
-        context.log("before setPlayersRelations...");
+        //context.log("before setPlayersRelations...");
         utility.setPlayersRelations(game.get("_id"), participants);
     });
 
@@ -67,7 +67,7 @@ exports.onMatchFoundController = function (requestBody, context) {
     })
     .done(function(tt) {
 
-        context.log("After All....");
+        //context.log("After All....");
 
         var rndNumbers = [];
         rndNumbers[0] = utility.getRandomInt(topicCount);
@@ -84,14 +84,29 @@ exports.onMatchFoundController = function (requestBody, context) {
             rndNumbers[2] = utility.getRandomInt(topicCount);
         }
 
+        var tpids = [];
+        for (var i = 0; i < utility.playerCounts; i++)
+        {
+            tpids.push(utility.getUserPid(participants[i]));
+        }
+
+        var tuids = [];
+        for (var i = 0; i < utility.playerCounts; i++)
+        {
+            tuids.push(participants[i].userId);
+        }
+
         var realtimeGame = new Backtory.RealtimeGame(matchId);
         realtimeGame.setProperties({
+            uids: tuids,
+            pids: tpids,
             choices: {},
             topics: [],
             topic: "",
             chosenKeywords: {},
             keywordsGameId: "",
-            gameId: game.get("_id")
+            gameId: game.get("_id"),
+            rounds: []
         });
 
         //props = {
