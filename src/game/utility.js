@@ -2,6 +2,7 @@
 var Backtory = require("backtory-sdk");
 // For Local
 //var Backtory = require("./../../api/node_modules/backtory-sdk");
+var waitUntil = require("./myLibs/wait-until");
 var request = require("./myLibs/request");
 var keywordsFile = require("./keywords");
 
@@ -11,6 +12,7 @@ var keywordsFile = require("./keywords");
 var randomKeywordCounts = 20;
 
 exports.playerCounts = 3;
+var pCounts = 3;
 
 /********************************************************************************** */
 /********************************************************************************** */
@@ -241,3 +243,80 @@ exports.sendRequest = function(reqType, formParams, tkeywordsGameId)
         }
     });
 }
+
+/********************************************************************************** */
+/********************************************************************************** */
+
+exports.setRoundParticipants = function(gameId, topic, pids)
+{
+    var Round = Backtory.Object.extend("rounds");
+    var Game = Backtory.Object.extend("games");
+    var Player = Backtory.Object.extend("players");
+    var Participants = Backtory.Object.extend("participants");
+    
+    var partiIds = [];
+    let counter = {val: 0};
+    var rid = {val: 0};
+
+    var game = new Game();
+    game.set("_id", gameId);
+
+    var round = new Round();
+    round.set("topic", topic);
+    round.set("game", game);
+
+    round.save({
+        success:function(tRound)
+        {
+            rid.val = tRound.get("_id");
+
+            for (var i = 0; i < pCounts; i++)
+            {
+                var tempParti = new Participants();
+                var tempPlayer = new Player();
+                tempPlayer.set("_id",pids[i]);
+
+                tempParti.set("player",tempPlayer);
+                tempParti.set("round", tRound);
+
+                tempParti.save({
+                    success:function(parti)
+                    {
+                        partiIds.push(parti.get("_id"));
+                        counter.val = counter.val + 1;
+                    }
+                });
+            }
+        }
+    });
+
+    waitUntil()
+        .interval(100)
+        .times(Infinity)
+        .condition(function() {
+            return (counter.val == pCounts ? true : false);
+        })
+        .done(function(temp) {
+
+            var newRound = new Round();
+            var roundPartiRelation = newRound.relation("participants");
+            newRound.set("_id",rid.val);
+
+            for (var i = 0; i < pCounts; i++)
+            {
+                var tempParti = new Participants();
+                tempParti.set("_id", partiIds[i]);
+                roundPartiRelation.add(tempParti);
+            }
+
+            newRound.save({
+                success:function(alaki){}
+            });
+
+
+        });
+}
+
+//var pids = ["5b4457b74f83de0001e9bd59","5b445c735ce7180001bfaf7c","5b445c624f83de0001e9d101"];
+
+//this.setRoundParticipants("5b4f5bb6b291a40001c7ef1b","Driving",pids);

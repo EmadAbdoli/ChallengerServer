@@ -89,7 +89,7 @@ exports.gameEventController = function (requestBody, context) {
                     formParams.keywords += ']';
 
                     utility.sendRequest(reqType, formParams, tkeywordsGameId);
-                    //utility.setRound(props.gameId, props.topic, Object.keys(props.choices), );
+                    utility.setRoundParticipants(props.gameId, props.topic, props.pids);
 
                     result = {operation: 'subjectSelected', 
                                 userId: userId, choice: requestBody.data.choice, topic : topicIndex, keywords: tKeywords};
