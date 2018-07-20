@@ -42,8 +42,7 @@ exports.gameEventController = function (requestBody, context) {
     var props = requestBody.properties;
 
     var result;
-    var checkKeywordsGameId = false;
-    let tkeywordsGameId = {val: -1};
+    var dontsendResult = false;
 
 
     switch (eventType) 
@@ -69,30 +68,39 @@ exports.gameEventController = function (requestBody, context) {
 
                 if (Object.keys(props.choices).length == utility.playerCounts)
                 {
-                    checkKeywordsGameId = true;
+                    dontsendResult = true;
+                    let tkeywordsGameId = {val: -1};
 
                     var topicIndex = utility.calcTopic(props.choices);
                     props["topic"]=  props.topics[topicIndex];
 
                     var tKeywords = utility.getTopicKeywords(props["topic"], topicIndex);
 
-                    var reqType = "new_game";
-                    var formParams = {};
-                    formParams.topic = props.topics[topicIndex];
-                    
-                    formParams.keywords = '[';
-                    for (var i = 0; i < tKeywords.length; i++)
-                    {
-                        formParams.keywords += '"' + tKeywords[i] + '"';
-                        if ( i != tKeywords.length - 1) formParams.keywords += ',';
-                    }
-                    formParams.keywords += ']';
-
-                    utility.sendRequest(reqType, formParams, tkeywordsGameId);
+                    utility.sendNewGameRequest(props["topic"], tKeywords, tkeywordsGameId);
                     utility.setRoundParticipants(props.gameId, props.topic, props.pids);
 
                     result = {operation: 'subjectSelected', 
                                 userId: userId, choice: requestBody.data.choice, topic : topicIndex, keywords: tKeywords};
+
+                    waitUntil()
+                    .interval(100)
+                    .times(Infinity)
+                    .condition(function() {
+                        return (tkeywordsGameId.val != -1 ? true : false);
+                    })
+                    .done(function(temp) {
+                        
+                        props.keywordsGameId = tkeywordsGameId.val;
+            
+                        utility.setgameKeywordsId(props.gameId, props.keywordsGameId);
+            
+                        var tResult = {message: JSON.stringify(result), properties: props};
+                        // For Local
+                        //console.log(tResult);
+                        // For Server
+                        context.log(tResult);
+                        context.succeed(tResult);
+                    });
                 }
                 else
                 {
@@ -119,6 +127,7 @@ exports.gameEventController = function (requestBody, context) {
 
                 if (Object.keys(props.chosenKeywords).length == utility.playerCounts)
                 {
+                    dontsendResult = true;
                     var keywordsUnion = [];
 
                     for (var i = 0; i < utility.playerCounts; i++)
@@ -132,10 +141,31 @@ exports.gameEventController = function (requestBody, context) {
                         }
                     }
 
-                    //context.log("keywrods Union:");
-                    //context.log(keywordsUnion);
+                    let checker = {val: false, blanksKeys: {}, commonKeys: [], theText: ""};
+                    utility.sendGetParagraphsRequest(props.keywordsGameId, keywordsUnion, checker);
 
-                    result = { operation : 'keywordsReady', userId: userId, Union: keywordsUnion};
+                    waitUntil()
+                    .interval(100)
+                    .times(Infinity)
+                    .condition(function() {
+                        return (checker.val == true ? true : false);
+                    })
+                    .done(function(temp) {
+
+                        result = { operation : 'textReady', userId: userId,
+                                    blankKeys: checker.blanksKeys, commonKeys: checker.commonKeys, theText: checker.theText};
+
+                        props.blankKeys = checker.blanksKeys;
+                        props.commonKeys = checker.commonKeys;
+                        props.theText = checker.theText;
+            
+                        var tResult = {message: JSON.stringify(result), properties: props};
+                        // For Local
+                        //console.log(tResult);
+                        // For Server
+                        context.log(tResult);
+                        context.succeed(tResult);
+                    });
                 }
                 else
                 {
@@ -151,29 +181,7 @@ exports.gameEventController = function (requestBody, context) {
             break;
     }
 
-    if (checkKeywordsGameId)
-    {
-        waitUntil()
-        .interval(100)
-        .times(Infinity)
-        .condition(function() {
-            return (tkeywordsGameId.val != -1 ? true : false);
-        })
-        .done(function(temp) {
-            
-            props.keywordsGameId = tkeywordsGameId.val;
-
-            utility.setgameKeywordsId(props.gameId, props.keywordsGameId);
-
-            var tResult = {message: JSON.stringify(result), properties: props};
-            // For Local
-            //console.log(tResult);
-            // For Server
-            context.log(tResult);
-            context.succeed(tResult);
-        });
-    }
-    else
+    if(dontsendResult == false)
     {
         //context.log(props);
         var tResult = {message: JSON.stringify(result), properties: props};
@@ -241,7 +249,10 @@ var reqbody3 = {
             "5b445c73e4b0a2a06398f8a0":["president","obama","voting","year","polling","questions","news","new","faith","volunteering"]
         },
         "keywordsGameId":47,
-        "gameId":"5b4f31c76374f60001d52af9"
+        "gameId":"5b4f31c76374f60001d52af9",
+        "theText": "",
+        "blankKeys": {},
+        "commonKeys": []
     }
 }
 
@@ -250,4 +261,4 @@ formParams.topic = "Health";
 formParams.keywords = '["doctor","problem","blood","appointment","results","emergency","medication","test","insurance","pressure","problems","stomach","professor","stress","antihistamine","sleep","breath","medicine","feeling","good","lately","health","effects","infection","chest","information","prescription","itching","trouble"]';
 
 
-//this.gameEventController(reqbody2);
+//this.gameEventController(reqbody3);

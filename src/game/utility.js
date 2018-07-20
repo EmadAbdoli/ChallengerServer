@@ -3,6 +3,7 @@ var Backtory = require("backtory-sdk");
 // For Local
 //var Backtory = require("./../../api/node_modules/backtory-sdk");
 var waitUntil = require("./myLibs/wait-until");
+var utility = require("./utility");
 var request = require("./myLibs/request");
 var keywordsFile = require("./keywords");
 
@@ -12,7 +13,7 @@ var keywordsFile = require("./keywords");
 var randomKeywordCounts = 20;
 
 exports.playerCounts = 3;
-var pCounts = 3;
+exports.minBlanksCount = 10;
 
 /********************************************************************************** */
 /********************************************************************************** */
@@ -213,10 +214,57 @@ exports.setgameKeywordsId = function(gameId, keywordsGameId)
 /********************************************************************************** */
 /********************************************************************************** */
 
-exports.sendRequest = function(reqType, formParams, tkeywordsGameId)
+exports.sendNewGameRequest = function(topic, tKeywords, tkeywordsGameId)
 {
+    var formParams = {};
+    formParams.topic = topic;
+    
+    formParams.keywords = '[';
+    for (var i = 0; i < tKeywords.length; i++)
+    {
+        formParams.keywords += '"' + tKeywords[i] + '"';
+        if ( i != tKeywords.length - 1) formParams.keywords += ',';
+    }
+    formParams.keywords += ']';
+
     request({
-        url: "http://216.158.80.50/text_parser/" + reqType,
+        url: "http://216.158.80.50/text_parser/new_game",
+        headers: {'content-type' : 'application/x-www-form-urlencoded'},
+        method: "POST",
+        form: formParams,
+    }, function (error, response, body){
+
+        if (error == null)
+        {
+            var myBody = JSON.parse(body);
+            tkeywordsGameId.val = myBody.game_id;
+        }
+        else
+        {
+            return null;
+        }
+    });
+}
+
+/********************************************************************************** */
+/********************************************************************************** */
+
+exports.sendGetParagraphsRequest = function(keywordsGameId, keywordsUnion, checker)
+{
+    var formParams = {};
+    formParams.game_id = keywordsGameId;
+
+    formParams.keywords = '[';
+    for (var i = 0; i < keywordsUnion.length; i++)
+    {
+        formParams.keywords += '"' + keywordsUnion[i] + '"';
+        if ( i != keywordsUnion.length - 1) formParams.keywords += ',';
+    }
+    formParams.keywords += ']';
+
+
+    request({
+        url: "http://216.158.80.50/text_parser/get_containing_paragraphs",
         headers: {'content-type' : 'application/x-www-form-urlencoded'},
         method: "POST",
         form: formParams,
@@ -224,18 +272,100 @@ exports.sendRequest = function(reqType, formParams, tkeywordsGameId)
         
         if (error == null)
         {
-            switch (reqType) {
-                case "new_game":
+            var myBody = JSON.parse(body);
+            var paragraphs = myBody.paragraphs;
 
-                    var myBody = JSON.parse(body);
-                    tkeywordsGameId.val = myBody.game_id;
-
-                    break;
-            
-                default:
-                    break;
+            for (var i = 0; i < paragraphs.length; i++)
+            {
+                var item = paragraphs[i];
+                if(item.length <= 10)
+                {
+                    var index = paragraphs.indexOf(item);
+                    if (index > -1)
+                    {
+                        paragraphs.splice(index, 1);
+                        i--;
+                    }
+                }
             }
 
+            var pindex = utility.getRandomInt(paragraphs.length);
+            var theText = paragraphs[pindex];
+
+            console.log(theText);
+
+            var textKeys = theText.split(" ");
+            for(var i = 0; i < keywordsFile.forbiddenBlanks.length; i++)
+            {
+                var index = textKeys.indexOf(keywordsFile.forbiddenBlanks[i]);
+                while (index != -1)
+                {
+                    textKeys.splice(index, 1);
+                    index = textKeys.indexOf(keywordsFile.forbiddenBlanks[i]);
+                }
+            }
+
+            var blanksKeys = {};
+            var commonKeys = [];
+
+            var blankCounter = 0;
+            keywordsUnion.forEach(keyword => {
+
+                var temp = keyword;
+                var bySpace = false;
+                if (keyword.length <= 3) { temp = " "+keyword+" "; bySpace = true;}
+                var index = theText.search(temp);
+
+                if (index != -1)
+                {
+                    if (bySpace == true)
+                        theText = theText.replace(temp.toLowerCase(), " %BLANK% ");
+                    else
+                        theText = theText.replace(temp.toLowerCase(), "%BLANK%");
+
+                    blankCounter++;
+                    blanksKeys[index] = keyword;
+
+                    var index = textKeys.indexOf(keyword);
+                    if (index != -1)    textKeys.splice(index, 1);
+                }
+            });
+
+            if (blankCounter <= utility.minBlanksCount)
+            {
+                for (var i = 0; i < utility.minBlanksCount - blankCounter; i++)
+                {
+                    var randomIndex = utility.getRandomInt(textKeys.length);
+                    var randKey = textKeys[randomIndex];
+                    textKeys.splice(randomIndex, 1);
+
+
+                    var temp = randKey;
+                    var bySpace = false;
+                    if (randKey.length <= 3) { temp = " "+randKey+" "; bySpace = true;}
+                    var index = theText.search(temp);
+                    if (index != -1)
+                    {
+                        blanksKeys[index] = randKey;
+                        commonKeys.push(randKey);
+
+                        if (bySpace)
+                            theText = theText.replace(temp, " %BLANK% ");
+                        else
+                            theText = theText.replace(temp, "%BLANK%");
+                    }
+                    else
+                    {
+                        i--;
+                    }
+                }
+            }
+
+            checker.blanksKeys = blanksKeys;
+            checker.commonKeys = commonKeys;
+            checker.theText = theText;
+
+            checker.val = true;
         }
         else
         {
@@ -270,7 +400,7 @@ exports.setRoundParticipants = function(gameId, topic, pids)
         {
             rid.val = tRound.get("_id");
 
-            for (var i = 0; i < pCounts; i++)
+            for (var i = 0; i < utility.playerCounts; i++)
             {
                 var tempParti = new Participants();
                 var tempPlayer = new Player();
@@ -294,7 +424,7 @@ exports.setRoundParticipants = function(gameId, topic, pids)
         .interval(100)
         .times(Infinity)
         .condition(function() {
-            return (counter.val == pCounts ? true : false);
+            return (counter.val == utility.playerCounts ? true : false);
         })
         .done(function(temp) {
 
@@ -302,7 +432,7 @@ exports.setRoundParticipants = function(gameId, topic, pids)
             var roundPartiRelation = newRound.relation("participants");
             newRound.set("_id",rid.val);
 
-            for (var i = 0; i < pCounts; i++)
+            for (var i = 0; i < utility.playerCounts; i++)
             {
                 var tempParti = new Participants();
                 tempParti.set("_id", partiIds[i]);
@@ -320,3 +450,5 @@ exports.setRoundParticipants = function(gameId, topic, pids)
 //var pids = ["5b4457b74f83de0001e9bd59","5b445c735ce7180001bfaf7c","5b445c624f83de0001e9d101"];
 
 //this.setRoundParticipants("5b4f5bb6b291a40001c7ef1b","Driving",pids);
+//let alaki = {val:false};
+//this.sendGetParagraphsRequest(4, ["doctor","problem","blood","appointment","results","emergency","medication","test","stress","antihistamine","sleep","breath","medicine"], alaki);

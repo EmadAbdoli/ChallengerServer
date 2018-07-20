@@ -106,7 +106,9 @@ exports.onMatchFoundController = function (requestBody, context) {
             chosenKeywords: {},
             keywordsGameId: "",
             gameId: game.get("_id"),
-            rounds: []
+            theText: "",
+            blankKeys: {},
+            commonKeys: []
         });
 
         //props = {

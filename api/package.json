@@ -21,6 +21,7 @@
         "node-rest-client": "2.0.1",
         "pug": "*",
         "randomstring": "1.1.5",
+        "regex": "^0.1.1",
         "request": "^2.87.0",
         "unirest": "0.5.1",
         "wait-until": "0.0.2"

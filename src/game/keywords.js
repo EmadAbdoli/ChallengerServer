@@ -27,6 +27,18 @@ exports.topics =
     //"Selling a House"
 ];
 
+exports.forbiddenBlanks =
+[
+    "A:",
+    "B:",
+    "a",
+    ".",
+    "?",
+    "!",
+    "...",
+    ""
+];
+
 exports.AtTheBank =
 [
 "account",
