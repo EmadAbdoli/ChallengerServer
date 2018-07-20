@@ -152,8 +152,15 @@ exports.gameEventController = function (requestBody, context) {
                     })
                     .done(function(temp) {
 
+                        var blanksKeywordsKeys = Object.keys(checker.blanksKeys);
+                        var blanksKeyArr = [];
+                        for (var i = 0; i < blanksKeywordsKeys.length; i++)
+                        {
+                            blanksKeyArr.push(checker.blanksKeys[blanksKeywordsKeys[i]]);
+                        }
+
                         result = { operation : 'textReady', userId: userId,
-                                    blankKeys: checker.blanksKeys, commonKeys: checker.commonKeys, theText: checker.theText};
+                                    blanksKeys: blanksKeyArr, commonKeys: checker.commonKeys, theText: checker.theText};
 
                         props.blankKeys = checker.blanksKeys;
                         props.commonKeys = checker.commonKeys;
