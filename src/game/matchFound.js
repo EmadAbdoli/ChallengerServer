@@ -127,8 +127,8 @@ exports.onMatchFoundController = function (requestBody, context) {
             keywordsFile.topics[rndNumbers[2]],
         ];
 
-        //var tResult = {message: selectedTopics, properties: props};
-        var tResult = {message: selectedTopics};
+        var tResult = {message: selectedTopics, participants: participants};
+        //var tResult = {message: selectedTopics};
 
         /*
         {
