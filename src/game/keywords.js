@@ -32,6 +32,7 @@ exports.forbiddenBlanks =
     "A:",
     "B:",
     "a",
+    "an",
     ".",
     "?",
     "!",

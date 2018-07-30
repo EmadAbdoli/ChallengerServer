@@ -39,7 +39,7 @@ exports.onMatchFoundController = function (requestBody, context) {
         .interval(50)
         .times(Infinity)
         .condition(function() {
-            return (checker.gameTypeRel == true ? true : false);
+            return (game.get("_id") != null ? true : false);
         })
         .done(function(result) {
 
@@ -51,7 +51,7 @@ exports.onMatchFoundController = function (requestBody, context) {
     .interval(50)
     .times(Infinity)
     .condition(function() {
-        return (checker.gameRel == true ? true : false);
+        return (game.get("_id") != null ? true : false);
     })
     .done(function(result) {
 
@@ -63,7 +63,7 @@ exports.onMatchFoundController = function (requestBody, context) {
     .interval(50)
     .times(Infinity)
     .condition(function() {
-        return (checker.gameTypeRel == true ? true : false);
+        return (game.get("_id") != null ? true : false);
     })
     .done(function(tt) {
 
@@ -162,9 +162,9 @@ var reqbody0 = {
     "realtimeChallengeId":"5b4dde7de4b0115f590b850f",
     "matchmakingName":"GameMatching1",
     "participants":[
-        {"userId":"5b4457b7e4b0712f42bad646","skill":0,"metaData":"[\"emad666\",\"5b4457b74f83de0001e9bd59\"]"},
-        {"userId":"5b445c62e4b0a2a06398f896","skill":0,"metaData":"[\"milad222\",\"5b445c624f83de0001e9d101\"]"},
-        {"userId":"5b445c73e4b0a2a06398f8a0","skill":0,"metaData":"[\"zahra222\",\"5b445c735ce7180001bfaf7c\"]"}
+        {"userId":"5b4457b7e4b0712f42bad646","skill":0,"metaData":"[\"emad666\",\"5b4457b74f83de0001e9bd59\",\"1\"]"},
+        {"userId":"5b445c62e4b0a2a06398f896","skill":0,"metaData":"[\"milad222\",\"5b445c624f83de0001e9d101\",\"2\"]"},
+        {"userId":"5b445c73e4b0a2a06398f8a0","skill":0,"metaData":"[\"zahra222\",\"5b445c735ce7180001bfaf7c\",\"2\"]"}
     ]
 }
 
@@ -175,16 +175,16 @@ var reqbody = {
         [
             {"userId":"5b445c62e4b0a2a06398f896",
             "skill":0,
-            "metaData":'["milad222","5b445c624f83de0001e9d101"]'
+            "metaData":'["milad222","5b445c624f83de0001e9d101",\"1\"]'
         },
             {"userId":"5b445c73e4b0a2a06398f8a0",
             "skill":0,
-            "metaData":'["zahra222","5b445c735ce7180001bfaf7c"]'
+            "metaData":'["zahra222","5b445c735ce7180001bfaf7c",\"2\"]'
         },
         {
             "userId":"5b4457b7e4b0712f42bad646",
             "skill":0,
-            "metaData": '["emad666","5b4457b74f83de0001e9bd59"]'
+            "metaData": '["emad666","5b4457b74f83de0001e9bd59",\"2\"]'
         }
         ]
 };
