@@ -59,7 +59,7 @@ exports.onMatchFoundController = function (requestBody, context) {
     */
     waitUntil()
     .interval(50)
-    .times(Infinity)
+    .times(20)
     .condition(function() {
         return (game.get("_id") != null ? true : false);
     })

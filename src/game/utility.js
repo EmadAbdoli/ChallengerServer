@@ -80,6 +80,8 @@ exports.calcTopic = function (choices) // Designed for 3 Topics
 
 exports.setGameRelations = function(gid, participants)
 {
+    context.log("In setGameRelations: " + gid.toString());
+
     var Game = Backtory.Object.extend("games");
     var game = new Game();
     var gamePlayerRelation = game.relation("players");
@@ -134,6 +136,8 @@ exports.setGameTypeRelations = function(game, gameTypeId, matchId, participants)
 
 exports.setPlayersRelations = function(gid, participants)
 {
+    context.log("In setGameRelations: " + gid.toString());
+
     var Game = Backtory.Object.extend("games");
     var Player = Backtory.Object.extend("players");
     
