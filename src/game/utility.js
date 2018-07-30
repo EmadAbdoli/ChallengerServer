@@ -78,7 +78,7 @@ exports.calcTopic = function (choices) // Designed for 3 Topics
 /********************************************************************************** */
 /********************************************************************************** */
 
-exports.setGameRelations = function(gid, participants, checker)
+exports.setGameRelations = function(gid, participants)
 {
     var Game = Backtory.Object.extend("games");
     var game = new Game();
@@ -98,7 +98,6 @@ exports.setGameRelations = function(gid, participants, checker)
     game.save({
         success:function(game)
         {
-            checker.gameRel = true;
         }
     });
 }
@@ -106,7 +105,7 @@ exports.setGameRelations = function(gid, participants, checker)
 /********************************************************************************** */
 /********************************************************************************** */
 
-exports.setGameTypeRelations = function(game, gameTypeId, matchId, checker)
+exports.setGameTypeRelations = function(game, gameTypeId, matchId, participants)
 {
     var GameType = Backtory.Object.extend("gameType");
 
@@ -123,10 +122,8 @@ exports.setGameTypeRelations = function(game, gameTypeId, matchId, checker)
             game.set("challengeId",matchId);
 
             game.save();
-
-            checker.gameTypeRel = true;
             
-            utility.setGameRelations(game.get("_id"), participants, checker);
+            utility.setGameRelations(game.get("_id"), participants);
             utility.setPlayersRelations(game.get("_id"), participants);
         }
     });

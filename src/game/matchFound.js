@@ -29,11 +29,9 @@ exports.onMatchFoundController = function (requestBody, context) {
     var Game = Backtory.Object.extend("games");
     var game = new Game();
 
-    let checker = {gameTypeRel: false, gameRel: false};
-
     //context.log("before setGameTypeRelations...");
 
-    utility.setGameTypeRelations(game, gameTypeId, matchId, checker);
+    utility.setGameTypeRelations(game, gameTypeId, matchId, participants);
     
     /*waitUntil()
         .interval(50)
@@ -189,4 +187,4 @@ var reqbody = {
         ]
 };
 
-//this.onMatchFoundController(reqbody0);
+//this.onMatchFoundController(reqbody);
