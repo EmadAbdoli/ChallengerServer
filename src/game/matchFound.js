@@ -35,7 +35,7 @@ exports.onMatchFoundController = function (requestBody, context) {
 
     utility.setGameTypeRelations(game, gameTypeId, matchId, checker);
     
-    waitUntil()
+    /*waitUntil()
         .interval(50)
         .times(Infinity)
         .condition(function() {
@@ -44,7 +44,7 @@ exports.onMatchFoundController = function (requestBody, context) {
         .done(function(result) {
 
             //context.log("before setGameRelations...");
-            utility.setGameRelations(game.get("_id"), participants, checker);
+            //utility.setGameRelations(game.get("_id"), participants, checker);
     });
 
     waitUntil()
@@ -56,16 +56,16 @@ exports.onMatchFoundController = function (requestBody, context) {
     .done(function(result) {
 
         //context.log("before setPlayersRelations...");
-        utility.setPlayersRelations(game.get("_id"), participants);
+        //utility.setPlayersRelations(game.get("_id"), participants);
     });
-
-    //waitUntil()
-    //.interval(50)
-    //.times(Infinity)
-    //.condition(function() {
-    //    return (game.get("_id") != null ? true : false);
-    //})
-    //.done(function(tt) {
+    */
+    waitUntil()
+    .interval(50)
+    .times(Infinity)
+    .condition(function() {
+        return (game.get("_id") != null ? true : false);
+    })
+    .done(function(tt) {
 
         //context.log("After All....");
 
@@ -105,7 +105,7 @@ exports.onMatchFoundController = function (requestBody, context) {
             topic: "",
             chosenKeywords: {},
             keywordsGameId: "",
-            gameId: 0,//game.get("_id"),
+            gameId: game.get("_id"),
             theText: "",
             blankKeys: {},
             commonKeys: []
@@ -151,7 +151,7 @@ exports.onMatchFoundController = function (requestBody, context) {
         // For Server
         context.log(tResult);
         context.succeed(tResult);
-    //});
+    });
 };
 
 //********************************************************************************************************** */

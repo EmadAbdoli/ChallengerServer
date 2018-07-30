@@ -125,6 +125,9 @@ exports.setGameTypeRelations = function(game, gameTypeId, matchId, checker)
             game.save();
 
             checker.gameTypeRel = true;
+            
+            utility.setGameRelations(game.get("_id"), participants, checker);
+            utility.setPlayersRelations(game.get("_id"), participants);
         }
     });
 }
