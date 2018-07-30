@@ -31,7 +31,7 @@ exports.onMatchFoundController = function (requestBody, context) {
 
     //context.log("before setGameTypeRelations...");
 
-    utility.setGameTypeRelations(game, gameTypeId, matchId, participants);
+    utility.setGameTypeRelations(game, gameTypeId, matchId, participants, context);
     
     /*waitUntil()
         .interval(50)

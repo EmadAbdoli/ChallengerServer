@@ -78,7 +78,7 @@ exports.calcTopic = function (choices) // Designed for 3 Topics
 /********************************************************************************** */
 /********************************************************************************** */
 
-exports.setGameRelations = function(gid, participants)
+exports.setGameRelations = function(gid, participants, context)
 {
     context.log("In setGameRelations: " + gid.toString());
 
@@ -107,7 +107,7 @@ exports.setGameRelations = function(gid, participants)
 /********************************************************************************** */
 /********************************************************************************** */
 
-exports.setGameTypeRelations = function(game, gameTypeId, matchId, participants)
+exports.setGameTypeRelations = function(game, gameTypeId, matchId, participants, context)
 {
     var GameType = Backtory.Object.extend("gameType");
 
@@ -125,8 +125,8 @@ exports.setGameTypeRelations = function(game, gameTypeId, matchId, participants)
 
             game.save();
             
-            utility.setGameRelations(game.get("_id"), participants);
-            utility.setPlayersRelations(game.get("_id"), participants);
+            utility.setGameRelations(game.get("_id"), participants, context);
+            utility.setPlayersRelations(game.get("_id"), participants, context);
         }
     });
 }
@@ -134,7 +134,7 @@ exports.setGameTypeRelations = function(game, gameTypeId, matchId, participants)
 /********************************************************************************** */
 /********************************************************************************** */
 
-exports.setPlayersRelations = function(gid, participants)
+exports.setPlayersRelations = function(gid, participants, context)
 {
     context.log("In setGameRelations: " + gid.toString());
 
