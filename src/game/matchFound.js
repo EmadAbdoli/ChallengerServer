@@ -106,7 +106,16 @@ exports.onMatchFoundController = function (requestBody, context) {
             gameId: game.get("_id"),
             theText: "",
             blankKeys: {},
-            commonKeys: []
+            commonKeys: [],
+            turnUid: -1,
+            turn: -1,
+            sequence: -1,
+            filledBlanks: {},
+            filledBlankOwners: {},
+            rejectedWords: [],
+            rejectionOwners: [],
+            rejectionVotes: {},
+
         });
 
         //props = {

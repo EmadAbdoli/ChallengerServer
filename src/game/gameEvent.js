@@ -160,18 +160,24 @@ exports.gameEventController = function (requestBody, context) {
                         }
 
                         result = { operation : 'textReady', userId: userId,
-                                    blanksKeys: blanksKeyArr, commonKeys: checker.commonKeys, theText: checker.theText};
+                                    blanksKeys: blanksKeyArr, commonKeys: checker.commonKeys, theText: checker.theText,
+                                    turnUid: props.uids[0], sequence: 1
+                                 };
 
                         props.blankKeys = checker.blanksKeys;
                         props.commonKeys = checker.commonKeys;
                         props.theText = checker.theText;
+
+                        props.turnUid = props.uids[0];
+                        props.turn = 0;
+                        props.sequence = 1;
             
                         var tResult = {message: JSON.stringify(result), properties: props};
                         // For Local
-                        //console.log(tResult);
+                        console.log(tResult);
                         // For Server
-                        context.log(tResult);
-                        context.succeed(tResult);
+                        //context.log(tResult);
+                        //context.succeed(tResult);
                     });
                 }
                 else
