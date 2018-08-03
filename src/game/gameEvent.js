@@ -174,10 +174,10 @@ exports.gameEventController = function (requestBody, context) {
             
                         var tResult = {message: JSON.stringify(result), properties: props};
                         // For Local
-                        console.log(tResult);
+                        //console.log(tResult);
                         // For Server
-                        //context.log(tResult);
-                        //context.succeed(tResult);
+                        context.log(tResult);
+                        context.succeed(tResult);
                     });
                 }
                 else
@@ -265,7 +265,15 @@ var reqbody3 = {
         "gameId":"5b4f31c76374f60001d52af9",
         "theText": "",
         "blankKeys": {},
-        "commonKeys": []
+        "commonKeys": [],
+        "turnUid": -1,
+        "turn": -1,
+        "sequence": -1,
+        "filledBlanks": {},
+        "filledBlankOwners": {},
+        "rejectedWords": [],
+        "rejectionOwners": [],
+        "rejectionVotes": {},
     }
 }
 
