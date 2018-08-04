@@ -281,6 +281,86 @@ exports.gameEventController = function (requestBody, context) {
         /************************************************************************************ */
         /************************************************************************************ */
 
+        case "PutWord":
+
+            var tempSeq = props.sequence;
+            var requestSeq = JSON.parse(requestBody.data.sequence);
+            
+            var blanktoFillIndex = JSON.parse(requestBody.data.blankIndex);
+            var wordtoPutInBlank = JSON.parse(requestBody.data.wordToPut);
+
+            if (requestSeq != tempSeq)
+            {
+                result = {operation: 'invalidOperation3', userId: userId};
+            }
+            else
+            {
+                if (userId == props.turnUid)
+                {
+                    //blankKeys: {},
+                    //commonKeys: [],
+                    //turnUid: -1,
+                    //turn: -1,
+                    //sequence: -1,
+                    //lastTurnStartTime: -1,
+                    //filledBlanks: {},
+                    //filledBlankOwners: {},
+                    //rejectedWords: [],
+                    //rejectionOwners: [],
+                    //rejectionVotes: {}
+                    
+                    var blankIndexInText = Object.keys(props.blankKeys)[blanktoFillIndex];
+                    var tempKeys = Object.keys(props.filledBlanks);
+                    var res = tempKeys.findIndex(function(element) {return element == blankIndexInText});
+                    if (res != -1)
+                    {
+                        result = {operation: 'blankIsFull', userId: userId};
+                    }
+                    else
+                    {
+                        props.filledBlanks[blankIndexInText] = wordtoPutInBlank;
+                        props.filledBlankOwners[blankIndexInText] = userId;
+
+                        var d = new Date();
+                        var seconds = Math.round(d.getTime() / 1000);
+
+                        props.turn = (props.turn + 1) % utility.playerCounts;
+                        props.turnUid = props.uids[props.turn];
+                        props.sequence = props.sequence + 1;
+                        props.lastTurnStartTime = seconds;
+
+                        result = { operation : 'PutWord',
+                                    userId: userId,
+                                    turnUid: props.turnUid,
+                                    sequence: props.sequence,
+                                    filledBlanks: JSON.stringify(props.filledBlanks)
+                                 };
+                    }
+                }
+            }
+
+
+        break;
+
+        /************************************************************************************ */
+        /************************************************************************************ */
+        /************************************************************************************ */
+        /************************************************************************************ */
+        /************************************************************************************ */
+        /************************************************************************************ */
+
+        case "RejectWord":
+
+        break;
+
+        /************************************************************************************ */
+        /************************************************************************************ */
+        /************************************************************************************ */
+        /************************************************************************************ */
+        /************************************************************************************ */
+        /************************************************************************************ */
+
+
         default:
             break;
     }
@@ -410,9 +490,50 @@ var reqbody4 = {
     }
 }
 
+var reqbody5 = {
+    "message":"PutWord",
+    "userId":"5b4457b7e4b0712f42bad646",
+    "challengeId":"5b4f31c7e4b0115f590dda9d",
+    "data":{
+        "sequence":"1",
+        "blankIndex": "0",
+        "wordToPut": '\"the\"'
+    },
+    "properties":{
+        "uids": ["5b4457b7e4b0712f42bad646","5b445c73e4b0a2a06398f8a0","5b445c62e4b0a2a06398f896"],
+        "pids": ["5b4457b74f83de0001e9bd59","5b445c735ce7180001bfaf7c","5b445c624f83de0001e9d101"],
+        "choices":{
+            "5b4457b7e4b0712f42bad646":"0",
+            "5b445c73e4b0a2a06398f8a0":"1",
+            "5b445c62e4b0a2a06398f896":"2"
+        },
+        "topics":["Food","Voting","Shopping"],
+        "topic":"Voting",
+        "chosenKeywords":{
+            "5b4457b7e4b0712f42bad646":["president","obama","voting","year","polling","questions","news","new","faith","volunteering"],
+            "5b445c73e4b0a2a06398f8a0":["president","obama","voting","year","polling","questions","news","new","faith","volunteering"],
+            "5b445c62e4b0a2a06398f896":["president","obama","voting","year","polling","questions","news","new","faith","volunteering"]
+        },
+        "keywordsGameId":47,
+        "gameId":"5b4f31c76374f60001d52af9",
+        "theText": "",
+        "blankKeys":{"8":"you?","15":"the","36":"No.","62":"her?","73":"the","121":"she","180":"tall","254":"her","271":"facial","395":"seen"},
+        "commonKeys":["the","you?","No.","her","she","the","seen","facial","her?","tall"],
+        "turnUid": "5b4457b7e4b0712f42bad646",
+        "turn": 0,
+        "sequence": 1,
+        "lastTurnStartTime": 1533375680,
+        "filledBlanks": {},
+        "filledBlankOwners": {},
+        "rejectedWords": [],
+        "rejectionOwners": [],
+        "rejectionVotes": {},
+    }
+}
+
 var formParams = {};
 formParams.topic = "Health";
 formParams.keywords = '["doctor","problem","blood","appointment","results","emergency","medication","test","insurance","pressure","problems","stomach","professor","stress","antihistamine","sleep","breath","medicine","feeling","good","lately","health","effects","infection","chest","information","prescription","itching","trouble"]';
 
 
-//this.gameEventController(reqbody3);
+//this.gameEventController(reqbody5);
