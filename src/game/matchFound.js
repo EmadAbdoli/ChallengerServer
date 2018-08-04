@@ -110,12 +110,12 @@ exports.onMatchFoundController = function (requestBody, context) {
             turnUid: -1,
             turn: -1,
             sequence: -1,
+            lastTurnStartTime: -1,
             filledBlanks: {},
             filledBlankOwners: {},
             rejectedWords: [],
             rejectionOwners: [],
-            rejectionVotes: {},
-
+            rejectionVotes: {}
         });
 
         //props = {
