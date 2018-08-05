@@ -308,18 +308,15 @@ exports.gameEventController = function (requestBody, context) {
                     //rejectedWords: [],
                     //rejectionOwners: [],
                     //rejectionVotes: {}
-                    
-                    var blankIndexInText = Object.keys(props.blankKeys)[blanktoFillIndex];
-                    var tempKeys = Object.keys(props.filledBlanks);
-                    var res = tempKeys.findIndex(function(element) {return element == blankIndexInText});
-                    if (res != -1)
+
+                    if ((blanktoFillIndex in Object.keys(props.filledBlanks)))
                     {
                         result = {operation: 'blankIsFull', userId: userId};
                     }
                     else
                     {
-                        props.filledBlanks[blankIndexInText] = wordtoPutInBlank;
-                        props.filledBlankOwners[blankIndexInText] = userId;
+                        props.filledBlanks[blanktoFillIndex] = wordtoPutInBlank;
+                        props.filledBlankOwners[blanktoFillIndex] = userId;
 
                         var d = new Date();
                         var seconds = Math.round(d.getTime() / 1000);
@@ -496,7 +493,7 @@ var reqbody5 = {
     "challengeId":"5b4f31c7e4b0115f590dda9d",
     "data":{
         "sequence":"1",
-        "blankIndex": "0",
+        "blankIndex": "1",
         "wordToPut": '\"the\"'
     },
     "properties":{
@@ -523,8 +520,8 @@ var reqbody5 = {
         "turn": 0,
         "sequence": 1,
         "lastTurnStartTime": 1533375680,
-        "filledBlanks": {},
-        "filledBlankOwners": {},
+        "filledBlanks": {"0":"alaki"},
+        "filledBlankOwners": {"0":"5b445c73e4b0a2a06398f8a0"},
         "rejectedWords": [],
         "rejectionOwners": [],
         "rejectionVotes": {},
