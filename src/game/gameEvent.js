@@ -333,7 +333,7 @@ exports.gameEventController = function (requestBody, context) {
                                     userId: userId,
                                     turnUid: props.turnUid,
                                     sequence: props.sequence,
-                                    filledBlanks: JSON.stringify(props.filledBlanks)
+                                    filledBlanks: props.filledBlanks
                                  };
                     }
                 }
