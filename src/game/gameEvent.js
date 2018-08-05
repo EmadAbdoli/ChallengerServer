@@ -309,7 +309,7 @@ exports.gameEventController = function (requestBody, context) {
                     //rejectionOwners: [],
                     //rejectionVotes: {}
 
-                    if ((blanktoFillIndex in Object.keys(props.filledBlanks)))
+                    if (Object.keys(props.filledBlanks).findIndex(function(element){return element == blanktoFillIndex}) != -1)
                     {
                         result = {operation: 'blankIsFull',
                                     userId: userId,
@@ -498,8 +498,8 @@ var reqbody5 = {
     "challengeId":"5b4f31c7e4b0115f590dda9d",
     "data":{
         "sequence":"1",
-        "blankIndex": "1",
-        "wordToPut": '\"the\"'
+        "blankIndex": "11",
+        "wordToPut": '\"then?\"'
     },
     "properties":{
         "uids": ["5b4457b7e4b0712f42bad646","5b445c73e4b0a2a06398f8a0","5b445c62e4b0a2a06398f896"],
@@ -525,7 +525,7 @@ var reqbody5 = {
         "turn": 0,
         "sequence": 1,
         "lastTurnStartTime": 1533375680,
-        "filledBlanks": {"0":"alaki"},
+        "filledBlanks": {"3":"any","4":"should","5":"to","6":"subject","7":"school","8":"movie","9":"then?"},
         "filledBlankOwners": {"0":"5b445c73e4b0a2a06398f8a0"},
         "rejectedWords": [],
         "rejectionOwners": [],
