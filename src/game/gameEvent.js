@@ -311,7 +311,12 @@ exports.gameEventController = function (requestBody, context) {
 
                     if ((blanktoFillIndex in Object.keys(props.filledBlanks)))
                     {
-                        result = {operation: 'blankIsFull', userId: userId};
+                        result = {operation: 'blankIsFull',
+                                    userId: userId,
+                                    turnUid: props.turnUid,
+                                    sequence: props.sequence,
+                                    filledBlanks: props.filledBlanks
+                                 };
                     }
                     else
                     {
