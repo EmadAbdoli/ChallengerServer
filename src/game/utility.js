@@ -56,6 +56,29 @@ exports.getUserPid = function(participant)
 /********************************************************************************** */
 /********************************************************************************** */
 
+exports.calcVotingResult = function(votes)
+{
+    var rejectVote = 0;
+    var dontRejectVote = 0;
+
+    for (v in votes)
+    {
+        if (votes[v] == 0) dontRejectVote++;
+        if (votes[v] == 1) rejectVote++;
+    }
+
+    if (rejectVote > dontRejectVote)
+        return 1;
+
+    if (dontRejectVote > rejectVote)
+        return 0;
+
+    return this.getRandomInt(2);
+}
+
+/********************************************************************************** */
+/********************************************************************************** */
+
 exports.calcTopic = function (choices) // Designed for 3 Topics
 {
     var res = [0,0,0];
