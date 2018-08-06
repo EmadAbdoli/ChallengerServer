@@ -311,7 +311,7 @@ exports.gameEventController = function (requestBody, context) {
                     //filledBlankOwners: {},
                     //rejectedWords: [],
                     //rejectionOwners: [],
-                    //rejectionVotes: {}
+                    //rejectionVotes: []
 
                     if (Object.keys(props.filledBlanks).findIndex(function(element){return element == blanktoFillIndex}) != -1)
                     {

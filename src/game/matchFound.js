@@ -115,7 +115,7 @@ exports.onMatchFoundController = function (requestBody, context) {
             filledBlankOwners: {},
             rejectedWords: [],
             rejectionOwners: [],
-            rejectionVotes: {}
+            rejectionVotes: []
         });
 
         //props = {
