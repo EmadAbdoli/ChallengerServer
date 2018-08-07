@@ -109,7 +109,7 @@ exports.onMatchFoundController = function (requestBody, context) {
             commonKeys: [],
             turnUid: -1,
             turn: -1,
-            sequence: -1,
+            sequence: 1,
             lastTurnStartTime: -1,
             filledBlanks: {},
             filledBlankOwners: {},

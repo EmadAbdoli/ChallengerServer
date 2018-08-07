@@ -15,7 +15,10 @@ var randomKeywordCounts = 20;
 exports.playerCounts = 3;
 exports.minBlanksCount = 10;
 
-exports.eachTurnTime = 15;
+exports.eachTurnTime = 21;
+exports.subjectSelectionTime = 17;
+exports.keywordSelectionTime = 42;
+exports.voteForRejectTime = 13;
 
 /********************************************************************************** */
 /********************************************************************************** */

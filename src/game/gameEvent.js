@@ -175,6 +175,8 @@ exports.gameEventController = function (requestBody, context) {
                         props.blankKeys = checker.blanksKeys;
                         props.commonKeys = checker.commonKeys;
                         props.theText = checker.theText;
+                        
+                        props.sequence = 2;
 
                         var d = new Date();
                         var seconds = Math.round(d.getTime() / 1000);
@@ -248,7 +250,7 @@ exports.gameEventController = function (requestBody, context) {
         /************************************************************************************ */
         /************************************************************************************ */
 
-        case "TimeOutAlarm":
+        case "turnTimeout":
 
             var tempSeq = props.sequence;
             var requestSeq = JSON.parse(requestBody.data.sequence);
