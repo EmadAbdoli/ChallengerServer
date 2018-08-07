@@ -84,8 +84,15 @@ exports.gameEventController = function (requestBody, context) {
                     utility.sendNewGameRequest(props["topic"], tKeywords, tkeywordsGameId);
                     utility.setRoundParticipants(props.gameId, props.topic, props.pids);
 
+                    props.sequence = props.sequence + 1;
+
                     result = {operation: 'subjectSelected', 
-                                userId: userId, choice: requestBody.data.choice, topic : topicIndex, keywords: tKeywords};
+                                userId: userId,
+                                choice: requestBody.data.choice,
+                                topic : topicIndex,
+                                keywords: tKeywords,
+                                sequence: props.sequence
+                             };
 
                     waitUntil()
                     .interval(100)
@@ -168,24 +175,22 @@ exports.gameEventController = function (requestBody, context) {
                             blanksKeyArr.push(checker.blanksKeys[blanksKeywordsKeys[i]]);
                         }
 
-                        result = { operation : 'textReady', userId: userId,
-                                    blanksKeys: blanksKeyArr, commonKeys: checker.commonKeys, theText: checker.theText,
-                                    turnUid: props.uids[0], sequence: 1
-                                 };
-
                         props.blankKeys = checker.blanksKeys;
                         props.commonKeys = checker.commonKeys;
                         props.theText = checker.theText;
-                        
-                        props.sequence = 2;
 
                         var d = new Date();
                         var seconds = Math.round(d.getTime() / 1000);
+                        
                         props.lastTurnStartTime = seconds;
-
                         props.turnUid = props.uids[0];
                         props.turn = 0;
-                        props.sequence = 1;
+                        props.sequence = props.sequence + 1;
+
+                        result = { operation : 'textReady', userId: userId,
+                                    blanksKeys: blanksKeyArr, commonKeys: checker.commonKeys, theText: checker.theText,
+                                    turnUid: props.uids[0], sequence: props.sequence
+                                 };
             
                         var tResult = {message: JSON.stringify(result), properties: props};
                         // For Local
