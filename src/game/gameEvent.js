@@ -1,5 +1,6 @@
 var utility = require("./utility");
 var waitUntil = require("./myLibs/wait-until");
+var eventsHelper = require("./eventsHelper");
 
 // For server
 var Backtory = require("backtory-sdk");
@@ -74,45 +75,9 @@ exports.gameEventController = function (requestBody, context) {
                 if (Object.keys(props.choices).length == utility.playerCounts)
                 {
                     dontsendResult = true;
-                    let tkeywordsGameId = {val: -1};
-
-                    var topicIndex = utility.calcTopic(props.choices);
-                    props["topic"]=  props.topics[topicIndex];
-
-                    var tKeywords = utility.getTopicKeywords(props["topic"], topicIndex);
-
-                    utility.sendNewGameRequest(props["topic"], tKeywords, tkeywordsGameId);
-                    utility.setRoundParticipants(props.gameId, props.topic, props.pids);
-
-                    props.sequence = props.sequence + 1;
-
-                    result = {operation: 'subjectSelected', 
-                                userId: userId,
-                                choice: requestBody.data.choice,
-                                topic : topicIndex,
-                                keywords: tKeywords,
-                                sequence: props.sequence
-                             };
-
-                    waitUntil()
-                    .interval(100)
-                    .times(Infinity)
-                    .condition(function() {
-                        return (tkeywordsGameId.val != -1 ? true : false);
-                    })
-                    .done(function(temp) {
-                        
-                        props.keywordsGameId = tkeywordsGameId.val;
-            
-                        utility.setgameKeywordsId(props.gameId, props.keywordsGameId);
-            
-                        var tResult = {message: JSON.stringify(result), properties: props};
-                        // For Local
-                        //console.log(tResult);
-                        // For Server
-                        context.log(tResult);
-                        context.succeed(tResult);
-                    });
+                    
+                    eventsHelper.selectingSubject(props, context, userId, requestBody.data.choice);
+                    //eventsHelper.selectingSubject(props, userId, requestBody.data.choice);
                 }
                 else
                 {
@@ -121,6 +86,27 @@ exports.gameEventController = function (requestBody, context) {
             }            
 
             break;
+
+        /************************************************************************************ */
+        /************************************************************************************ */
+
+        case "subjectSelectionTimeout":
+
+            var tempSeq = props.sequence;
+            var requestSeq = JSON.parse(requestBody.data.sequence);
+
+            if (requestSeq != tempSeq)
+            {
+                result = {operation: 'invalidOperation3', userId: userId};
+            }
+            else
+            {
+                dontsendResult = true;
+                eventsHelper.selectingSubject(props, context, userId, -1);
+                //eventsHelper.selectingSubject(props, userId, -1);
+            }
+
+        break;
 
         /************************************************************************************ */
         /************************************************************************************ */
@@ -813,9 +799,30 @@ var reqbody7 = {
     }
 }
 
+var request8 = 
+{
+    "message": "subjectSelectionTimeout",
+    "userId" : "4",
+    "properties": {
+        "uids": ["5b4457b7e4b0712f42bad646","5b445c73e4b0a2a06398f8a0","5b445c62e4b0a2a06398f896"],
+        "pids": ["5b4457b74f83de0001e9bd59","5b445c735ce7180001bfaf7c","5b445c624f83de0001e9d101"],
+        "choices": {1:1,2:1},
+        "topics": ["Selling a House","At the Bank","Health"],
+        "topic" : "",
+        "sequence": 1,
+        "chosenKeywords": {},
+        "keywordsGameId" : "",
+        "gameId" : "5b4dde7d0f747e00014d84e9"
+    },
+    "data" :{
+        "sequence": 1
+    },
+    "clientRequestId": "26e7379d-f2e6-46d3-be78-3f300345517e"
+}
+
 var formParams = {};
 formParams.topic = "Health";
 formParams.keywords = '["doctor","problem","blood","appointment","results","emergency","medication","test","insurance","pressure","problems","stomach","professor","stress","antihistamine","sleep","breath","medicine","feeling","good","lately","health","effects","infection","chest","information","prescription","itching","trouble"]';
 
 
-//this.gameEventController(reqbody7);
+//this.gameEventController(request8);

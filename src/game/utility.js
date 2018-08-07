@@ -264,10 +264,16 @@ exports.sendNewGameRequest = function(topic, tKeywords, tkeywordsGameId)
         headers: {'content-type' : 'application/x-www-form-urlencoded'},
         method: "POST",
         form: formParams,
+        //gzip: true,
     }, function (error, response, body){
 
         if (error == null)
         {
+            var firstCharCode = body.charCodeAt(0);
+            if (firstCharCode == 65279) { // remove first Character...
+                body = body.substring(1);
+            }
+
             var myBody = JSON.parse(body);
             tkeywordsGameId.val = myBody.game_id;
         }
@@ -304,6 +310,11 @@ exports.sendGetParagraphsRequest = function(keywordsGameId, keywordsUnion, check
         
         if (error == null)
         {
+            var firstCharCode = body.charCodeAt(0);
+            if (firstCharCode == 65279) { // remove first Character...
+                body = body.substring(1);
+            }
+
             var myBody = JSON.parse(body);
             var paragraphs = myBody.paragraphs;
 
