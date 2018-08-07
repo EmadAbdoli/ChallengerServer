@@ -19,6 +19,7 @@ exports.gameEventController = function (requestBody, context) {
 // For local
 //exports.gameEventController = function (requestBody) {
 
+
     /* requestBody is like this:
    * {
    *   "userId": "1234",
