@@ -130,68 +130,36 @@ exports.gameEventController = function (requestBody, context) {
                 if (Object.keys(props.chosenKeywords).length == utility.playerCounts)
                 {
                     dontsendResult = true;
-                    var keywordsUnion = [];
-
-                    for (var i = 0; i < utility.playerCounts; i++)
-                    {
-                        var tUserKeys = props.chosenKeywords[props.uids[i]];
-
-                        for (var j = 0; j < tUserKeys.length; j++)
-                        {
-                            if (keywordsUnion.includes(tUserKeys[j]) == false)
-                                keywordsUnion.push(tUserKeys[j]);
-                        }
-                    }
-
-                    let checker = {val: false, blanksKeys: {}, commonKeys: [], theText: ""};
-                    utility.sendGetParagraphsRequest(props.keywordsGameId, keywordsUnion, checker);
-
-                    waitUntil()
-                    .interval(100)
-                    .times(Infinity)
-                    .condition(function() {
-                        return (checker.val == true ? true : false);
-                    })
-                    .done(function(temp) {
-
-                        var blanksKeywordsKeys = Object.keys(checker.blanksKeys);
-                        var blanksKeyArr = [];
-                        for (var i = 0; i < blanksKeywordsKeys.length; i++)
-                        {
-                            blanksKeyArr.push(checker.blanksKeys[blanksKeywordsKeys[i]]);
-                        }
-
-                        props.blankKeys = checker.blanksKeys;
-                        props.commonKeys = checker.commonKeys;
-                        props.theText = checker.theText;
-
-                        var d = new Date();
-                        var seconds = Math.round(d.getTime() / 1000);
-                        
-                        props.lastTurnStartTime = seconds;
-                        props.turnUid = props.uids[0];
-                        props.turn = 0;
-                        props.sequence = props.sequence + 1;
-
-                        result = { operation : 'textReady', userId: userId,
-                                    blanksKeys: blanksKeyArr, commonKeys: checker.commonKeys, theText: checker.theText,
-                                    turnUid: props.uids[0], sequence: props.sequence
-                                 };
-            
-                        var tResult = {message: JSON.stringify(result), properties: props};
-                        // For Local
-                        //console.log(tResult);
-                        // For Server
-                        context.log(tResult);
-                        context.succeed(tResult);
-                    });
+                    eventsHelper.gettingTextReady(props, context, userId);
+                    //eventsHelper.gettingTextReady(props, userId);
                 }
                 else
                 {
                     result = { operation : 'selectedKeywords', userId: userId};
                 }
             }
-            break;
+        break;
+
+        /************************************************************************************ */
+        /************************************************************************************ */
+
+        case "KeywordSelTimeout":
+
+            var tempSeq = props.sequence;
+            var requestSeq = JSON.parse(requestBody.data.sequence);
+
+            if (requestSeq != tempSeq)
+            {
+                result = {operation: 'invalidOperation3', userId: userId};
+            }
+            else
+            {
+                dontsendResult = true;
+                eventsHelper.gettingTextReady(props, context, userId);
+                //eventsHelper.gettingTextReady(props, userId);
+            }
+
+        break;
 
         /************************************************************************************ */
         /************************************************************************************ */
@@ -470,30 +438,7 @@ exports.gameEventController = function (requestBody, context) {
 
                 if (Object.keys(prevVotes).length == utility.playerCounts)
                 {
-                    var votingResult = utility.calcVotingResult(props.rejectionVotes[rejectIndex-1]);
-                    props.rejectedWords[rejectIndex-1].push(votingResult);
-
-                    if (votingResult == 1)
-                    {
-                        var wordIndexInBlanks = props.rejectedWords[rejectIndex-1][0];
-                        delete props.filledBlanks[wordIndexInBlanks];
-                        delete props.filledBlankOwners[wordIndexInBlanks];
-                    }
-
-                    var d = new Date();
-                    var seconds = Math.round(d.getTime() / 1000);
-
-                    props.turn = (props.turn + 1) % utility.playerCounts;
-                    props.turnUid = props.uids[props.turn];
-                    props.sequence = props.sequence + 1;
-                    props.lastTurnStartTime = seconds;
-
-                    result = { operation : 'rejectionResult',
-                                vResult: votingResult,
-                                turnUid: props.turnUid,
-                                sequence: props.sequence,
-                                filledBlanks: props.filledBlanks
-                                };
+                    result = eventsHelper.findingVotesResult(props);
                 }
                 else
                 {
@@ -509,6 +454,24 @@ exports.gameEventController = function (requestBody, context) {
 
         break;
 
+        /************************************************************************************ */
+        /************************************************************************************ */
+
+        case "voteForRejectTimeout":
+
+            var tempSeq = props.sequence;
+            var requestSeq = JSON.parse(requestBody.data.sequence);
+
+            if (requestSeq != tempSeq)
+            {
+                result = {operation: 'invalidOperation3', userId: userId};
+            }
+            else
+            {
+                result = eventsHelper.findingVotesResult(props);
+            }
+
+        break;
 
         default:
             break;
@@ -564,11 +527,12 @@ var reqbody2 = {
 }
 
 var reqbody3 = {
-    "message":"selectedKeywords",
+    "message":"KeywordSelTimeout",
     "userId":"5b445c62e4b0a2a06398f896",
     "challengeId":"5b4f31c7e4b0115f590dda9d",
     "data":{
-        "userKeywords":"[\"president\",\"obama\",\"voting\",\"year\",\"polling\",\"questions\",\"news\",\"new\",\"faith\",\"volunteering\"]"
+        "sequence": 1
+        //"userKeywords":"[\"president\",\"obama\",\"voting\",\"year\",\"polling\",\"questions\",\"news\",\"new\",\"faith\",\"volunteering\"]"
     },
     "properties":{
         "uids": ["5b4457b7e4b0712f42bad646","5b445c73e4b0a2a06398f8a0","5b445c62e4b0a2a06398f896"],
@@ -591,7 +555,7 @@ var reqbody3 = {
         "commonKeys": [],
         "turnUid": -1,
         "turn": -1,
-        "sequence": -1,
+        "sequence": 1,
         "filledBlanks": {},
         "filledBlankOwners": {},
         "rejectedWords": [],
@@ -760,12 +724,11 @@ var reqbody6 = {
 }
 
 var reqbody7 = {
-    "message":"rejectVote",
+    "message":"voteForRejectTimeout",
     "userId":"5b445c73e4b0a2a06398f8a0",
     "challengeId":"5b4f31c7e4b0115f590dda9d",
     "data":{
         "sequence":"1",
-        "myVote": "1"
     },
     "properties":{
         "uids": ["5b4457b7e4b0712f42bad646","5b445c73e4b0a2a06398f8a0","5b445c62e4b0a2a06398f896"],
@@ -825,4 +788,4 @@ formParams.topic = "Health";
 formParams.keywords = '["doctor","problem","blood","appointment","results","emergency","medication","test","insurance","pressure","problems","stomach","professor","stress","antihistamine","sleep","breath","medicine","feeling","good","lately","health","effects","infection","chest","information","prescription","itching","trouble"]';
 
 
-//this.gameEventController(request8);
+//this.gameEventController(reqbody7);
