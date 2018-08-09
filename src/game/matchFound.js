@@ -95,9 +95,11 @@ exports.onMatchFoundController = function (requestBody, context) {
         }
 
         var tempUserScore = {};
+        var tempUserAction = {};
         for (var i = 0; i < utility.playerCounts; i++)
         {
             tempUserScore[tuids[i]] = 0;
+            tempUserAction[tuids[i]] = 0;
         }
 
         var realtimeGame = new Backtory.RealtimeGame(matchId);
@@ -105,6 +107,7 @@ exports.onMatchFoundController = function (requestBody, context) {
             uids: tuids,
             pids: tpids,
             userScores: tempUserScore,
+            userActions: tempUserAction,
             choices: {},
             topics: [],
             topic: "",

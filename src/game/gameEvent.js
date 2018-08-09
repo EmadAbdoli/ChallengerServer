@@ -292,6 +292,7 @@ exports.gameEventController = function (requestBody, context) {
                         props.filledBlankStates[blanktoFillIndex] = 0;
 
                         props.userScores[userId] = props.userScores[userId] + utility.putwordScore;
+                        props.userActions[userId] = props.userActions[userId] + 1;
 
                         var d = new Date();
                         var seconds = Math.round(d.getTime() / 1000);
@@ -306,7 +307,8 @@ exports.gameEventController = function (requestBody, context) {
                                     turnUid: props.turnUid,
                                     sequence: props.sequence,
                                     filledBlanks: props.filledBlanks,
-                                    userScores: props.userScores
+                                    userScores: props.userScores,
+                                    userActions: props.userActions
                                  };
                     }
                 }
@@ -383,6 +385,7 @@ exports.gameEventController = function (requestBody, context) {
                             props.rejectionOwners.push(userId);
 
                             props.userScores[userId] = props.userScores[userId] + utility.rejectWordScore;
+                            props.userActions[userId] = props.userActions[userId] + 1;
 
                             var d = new Date();
                             var seconds = Math.round(d.getTime() / 1000);
@@ -396,7 +399,8 @@ exports.gameEventController = function (requestBody, context) {
                                         turnUid: props.turnUid,
                                         sequence: props.sequence,
                                         filledBlanks: props.filledBlanks,
-                                        userScores: props.userScores
+                                        userScores: props.userScores,
+                                        userActions: props.userActions
                                     };
                         }
                     }
