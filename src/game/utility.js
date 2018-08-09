@@ -20,6 +20,11 @@ exports.subjectSelectionTime = 17;
 exports.keywordSelectionTime = 42;
 exports.voteForRejectTime = 13;
 
+exports.putwordScore = 10;
+exports.rejectWordScore = 10;
+exports.trueRejectScore = 15;
+
+
 /********************************************************************************** */
 /********************************************************************************** */
 

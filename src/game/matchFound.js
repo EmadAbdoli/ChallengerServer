@@ -94,10 +94,17 @@ exports.onMatchFoundController = function (requestBody, context) {
             tuids.push(participants[i].userId);
         }
 
+        var tempUserScore = {};
+        for (var i = 0; i < utility.playerCounts; i++)
+        {
+            tempUserScore[tuids[i]] = 0;
+        }
+
         var realtimeGame = new Backtory.RealtimeGame(matchId);
         realtimeGame.setProperties({
             uids: tuids,
             pids: tpids,
+            userScores: tempUserScore,
             choices: {},
             topics: [],
             topic: "",
@@ -112,10 +119,13 @@ exports.onMatchFoundController = function (requestBody, context) {
             sequence: 1,
             lastTurnStartTime: -1,
             filledBlanks: {},
+            filledBlanksShare: {},
             filledBlankOwners: {},
+            filledBlankSeqs:{},
+            filledBlankStates: {},
             rejectedWords: [],
             rejectionOwners: [],
-            rejectionVotes: []
+            rejectionVotes: [],
         });
 
         

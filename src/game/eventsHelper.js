@@ -128,14 +128,57 @@ exports.findingVotesResult = function (props)
 {
     var rejectIndex = props.rejectedWords.length;    
     var votingResult = utility.calcVotingResult(props.rejectionVotes[rejectIndex-1]);
+    var wordIndexInBlanks = props.rejectedWords[rejectIndex-1][0];
 
     props.rejectedWords[rejectIndex-1].push(votingResult);
 
+    var mustBeRejected = false;
+    var rejectingWord = props.rejectedWords[rejectIndex-1][1];
+    var wordIndexInText = Object.keys(props.blankKeys)[wordIndexInBlanks];
+    if (rejectingWord != props.blankKeys[wordIndexInText])
+    {
+        mustBeRejected = true;
+    }
+
     if (votingResult == 1)
     {
-        var wordIndexInBlanks = props.rejectedWords[rejectIndex-1][0];
-        delete props.filledBlanks[wordIndexInBlanks];
-        delete props.filledBlankOwners[wordIndexInBlanks];
+        if (mustBeRejected)
+        {
+            for (uid in props.rejectionVotes[rejectIndex-1])
+            {
+                if (props.rejectionVotes[rejectIndex-1][uid] == 1)
+                    props.userScores[uid] = props.userScores[uid] + utility.trueRejectScore;
+            }
+        }
+
+        if (props.filledBlanks != undefined && props.filledBlanks[wordIndexInBlanks] != undefined)
+            delete props.filledBlanks[wordIndexInBlanks];
+
+        if (props.filledBlankOwners != undefined && props.filledBlankOwners[wordIndexInBlanks] != undefined)
+            delete props.filledBlankOwners[wordIndexInBlanks];
+
+        if (props.filledBlankSeqs!= undefined && props.filledBlankSeqs[wordIndexInBlanks] != undefined)
+            delete props.filledBlankSeqs[wordIndexInBlanks];
+
+        if (props.filledBlankStates != undefined && props.filledBlankStates[wordIndexInBlanks] != undefined)
+            delete props.filledBlankStates[wordIndexInBlanks];
+            
+        if (props.filledBlanksShare != undefined && props.filledBlanksShare[wordIndexInBlanks] != undefined)
+            delete props.filledBlanksShare[wordIndexInBlanks];
+    }
+    else
+    {
+        if (mustBeRejected == false)
+        {
+            var stockHolders = [];
+            
+            for (uid in props.rejectionVotes[rejectIndex-1])
+            {
+                if (props.rejectionVotes[rejectIndex-1][uid] == 0)
+                    stockHolders.push(uid);
+            }
+            props.filledBlanksShare[wordIndexInBlanks] = stockHolders;
+        }
     }
 
     var d = new Date();
@@ -150,7 +193,8 @@ exports.findingVotesResult = function (props)
                 vResult: votingResult,
                 turnUid: props.turnUid,
                 sequence: props.sequence,
-                filledBlanks: props.filledBlanks
+                filledBlanks: props.filledBlanks,
+                userScores: props.userScores
                 };
 
     return result;

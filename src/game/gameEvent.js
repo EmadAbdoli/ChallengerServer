@@ -288,6 +288,10 @@ exports.gameEventController = function (requestBody, context) {
                     {
                         props.filledBlanks[blanktoFillIndex] = wordtoPutInBlank;
                         props.filledBlankOwners[blanktoFillIndex] = userId;
+                        props.filledBlankSeqs[blanktoFillIndex] = props.sequence;
+                        props.filledBlankStates[blanktoFillIndex] = 0;
+
+                        props.userScores[userId] = props.userScores[userId] + utility.putwordScore;
 
                         var d = new Date();
                         var seconds = Math.round(d.getTime() / 1000);
@@ -301,7 +305,8 @@ exports.gameEventController = function (requestBody, context) {
                                     userId: userId,
                                     turnUid: props.turnUid,
                                     sequence: props.sequence,
-                                    filledBlanks: props.filledBlanks
+                                    filledBlanks: props.filledBlanks,
+                                    userScores: props.userScores
                                  };
                     }
                 }
@@ -359,26 +364,41 @@ exports.gameEventController = function (requestBody, context) {
                     }
                     else
                     {
-                        var newReject = [];
-                        newReject.push(blankToRejectIndex);
-                        newReject.push(props.filledBlanks[blankToRejectIndex]);
-                        
-                        props.rejectedWords.push(newReject);
-                        props.rejectionOwners.push(userId);
-
-                        var d = new Date();
-                        var seconds = Math.round(d.getTime() / 1000);
-
-                        props.sequence = props.sequence + 1;
-                        props.lastTurnStartTime = seconds;
-
-                        result = { operation : 'voteActive',
+                        if (props.filledBlankStates[blankToRejectIndex] == 1)
+                        {
+                            result = {operation: 'blankIsFinalized',
                                     userId: userId,
-                                    rejectIndex: blankToRejectIndex,
                                     turnUid: props.turnUid,
                                     sequence: props.sequence,
                                     filledBlanks: props.filledBlanks
                                  };
+                        }
+                        else
+                        {
+                            var newReject = [];
+                            newReject.push(blankToRejectIndex);
+                            newReject.push(props.filledBlanks[blankToRejectIndex]);
+                            
+                            props.rejectedWords.push(newReject);
+                            props.rejectionOwners.push(userId);
+
+                            props.userScores[userId] = props.userScores[userId] + utility.rejectWordScore;
+
+                            var d = new Date();
+                            var seconds = Math.round(d.getTime() / 1000);
+
+                            props.sequence = props.sequence + 1;
+                            props.lastTurnStartTime = seconds;
+
+                            result = { operation : 'voteActive',
+                                        userId: userId,
+                                        rejectIndex: blankToRejectIndex,
+                                        turnUid: props.turnUid,
+                                        sequence: props.sequence,
+                                        filledBlanks: props.filledBlanks,
+                                        userScores: props.userScores
+                                    };
+                        }
                     }
                 }
                 else
@@ -733,6 +753,7 @@ var reqbody7 = {
     "properties":{
         "uids": ["5b4457b7e4b0712f42bad646","5b445c73e4b0a2a06398f8a0","5b445c62e4b0a2a06398f896"],
         "pids": ["5b4457b74f83de0001e9bd59","5b445c735ce7180001bfaf7c","5b445c624f83de0001e9d101"],
+        "userScores": {"5b4457b7e4b0712f42bad646":10,"5b445c73e4b0a2a06398f8a0":15,"5b445c62e4b0a2a06398f896":10},
         "choices":{
             "5b4457b7e4b0712f42bad646":"0",
             "5b445c73e4b0a2a06398f8a0":"1",
