@@ -213,7 +213,10 @@ exports.checkTrueWords = function (props)
             if (props.filledBlankSeqs[bSeqIndex] < props.sequence - utility.sequencesToCheckTrueWord)
             {
                 var blankRealWord = props.filledBlanks[bSeqIndex];
-                var blankTrueWord = Object.values(props.blankKeys)[bSeqIndex]; // maybe it is not true....!
+
+                var tempKeys = Object.keys(props.blankKeys);
+                var key = tempKeys[bSeqIndex];
+                var blankTrueWord = props.blankKeys[key]; // maybe it is not true....!
                 
                 if (blankRealWord == blankTrueWord)
                 {

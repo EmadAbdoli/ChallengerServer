@@ -826,6 +826,37 @@ var request8 =
     "clientRequestId": "26e7379d-f2e6-46d3-be78-3f300345517e"
 }
 
+var newRequest = 
+{
+    "message":"PassTurn",
+    "userId":"5b445c73e4b0a2a06398f8a0",
+    "challengeId":"5b6cabd8e4b0a48bfe84f10e",
+    "data":{"sequence":"12"},
+    "properties":
+    {
+        "uids":["5b6c290ce4b09aa3e74c8c30","5b445c73e4b0a2a06398f8a0","5b547ff7e4b0712f42c49855"],
+        "pids":["5b6c290d0b088c0001d39de2","5b445c735ce7180001bfaf7c","5b547ff8b291a40001e53f28"],
+        "userScores":{"5b6c290ce4b09aa3e74c8c30":20,"5b445c73e4b0a2a06398f8a0":20,"5b547ff7e4b0712f42c49855":20},
+        "userActions":{"5b6c290ce4b09aa3e74c8c30":2,"5b445c73e4b0a2a06398f8a0":2,"5b547ff7e4b0712f42c49855":2},
+        "choices":{"5b547ff7e4b0712f42c49855":"0","5b445c73e4b0a2a06398f8a0":"2","5b6c290ce4b09aa3e74c8c30":"1"},
+        "topics":["Driving","Food","Small Talk"],"topic":"Small Talk",
+        "chosenKeywords":{"5b6c290ce4b09aa3e74c8c30":["next","music","movie","today","family","friend","weather","apologize","invitation","instruments"],"5b445c73e4b0a2a06398f8a0":["music","sorry","friend","thanks","weather","question","apologize","invitation","assignments","instruments"],"5b547ff7e4b0712f42c49855":["next","phone","music","sorry","right","movie","party","invitation","assignments","instruments"]},
+        "keywordsGameId":189,"gameId":"5b6cabd80e66e7000168a69f",
+        "theText":"A: Don't %BLANK% think %BLANK% nice out? B: Yes, %BLANK% think so %BLANK% A: %BLANK% think that it's going to %BLANK%. B: I hope that it does rain. A: You like the rain? B: The sky looks so clean %BLANK% it rains. I love it. A: I understand. Rain does make it smell cleaner. B: I love most how it is %BLANK% night after it rains. A: How come? B: You can see the stars so much more clearly after it rains. A: I %BLANK% love for it to rain %BLANK%. B: I would too.",
+        "blankKeys":{"8":"you","19":"it's","44":"I","62":"too.","72":"I","97":"rain","174":"after","275":"at","397":"would","404":"today"},
+        "commonKeys":["it's","at","after","I","rain","would","too.","I","you"],
+        "turnUid":"5b445c73e4b0a2a06398f8a0","turn":1,"sequence":12,"lastTurnStartTime":1533848696,
+        "filledBlanks":{"0":"you","1":"rain","4":"I","5":"rain"},
+        "filledBlanksShare":{"0":["5b445c73e4b0a2a06398f8a0","5b6c290ce4b09aa3e74c8c30"],"5":["5b445c73e4b0a2a06398f8a0","5b6c290ce4b09aa3e74c8c30"]},
+        "filledBlankOwners":{"0":"5b6c290ce4b09aa3e74c8c30","1":"5b445c73e4b0a2a06398f8a0","4":"5b6c290ce4b09aa3e74c8c30","5":"5b445c73e4b0a2a06398f8a0"},
+        "filledBlankSeqs":{"0":3,"1":4,"4":7,"5":8},
+        "filledBlankStates":{"0":0,"1":0,"4":0,"5":0},
+        "rejectedWords":[[0,"you",0],[5,"rain",0]],
+        "rejectionOwners":["5b547ff7e4b0712f42c49855","5b547ff7e4b0712f42c49855"],
+        "rejectionVotes":[{"5b547ff7e4b0712f42c49855":1,"5b445c73e4b0a2a06398f8a0":0,"5b6c290ce4b09aa3e74c8c30":0},{"5b547ff7e4b0712f42c49855":1,"5b445c73e4b0a2a06398f8a0":0,"5b6c290ce4b09aa3e74c8c30":0}]
+    }
+}
+
 var formParams = {};
 formParams.topic = "Health";
 formParams.keywords = '["doctor","problem","blood","appointment","results","emergency","medication","test","insurance","pressure","problems","stomach","professor","stress","antihistamine","sleep","breath","medicine","feeling","good","lately","health","effects","infection","chest","information","prescription","itching","trouble"]';
