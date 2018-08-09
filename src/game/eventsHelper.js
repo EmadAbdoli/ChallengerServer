@@ -199,3 +199,44 @@ exports.findingVotesResult = function (props)
 
     return result;
 }
+
+//********************************************************************************************************** */
+//********************************************************************************************************** */
+//********************************************************************************************************** */
+
+exports.checkTrueWords = function (props)
+{
+    for (bSeqIndex in props.filledBlankSeqs)
+    {
+        if (props.filledBlankStates[bSeqIndex] == 0)
+        {
+            if (props.filledBlankSeqs[bSeqIndex] < props.sequence - utility.sequencesToCheckTrueWord)
+            {
+                var blankRealWord = props.filledBlanks[bSeqIndex];
+                var blankTrueWord = Object.values(props.blankKeys)[bSeqIndex]; // maybe it is not true....!
+                
+                if (blankRealWord == blankTrueWord)
+                {
+                    props.filledBlankStates[bSeqIndex] = 1;
+
+                    for (fbsIndex in props.filledBlanksShare)
+                    {
+                        if (fbsIndex == bSeqIndex)
+                        {
+                            var userIds = props.filledBlanksShare[fbsIndex];
+                            for (uuid in userIds)
+                            {
+                                var index = userIds[uuid];
+                                props.userScores[index] = props.userScores[index] + utility.trueWordScore;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+//********************************************************************************************************** */
+//********************************************************************************************************** */
+//********************************************************************************************************** */

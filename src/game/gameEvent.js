@@ -81,7 +81,7 @@ exports.gameEventController = function (requestBody, context) {
                 }
                 else
                 {
-                    result = { operation : 'subjectSelection', userId: userId, choice: requestBody.data.choice};
+                    result = {operation : 'subjectSelection', userId: userId, choice: requestBody.data.choice};
                 }
             }            
 
@@ -185,6 +185,8 @@ exports.gameEventController = function (requestBody, context) {
                     props.turnUid = props.uids[props.turn];
                     props.sequence = props.sequence + 1;
 
+                    eventsHelper.checkTrueWords(props);
+
                     var d = new Date();
                     var seconds = Math.round(d.getTime() / 1000);
                     props.lastTurnStartTime = seconds;
@@ -192,7 +194,9 @@ exports.gameEventController = function (requestBody, context) {
                     result = { operation : 'nextTrun',
                                userId: userId,
                                turnUid: props.turnUid,
-                               sequence: props.sequence
+                               sequence: props.sequence,
+                               userScore: props.userScores,
+                               blankStates: props.filledBlankStates
                              };
                 }
                 else
@@ -221,6 +225,9 @@ exports.gameEventController = function (requestBody, context) {
             }
             else
             {
+
+                eventsHelper.checkTrueWords(props);
+
                 var d = new Date();
                 var seconds = Math.round(d.getTime() / 1000);
 
@@ -234,7 +241,9 @@ exports.gameEventController = function (requestBody, context) {
                     result = { operation : 'nextTrun',
                                userId: userId,
                                turnUid: props.turnUid,
-                               sequence: props.sequence
+                               sequence: props.sequence,
+                               userScore: props.userScores,
+                               blankStates: props.filledBlankStates
                              };
                 }
             }
@@ -291,6 +300,8 @@ exports.gameEventController = function (requestBody, context) {
                         props.filledBlankSeqs[blanktoFillIndex] = props.sequence;
                         props.filledBlankStates[blanktoFillIndex] = 0;
 
+                        eventsHelper.checkTrueWords(props);
+
                         props.userScores[userId] = props.userScores[userId] + utility.putwordScore;
                         props.userActions[userId] = props.userActions[userId] + 1;
 
@@ -308,7 +319,8 @@ exports.gameEventController = function (requestBody, context) {
                                     sequence: props.sequence,
                                     filledBlanks: props.filledBlanks,
                                     userScores: props.userScores,
-                                    userActions: props.userActions
+                                    userActions: props.userActions,
+                                    blankStates: props.filledBlankStates
                                  };
                     }
                 }
@@ -384,6 +396,8 @@ exports.gameEventController = function (requestBody, context) {
                             props.rejectedWords.push(newReject);
                             props.rejectionOwners.push(userId);
 
+                            eventsHelper.checkTrueWords(props);
+
                             props.userScores[userId] = props.userScores[userId] + utility.rejectWordScore;
                             props.userActions[userId] = props.userActions[userId] + 1;
 
@@ -400,7 +414,8 @@ exports.gameEventController = function (requestBody, context) {
                                         sequence: props.sequence,
                                         filledBlanks: props.filledBlanks,
                                         userScores: props.userScores,
-                                        userActions: props.userActions
+                                        userActions: props.userActions,
+                                        blankStates: props.filledBlankStates
                                     };
                         }
                     }
@@ -632,8 +647,8 @@ var reqbody5 = {
     "userId":"5b4457b7e4b0712f42bad646",
     "challengeId":"5b4f31c7e4b0115f590dda9d",
     "data":{
-        "sequence":"1",
-        "blankIndex": "11",
+        "sequence":"12",
+        "blankIndex": "2",
         "wordToPut": '\"then?\"'
     },
     "properties":{
@@ -658,10 +673,13 @@ var reqbody5 = {
         "commonKeys":["the","you?","No.","her","she","the","seen","facial","her?","tall"],
         "turnUid": "5b4457b7e4b0712f42bad646",
         "turn": 0,
-        "sequence": 1,
+        "sequence": 12,
         "lastTurnStartTime": 1533375680,
-        "filledBlanks": {"3":"any","4":"should","5":"to","6":"subject","7":"school","8":"movie","9":"then?"},
+        "filledBlanks": {"3":"any","4":"should","5":"to","6":"subject","7":"school","8":"movie","9":"seen"},
         "filledBlankOwners": {"0":"5b445c73e4b0a2a06398f8a0"},
+        "filledBlankStates": {"3":"0","4":"0","5":"0","6":"0","7":"0","8":"0","9":"0"},
+        "filledBlanksShare":{"3":["5b4457b7e4b0712f42bad646","5b445c73e4b0a2a06398f8a0"],"9":["5b4457b7e4b0712f42bad646","5b445c73e4b0a2a06398f8a0"]},
+        "filledBlankSeqs":{"3":"11","4":"2","5":"10","6":"8","7":"6","8":"5","9":"1"},
         "rejectedWords": [],
         "rejectionOwners": [],
         "rejectionVotes": [],

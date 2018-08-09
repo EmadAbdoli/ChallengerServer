@@ -23,6 +23,9 @@ exports.voteForRejectTime = 13;
 exports.putwordScore = 10;
 exports.rejectWordScore = 10;
 exports.trueRejectScore = 15;
+exports.trueWordScore = 15;
+
+exports.sequencesToCheckTrueWord = 8;
 
 
 /********************************************************************************** */

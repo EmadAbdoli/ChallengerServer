@@ -121,11 +121,11 @@ exports.onMatchFoundController = function (requestBody, context) {
             turn: -1,
             sequence: 1,
             lastTurnStartTime: -1,
-            filledBlanks: {},
-            filledBlanksShare: {},
-            filledBlankOwners: {},
-            filledBlankSeqs:{},
-            filledBlankStates: {},
+            filledBlanks: {}, // index start from 0
+            filledBlanksShare: {},// index start from 0
+            filledBlankOwners: {}, // index start from 0
+            filledBlankSeqs:{}, // index start from 0
+            filledBlankStates: {}, // index start from 0
             rejectedWords: [],
             rejectionOwners: [],
             rejectionVotes: [],
