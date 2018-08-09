@@ -210,7 +210,7 @@ exports.checkTrueWords = function (props)
     {
         if (props.filledBlankStates[bSeqIndex] == 0)
         {
-            if (props.filledBlankSeqs[bSeqIndex] < props.sequence - utility.sequencesToCheckTrueWord)
+            if (props.filledBlankSeqs[bSeqIndex] <= props.sequence - utility.sequencesToCheckTrueWord)
             {
                 var blankRealWord = props.filledBlanks[bSeqIndex];
 
