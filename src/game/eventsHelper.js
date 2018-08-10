@@ -4,6 +4,7 @@ var Backtory = require("backtory-sdk");
 //var Backtory = require("./../../api/node_modules/backtory-sdk");
 var waitUntil = require("./myLibs/wait-until");
 var utility = require("./utility");
+var eventsHelper = require("./eventsHelper");
 var request = require("./myLibs/request");
 var keywordsFile = require("./keywords");
 
@@ -105,6 +106,7 @@ exports.gettingTextReady = function (props, context, userId)
         props.turnUid = props.uids[0];
         props.turn = 0;
         props.sequence = props.sequence + 1;
+        props.startTime = seconds;
 
         result = { operation : 'textReady', userId: userId,
                     blanksKeys: blanksKeyArr, commonKeys: checker.commonKeys, theText: checker.theText,
@@ -204,13 +206,13 @@ exports.findingVotesResult = function (props)
 //********************************************************************************************************** */
 //********************************************************************************************************** */
 
-exports.checkTrueWords = function (props)
+exports.checkTrueWords = function (props, isEndOfGame)
 {
     for (bSeqIndex in props.filledBlankSeqs)
     {
         if (props.filledBlankStates[bSeqIndex] == 0)
         {
-            if (props.filledBlankSeqs[bSeqIndex] <= props.sequence - utility.sequencesToCheckTrueWord)
+            if (isEndOfGame == true || props.filledBlankSeqs[bSeqIndex] <= props.sequence - utility.sequencesToCheckTrueWord)
             {
                 var blankRealWord = props.filledBlanks[bSeqIndex];
 
@@ -238,6 +240,62 @@ exports.checkTrueWords = function (props)
             }
         }
     }
+}
+
+//********************************************************************************************************** */
+//********************************************************************************************************** */
+//********************************************************************************************************** */
+
+exports.isGameFinishState = function (props)
+{
+    var d = new Date();
+    var seconds = Math.round(d.getTime() / 1000);
+    
+    var finishCheck = eventsHelper.allBlanksFilledCorrect(props);
+    
+    if (finishCheck == true || (seconds - props.startTime) >= (utility.gameTime + 50))
+    {
+        return true;
+    }
+    else
+        return false;
+}
+
+exports.allBlanksFilledCorrect = function (props)
+{
+    if (Object.keys(props.filledBlanks).length == Object.keys(props.blankKeys).length)
+    {
+        var filledBlankKeys = Object.keys(props.filledBlanks);
+        var trueBlankKeys = Object.keys(props.blankKeys);
+
+        for (var i = 0; i < filledBlankKeys.length; i++)
+        {
+            if (props.filledBlanks[filledBlankKeys[i]] != props.blankKeys[trueBlankKeys[i]]) return false;
+        }
+        
+        return true;
+    }
+
+    return false;
+}
+
+exports.doFinishingTasks = function (props, userId)
+{
+    eventsHelper.checkTrueWords(props, true); 
+
+    props.sequence = props.sequence + 2;
+    props.lastTurnStartTime = seconds;
+
+    result = { operation : 'GameFinished',
+                userId: userId,
+                sequence: props.sequence,
+                filledBlanks: props.filledBlanks,
+                userScores: props.userScores,
+                userActions: props.userActions,
+                blankStates: props.filledBlankStates
+            };
+
+    return result;
 }
 
 //********************************************************************************************************** */

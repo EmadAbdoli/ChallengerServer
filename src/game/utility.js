@@ -25,7 +25,8 @@ exports.rejectWordScore = 10;
 exports.trueRejectScore = 15;
 exports.trueWordScore = 15;
 
-exports.sequencesToCheckTrueWord 5;
+exports.sequencesToCheckTrueWord = 5;
+exports.gameTime = 300;
 
 
 /********************************************************************************** */

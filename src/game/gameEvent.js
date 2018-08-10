@@ -185,7 +185,7 @@ exports.gameEventController = function (requestBody, context) {
                     props.turnUid = props.uids[props.turn];
                     props.sequence = props.sequence + 1;
 
-                    eventsHelper.checkTrueWords(props);
+                    eventsHelper.checkTrueWords(props, false);
 
                     var d = new Date();
                     var seconds = Math.round(d.getTime() / 1000);
@@ -226,7 +226,7 @@ exports.gameEventController = function (requestBody, context) {
             else
             {
 
-                eventsHelper.checkTrueWords(props);
+                eventsHelper.checkTrueWords(props, false);
 
                 var d = new Date();
                 var seconds = Math.round(d.getTime() / 1000);
@@ -270,63 +270,70 @@ exports.gameEventController = function (requestBody, context) {
             }
             else
             {
-                if (userId == props.turnUid)
+                if (eventsHelper.isGameFinishState(props))
                 {
-                    //blankKeys: {},
-                    //commonKeys: [],
-                    //turnUid: -1,
-                    //turn: -1,
-                    //sequence: -1,
-                    //lastTurnStartTime: -1,
-                    //filledBlanks: {},
-                    //filledBlankOwners: {},
-                    //rejectedWords: [],
-                    //rejectionOwners: [],
-                    //rejectionVotes: []
-
-                    if (Object.keys(props.filledBlanks).findIndex(function(element){return element == blanktoFillIndex}) != -1)
-                    {
-                        result = {operation: 'blankIsFull',
-                                    userId: userId,
-                                    turnUid: props.turnUid,
-                                    sequence: props.sequence,
-                                    filledBlanks: props.filledBlanks
-                                 };
-                    }
-                    else
-                    {
-                        props.filledBlanks[blanktoFillIndex] = wordtoPutInBlank;
-                        props.filledBlankOwners[blanktoFillIndex] = userId;
-                        props.filledBlankSeqs[blanktoFillIndex] = props.sequence;
-                        props.filledBlankStates[blanktoFillIndex] = 0;
-
-                        eventsHelper.checkTrueWords(props);
-
-                        props.userScores[userId] = props.userScores[userId] + utility.putwordScore;
-                        props.userActions[userId] = props.userActions[userId] + 1;
-
-                        var d = new Date();
-                        var seconds = Math.round(d.getTime() / 1000);
-
-                        props.turn = (props.turn + 1) % utility.playerCounts;
-                        props.turnUid = props.uids[props.turn];
-                        props.sequence = props.sequence + 1;
-                        props.lastTurnStartTime = seconds;
-
-                        result = { operation : 'PutWord',
-                                    userId: userId,
-                                    turnUid: props.turnUid,
-                                    sequence: props.sequence,
-                                    filledBlanks: props.filledBlanks,
-                                    userScores: props.userScores,
-                                    userActions: props.userActions,
-                                    blankStates: props.filledBlankStates
-                                 };
-                    }
+                    result = eventsHelper.doFinishingTasks(props, userId);
                 }
                 else
                 {
-                    result = {operation: 'notYourTurn', userId: userId};
+                    if (userId == props.turnUid)
+                    {
+                        //blankKeys: {},
+                        //commonKeys: [],
+                        //turnUid: -1,
+                        //turn: -1,
+                        //sequence: -1,
+                        //lastTurnStartTime: -1,
+                        //filledBlanks: {},
+                        //filledBlankOwners: {},
+                        //rejectedWords: [],
+                        //rejectionOwners: [],
+                        //rejectionVotes: []
+
+                        if (Object.keys(props.filledBlanks).findIndex(function(element){return element == blanktoFillIndex}) != -1)
+                        {
+                            result = {operation: 'blankIsFull',
+                                        userId: userId,
+                                        turnUid: props.turnUid,
+                                        sequence: props.sequence,
+                                        filledBlanks: props.filledBlanks
+                                    };
+                        }
+                        else
+                        {
+                            props.filledBlanks[blanktoFillIndex] = wordtoPutInBlank;
+                            props.filledBlankOwners[blanktoFillIndex] = userId;
+                            props.filledBlankSeqs[blanktoFillIndex] = props.sequence;
+                            props.filledBlankStates[blanktoFillIndex] = 0;
+
+                            eventsHelper.checkTrueWords(props, false);
+
+                            props.userScores[userId] = props.userScores[userId] + utility.putwordScore;
+                            props.userActions[userId] = props.userActions[userId] + 1;
+
+                            var d = new Date();
+                            var seconds = Math.round(d.getTime() / 1000);
+
+                            props.turn = (props.turn + 1) % utility.playerCounts;
+                            props.turnUid = props.uids[props.turn];
+                            props.sequence = props.sequence + 1;
+                            props.lastTurnStartTime = seconds;
+
+                            result = { operation : 'PutWord',
+                                        userId: userId,
+                                        turnUid: props.turnUid,
+                                        sequence: props.sequence,
+                                        filledBlanks: props.filledBlanks,
+                                        userScores: props.userScores,
+                                        userActions: props.userActions,
+                                        blankStates: props.filledBlankStates
+                            };
+                        }
+                    }
+                    else
+                    {
+                        result = {operation: 'notYourTurn', userId: userId};
+                    }
                 }
             }
 
@@ -396,7 +403,7 @@ exports.gameEventController = function (requestBody, context) {
                             props.rejectedWords.push(newReject);
                             props.rejectionOwners.push(userId);
 
-                            eventsHelper.checkTrueWords(props);
+                            eventsHelper.checkTrueWords(props, false);
 
                             props.userScores[userId] = props.userScores[userId] + utility.rejectWordScore;
                             props.userActions[userId] = props.userActions[userId] + 1;
@@ -508,6 +515,36 @@ exports.gameEventController = function (requestBody, context) {
             else
             {
                 result = eventsHelper.findingVotesResult(props);
+            }
+
+        break;
+
+        /************************************************************************************ */
+        /************************************************************************************ */
+        /************************************************************************************ */
+        /************************************************************************************ */
+        /************************************************************************************ */
+        /************************************************************************************ */
+
+        case "theEnd":
+
+            var tempSeq = props.sequence;
+            var requestSeq = JSON.parse(requestBody.data.sequence);
+
+            if (requestSeq != tempSeq)
+            {
+                result = {operation: 'invalidOperation3', userId: userId};
+            }
+            else
+            {
+                if (eventsHelper.isGameFinishState(props))
+                {
+                    result = eventsHelper.doFinishingTasks(props, userId);
+                }
+                else
+                {
+                    result = {operation: 'invalidGameEnd', userId: userId};
+                }
             }
 
         break;
@@ -675,7 +712,7 @@ var reqbody5 = {
         "turn": 0,
         "sequence": 12,
         "lastTurnStartTime": 1533375680,
-        "filledBlanks": {"3":"any","4":"should","5":"to","6":"subject","7":"school","8":"movie","9":"seen"},
+        "filledBlanks": {"0":"you?","1":"the","2":"No.","4":"the","5":"she","6":"tall","7":"her","8":"facial","9":"seen"},
         "filledBlankOwners": {"0":"5b445c73e4b0a2a06398f8a0"},
         "filledBlankStates": {"3":"0","4":"0","5":"0","6":"0","7":"0","8":"0","9":"0"},
         "filledBlanksShare":{"3":["5b4457b7e4b0712f42bad646","5b445c73e4b0a2a06398f8a0"],"9":["5b4457b7e4b0712f42bad646","5b445c73e4b0a2a06398f8a0"]},

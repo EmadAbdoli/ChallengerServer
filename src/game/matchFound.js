@@ -114,6 +114,7 @@ exports.onMatchFoundController = function (requestBody, context) {
             chosenKeywords: {},
             keywordsGameId: "",
             gameId: game.get("_id"),
+            startTime: 0,
             theText: "",
             blankKeys: {},
             commonKeys: [],
