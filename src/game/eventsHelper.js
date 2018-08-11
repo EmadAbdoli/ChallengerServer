@@ -253,7 +253,7 @@ exports.isGameFinishState = function (props)
     
     var finishCheck = eventsHelper.allBlanksFilledCorrect(props);
     
-    if (finishCheck == true || (seconds - props.startTime) >= (utility.gameTime + 50))
+    if (finishCheck == true || (seconds - props.startTime) >= (utility.gameTime))
     {
         return true;
     }
@@ -281,7 +281,10 @@ exports.allBlanksFilledCorrect = function (props)
 
 exports.doFinishingTasks = function (props, userId)
 {
-    eventsHelper.checkTrueWords(props, true); 
+    eventsHelper.checkTrueWords(props, true);
+
+    var d = new Date();
+    var seconds = Math.round(d.getTime() / 1000);
 
     props.sequence = props.sequence + 2;
     props.lastTurnStartTime = seconds;
