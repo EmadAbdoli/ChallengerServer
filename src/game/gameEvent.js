@@ -270,46 +270,46 @@ exports.gameEventController = function (requestBody, context) {
             }
             else
             {
-                if (eventsHelper.isGameFinishState(props))
+                if (userId == props.turnUid)
                 {
-                    result = eventsHelper.doFinishingTasks(props, userId);
-                }
-                else
-                {
-                    if (userId == props.turnUid)
-                    {
-                        //blankKeys: {},
-                        //commonKeys: [],
-                        //turnUid: -1,
-                        //turn: -1,
-                        //sequence: -1,
-                        //lastTurnStartTime: -1,
-                        //filledBlanks: {},
-                        //filledBlankOwners: {},
-                        //rejectedWords: [],
-                        //rejectionOwners: [],
-                        //rejectionVotes: []
+                    //blankKeys: {},
+                    //commonKeys: [],
+                    //turnUid: -1,
+                    //turn: -1,
+                    //sequence: -1,
+                    //lastTurnStartTime: -1,
+                    //filledBlanks: {},
+                    //filledBlankOwners: {},
+                    //rejectedWords: [],
+                    //rejectionOwners: [],
+                    //rejectionVotes: []
 
-                        if (Object.keys(props.filledBlanks).findIndex(function(element){return element == blanktoFillIndex}) != -1)
+                    if (Object.keys(props.filledBlanks).findIndex(function(element){return element == blanktoFillIndex}) != -1)
+                    {
+                        result = {operation: 'blankIsFull',
+                                    userId: userId,
+                                    turnUid: props.turnUid,
+                                    sequence: props.sequence,
+                                    filledBlanks: props.filledBlanks
+                                };
+                    }
+                    else
+                    {
+                        props.filledBlanks[blanktoFillIndex] = wordtoPutInBlank;
+                        props.filledBlankOwners[blanktoFillIndex] = userId;
+                        props.filledBlankSeqs[blanktoFillIndex] = props.sequence;
+                        props.filledBlankStates[blanktoFillIndex] = 0;
+
+                        props.userScores[userId] = props.userScores[userId] + utility.putwordScore;
+                        props.userActions[userId] = props.userActions[userId] + 1;
+
+                        if (eventsHelper.isGameFinishState(props))
                         {
-                            result = {operation: 'blankIsFull',
-                                        userId: userId,
-                                        turnUid: props.turnUid,
-                                        sequence: props.sequence,
-                                        filledBlanks: props.filledBlanks
-                                    };
+                            result = eventsHelper.doFinishingTasks(props, userId);
                         }
                         else
                         {
-                            props.filledBlanks[blanktoFillIndex] = wordtoPutInBlank;
-                            props.filledBlankOwners[blanktoFillIndex] = userId;
-                            props.filledBlankSeqs[blanktoFillIndex] = props.sequence;
-                            props.filledBlankStates[blanktoFillIndex] = 0;
-
                             eventsHelper.checkTrueWords(props, false);
-
-                            props.userScores[userId] = props.userScores[userId] + utility.putwordScore;
-                            props.userActions[userId] = props.userActions[userId] + 1;
 
                             var d = new Date();
                             var seconds = Math.round(d.getTime() / 1000);
@@ -330,10 +330,10 @@ exports.gameEventController = function (requestBody, context) {
                             };
                         }
                     }
-                    else
-                    {
-                        result = {operation: 'notYourTurn', userId: userId};
-                    }
+                }
+                else
+                {
+                    result = {operation: 'notYourTurn', userId: userId};
                 }
             }
 
@@ -891,6 +891,40 @@ var newRequest =
         "rejectedWords":[[0,"you",0],[5,"rain",0]],
         "rejectionOwners":["5b547ff7e4b0712f42c49855","5b547ff7e4b0712f42c49855"],
         "rejectionVotes":[{"5b547ff7e4b0712f42c49855":1,"5b445c73e4b0a2a06398f8a0":0,"5b6c290ce4b09aa3e74c8c30":0},{"5b547ff7e4b0712f42c49855":1,"5b445c73e4b0a2a06398f8a0":0,"5b6c290ce4b09aa3e74c8c30":0}]
+    }
+}
+
+var newReq2 = 
+{
+    "message":"theEnd",
+    "userId":"5b6c290ce4b09aa3e74c8c30",
+    "challengeId":"5b6eac24e4b057f917381a35",
+    "data":{"sequence":"31"},
+    "properties":
+    {
+        "uids":["5b445c73e4b0a2a06398f8a0","5b6c290ce4b09aa3e74c8c30","5b547ff7e4b0712f42c49855"],
+        "pids":["5b445c735ce7180001bfaf7c","5b6c290d0b088c0001d39de2","5b547ff8b291a40001e53f28"],
+        "userScores":{"5b445c73e4b0a2a06398f8a0":90,"5b6c290ce4b09aa3e74c8c30":75,"5b547ff7e4b0712f42c49855":70},
+        "userActions":{"5b445c73e4b0a2a06398f8a0":6,"5b6c290ce4b09aa3e74c8c30":6,"5b547ff7e4b0712f42c49855":4},
+        "choices":{"5b547ff7e4b0712f42c49855":"0","5b445c73e4b0a2a06398f8a0":"2","5b6c290ce4b09aa3e74c8c30":"2"},
+        "topics":["Health","College Life","Shopping"],"topic":"Shopping",
+        "chosenKeywords":{"5b6c290ce4b09aa3e74c8c30":["idea","today","choice","thanks","credit","section","popular","outlets","receipt","customer"],"5b445c73e4b0a2a06398f8a0":["gift","idea","today","choice","section","popular","outlets","receipt","discount","customer"],"5b547ff7e4b0712f42c49855":["gift","idea","size","outlet","thanks","credit","section","discount","customer","difference"]},
+        "keywordsGameId":196,"gameId":"5b6eac240b088c00014c70cf",
+        "startTime":1533979738,
+        "theText":"A: My wife's birthday is %BLANK%. I need some flowers. B: We have lots of fresh red %BLANK% A: How much do the %BLANK% cost? B: $20 a dozen. A: That sounds good. Last %BLANK% I paid $30. B: Yes, you came here %BLANK% the right day. They're on %BLANK% %BLANK% A: Give me a dozen. B: Very good. %BLANK% you like %BLANK% else? A: No, I'll just %BLANK% her the roses and a card. B: She should be very pleased with these roses.",
+        "blankKeys":{"25":"today","84":"roses.","111":"roses","165":"year","206":"on","232":"sale","249":"today.","290":"Would","296":"anything","328":"give"}
+        ,"commonKeys":["sale","anything","roses.","give","year","on","Would","today.","roses"],
+        "turnUid":"5b547ff7e4b0712f42c49855",
+        "turn":2,
+        "sequence":31,
+        "lastTurnStartTime":1533980043,
+        "filledBlanks":{"0":"today","1":"roses.","2":"roses","3":"year","4":"on","5":"sale","6":"today.","7":"Would","8":"anything","9":"give"},
+        "filledBlanksShare":{},
+        "filledBlankOwners":{"0":"5b445c73e4b0a2a06398f8a0","1":"5b6c290ce4b09aa3e74c8c30","2":"5b547ff7e4b0712f42c49855","3":"5b445c73e4b0a2a06398f8a0","4":"5b547ff7e4b0712f42c49855","5":"5b445c73e4b0a2a06398f8a0","6":"5b6c290ce4b09aa3e74c8c30","7":"5b547ff7e4b0712f42c49855","8":"5b445c73e4b0a2a06398f8a0","9":"5b6c290ce4b09aa3e74c8c30"},
+        "filledBlankSeqs":{"0":3,"1":4,"2":5,"3":6,"4":8,"5":24,"6":25,"7":11,"8":12,"9":17},
+        "filledBlankStates":{"0":1,"1":1,"2":1,"3":1,"4":1,"5":0,"6":0,"7":1,"8":1,"9":1},
+        "rejectedWords":[[9,"give",1],[5,"on",1],[6,"sale",1]],
+        "rejectionOwners":["5b445c73e4b0a2a06398f8a0","5b6c290ce4b09aa3e74c8c30","5b547ff7e4b0712f42c49855"],"rejectionVotes":[{"5b445c73e4b0a2a06398f8a0":1,"5b6c290ce4b09aa3e74c8c30":1,"5b547ff7e4b0712f42c49855":1},{"5b6c290ce4b09aa3e74c8c30":1,"5b547ff7e4b0712f42c49855":1,"5b445c73e4b0a2a06398f8a0":1},{"5b445c73e4b0a2a06398f8a0":1,"5b547ff7e4b0712f42c49855":1,"5b6c290ce4b09aa3e74c8c30":0}]
     }
 }
 
