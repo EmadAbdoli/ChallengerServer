@@ -98,6 +98,7 @@ exports.onMatchFoundController = function (requestBody, context) {
         var tempUserAction = {};
         var tempUserPostCounts = {};
         var tempUserRejectCounts = {};
+        var tempUserJudgedVotes = {};
 
         for (var i = 0; i < utility.playerCounts; i++)
         {
@@ -105,6 +106,9 @@ exports.onMatchFoundController = function (requestBody, context) {
             tempUserAction[tuids[i]] = 0;
             tempUserPostCounts[tuids[i]] = 0;
             tempUserRejectCounts[tuids[i]] = 0;
+
+            var tempArr = [0,0];
+            tempUserJudgedVotes[tuids[i]] = tempArr;
         }
 
         var realtimeGame = new Backtory.RealtimeGame(matchId);
@@ -137,6 +141,7 @@ exports.onMatchFoundController = function (requestBody, context) {
             rejectionVotes: [],
             userPostCounts: tempUserPostCounts,
             userRejectCounts: tempUserRejectCounts,
+            userJudgedVotes: tempUserJudgedVotes // [trueCounts, falseCounts]
         });
 
         

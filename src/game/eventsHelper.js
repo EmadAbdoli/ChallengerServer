@@ -149,7 +149,20 @@ exports.findingVotesResult = function (props)
             for (uid in props.rejectionVotes[rejectIndex-1])
             {
                 if (props.rejectionVotes[rejectIndex-1][uid] == 1)
+                {
                     props.userScores[uid] = props.userScores[uid] + utility.trueRejectScore;
+                    props.userJudgedVotes[uid][0] = props.userJudgedVotes[uid][0] + 1;
+                }
+            }
+        }
+        else
+        {
+            for (uid in props.rejectionVotes[rejectIndex-1])
+            {
+                if (props.rejectionVotes[rejectIndex-1][uid] == 0)
+                {
+                    props.userJudgedVotes[uid][1] = props.userJudgedVotes[uid][1] + 1;
+                }
             }
         }
 
@@ -177,9 +190,23 @@ exports.findingVotesResult = function (props)
             for (uid in props.rejectionVotes[rejectIndex-1])
             {
                 if (props.rejectionVotes[rejectIndex-1][uid] == 0)
+                {
                     stockHolders.push(uid);
+                    props.userJudgedVotes[uid][0] = props.userJudgedVotes[uid][0] + 1;
+                }
             }
             props.filledBlanksShare[wordIndexInBlanks] = stockHolders;
+        }
+        else
+        {
+            for (uid in props.rejectionVotes[rejectIndex-1])
+            {
+                if (props.rejectionVotes[rejectIndex-1][uid] == 1)
+                {
+                    stockHolders.push(uid);
+                    props.userJudgedVotes[uid][1] = props.userJudgedVotes[uid][1] + 1;
+                }
+            }
         }
     }
 
@@ -298,8 +325,7 @@ exports.doFinishingTasks = function (props, userId)
                 blankStates: props.filledBlankStates,
                 userPosts: props.userPostCounts,
                 userRejects: props.userRejectCounts,
-                rejectedWords: props.rejectedWords,
-                rejectionVotes: props.rejectionVotes,
+                userJudgedVotes: props.userJudgedVotes
             };
 
     return result;
