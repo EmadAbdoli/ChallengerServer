@@ -300,6 +300,7 @@ exports.gameEventController = function (requestBody, context) {
                         props.filledBlankSeqs[blanktoFillIndex] = props.sequence;
                         props.filledBlankStates[blanktoFillIndex] = 0;
 
+                        props.userPostCounts[userId] = props.userPostCounts[userId] + 1;
                         props.userScores[userId] = props.userScores[userId] + utility.putwordScore;
                         props.userActions[userId] = props.userActions[userId] + 1;
 
@@ -405,6 +406,7 @@ exports.gameEventController = function (requestBody, context) {
 
                             eventsHelper.checkTrueWords(props, false);
 
+                            props.userRejectCounts[userId] = props.userRejectCounts[userId] + 1;
                             props.userScores[userId] = props.userScores[userId] + utility.rejectWordScore;
                             props.userActions[userId] = props.userActions[userId] + 1;
 

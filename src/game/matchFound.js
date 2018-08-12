@@ -96,10 +96,15 @@ exports.onMatchFoundController = function (requestBody, context) {
 
         var tempUserScore = {};
         var tempUserAction = {};
+        var tempUserPostCounts = {};
+        var tempUserRejectCounts = {};
+
         for (var i = 0; i < utility.playerCounts; i++)
         {
             tempUserScore[tuids[i]] = 0;
             tempUserAction[tuids[i]] = 0;
+            tempUserPostCounts[tuids[i]] = 0;
+            tempUserRejectCounts[tuids[i]] = 0;
         }
 
         var realtimeGame = new Backtory.RealtimeGame(matchId);
@@ -130,6 +135,8 @@ exports.onMatchFoundController = function (requestBody, context) {
             rejectedWords: [],
             rejectionOwners: [],
             rejectionVotes: [],
+            userPostCounts: tempUserPostCounts,
+            userRejectCounts: tempUserRejectCounts,
         });
 
         

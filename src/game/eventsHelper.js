@@ -295,7 +295,11 @@ exports.doFinishingTasks = function (props, userId)
                 filledBlanks: props.filledBlanks,
                 userScores: props.userScores,
                 userActions: props.userActions,
-                blankStates: props.filledBlankStates
+                blankStates: props.filledBlankStates,
+                userPosts: props.userPostCounts,
+                userRejects: props.userRejectCounts,
+                rejectedWords: props.rejectedWords,
+                rejectionVotes: props.rejectionVotes,
             };
 
     return result;
