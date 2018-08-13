@@ -196,8 +196,7 @@ exports.gameEventController = function (requestBody, context) {
                                turnUid: props.turnUid,
                                sequence: props.sequence,
                                userScore: props.userScores,
-                               blankStates: props.filledBlankStates,
-                               userJudgedVotes: props.userJudgedVotes
+                               blankStates: props.filledBlankStates
                              };
                 }
                 else

@@ -153,15 +153,23 @@ exports.findingVotesResult = function (props)
                     props.userScores[uid] = props.userScores[uid] + utility.trueRejectScore;
                     props.userJudgedVotes[uid][0] = props.userJudgedVotes[uid][0] + 1;
                 }
+                else
+                {
+                    props.userJudgedVotes[uid][1] = props.userJudgedVotes[uid][1] + 1;
+                }
             }
         }
         else
         {
             for (uid in props.rejectionVotes[rejectIndex-1])
             {
-                if (props.rejectionVotes[rejectIndex-1][uid] == 0)
+                if (props.rejectionVotes[rejectIndex-1][uid] == 1)
                 {
                     props.userJudgedVotes[uid][1] = props.userJudgedVotes[uid][1] + 1;
+                }
+                else
+                {
+                    props.userJudgedVotes[uid][0] = props.userJudgedVotes[uid][0] + 1;
                 }
             }
         }
@@ -194,16 +202,23 @@ exports.findingVotesResult = function (props)
                     stockHolders.push(uid);
                     props.userJudgedVotes[uid][0] = props.userJudgedVotes[uid][0] + 1;
                 }
+                else
+                {
+                    props.userJudgedVotes[uid][1] = props.userJudgedVotes[uid][1] + 1;
+                }
             }
             props.filledBlanksShare[wordIndexInBlanks] = stockHolders;
         }
-        else
+        else // votingResult = 0 && mustBeRejected = true
         {
             for (uid in props.rejectionVotes[rejectIndex-1])
             {
                 if (props.rejectionVotes[rejectIndex-1][uid] == 1)
                 {
-                    stockHolders.push(uid);
+                    props.userJudgedVotes[uid][0] = props.userJudgedVotes[uid][0] + 1;
+                }
+                else
+                {
                     props.userJudgedVotes[uid][1] = props.userJudgedVotes[uid][1] + 1;
                 }
             }
