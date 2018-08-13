@@ -196,7 +196,8 @@ exports.gameEventController = function (requestBody, context) {
                                turnUid: props.turnUid,
                                sequence: props.sequence,
                                userScore: props.userScores,
-                               blankStates: props.filledBlankStates
+                               blankStates: props.filledBlankStates,
+                               userJudgedVotes: props.userJudgedVotes
                              };
                 }
                 else
@@ -586,10 +587,32 @@ var reqbody1 = {
 
 var reqbody2 = {
     "message": "SubjectSelection",
-    "userId" : "4",
+    "userId" : "5b445c73e4b0a2a06398f8a0",
     "properties": {
-        "uids": ["5b4457b7e4b0712f42bad646","5b445c73e4b0a2a06398f8a0","5b445c62e4b0a2a06398f896"],
-        "pids": ["5b4457b74f83de0001e9bd59","5b445c735ce7180001bfaf7c","5b445c624f83de0001e9d101"],
+        "uids":["5b445c73e4b0a2a06398f8a0","5b6c290ce4b09aa3e74c8c30","5b547ff7e4b0712f42c49855"],
+        "pids":["5b445c735ce7180001bfaf7c","5b6c290d0b088c0001d39de2","5b547ff8b291a40001e53f28"],
+        "userScores":{"5b445c73e4b0a2a06398f8a0":0,"5b6c290ce4b09aa3e74c8c30":0,"5b547ff7e4b0712f42c49855":0},
+        "userActions":{"5b445c73e4b0a2a06398f8a0":0,"5b6c290ce4b09aa3e74c8c30":0,"5b547ff7e4b0712f42c49855":0},
+        "choices":{"5b547ff7e4b0712f42c49855":"0","5b6c290ce4b09aa3e74c8c30":"2"},
+        "topics":["Health","College Life","Shopping"],"topic":"Shopping",
+        "chosenKeywords":{},
+        "keywordsGameId":196,
+        "gameId":"5b6eac240b088c00014c70cf",
+        "startTime":1533979738,
+        "theText":"",
+        "blankKeys":{}
+        ,"commonKeys":[],
+        "turnUid":"",
+        "turn":2,
+        "sequence":1,
+        "lastTurnStartTime":1533980043,
+        "filledBlanks":{},
+        "filledBlanksShare":{},
+        "filledBlankOwners":{},
+        "filledBlankSeqs":{},
+        "filledBlankStates":{},
+        "rejectedWords":[],
+        "rejectionOwners":[],
         "choices": {1:1,2:1},
         "topics": ["Selling a House","At the Bank","Health"],
         "topic" : "",
@@ -599,6 +622,7 @@ var reqbody2 = {
     },
     "data" :{
         "choice": 0,
+        "sequence": 1,
         "topics": '["Selling a House","At the Bank","Health"]',
     },
     "clientRequestId": "26e7379d-f2e6-46d3-be78-3f300345517e"
