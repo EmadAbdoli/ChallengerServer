@@ -32,6 +32,7 @@ exports.onMatchFoundController = function (requestBody, context) {
     //context.log("before setGameTypeRelations...");
 
     utility.setGameTypeRelations(game, gameTypeId, matchId, participants, context);
+    utility.getCoinFromUsers(matchmakingName, participants);
     
     /*waitUntil()
         .interval(50)
@@ -115,6 +116,7 @@ exports.onMatchFoundController = function (requestBody, context) {
         realtimeGame.setProperties({
             uids: tuids,
             pids: tpids,
+            matchName: matchmakingName,
             userScores: tempUserScore,
             userActions: tempUserAction,
             choices: {},

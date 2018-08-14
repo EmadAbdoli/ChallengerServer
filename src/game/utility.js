@@ -499,8 +499,147 @@ exports.setRoundParticipants = function(gameId, topic, pids)
         });
 }
 
+/********************************************************************************** */
+/********************************************************************************** */
+
+exports.getCoinFromUsers = function (matchmakingName, participants)
+{
+    var Player = Backtory.Object.extend("players");
+
+    var coinCost = utility.gameCost(matchmakingName);
+
+    for(var i = 0; i < participants.length; i++)
+    {
+        var pid = this.getUserPid(participants[i]);
+        
+        var player = new Backtory.Query(Player);
+        player.get(pid, {
+            success: function(tPlayer) {
+                
+                var prevCoin = tPlayer.get("coin");
+                tPlayer.set("coin", prevCoin - coinCost);
+                tPlayer.save();
+            }
+        });
+    }
+}
+
+/********************************************************************************** */
+/********************************************************************************** */
+
+exports.gameCost = function (matchmakingName)
+{
+    if (matchmakingName == "GameMatching1") return 25;
+    if (matchmakingName == "GameMatching2") return 100;
+    if (matchmakingName == "GameMatching3") return 500;
+    if (matchmakingName == "GameMatching4") return 2500;
+    if (matchmakingName == "GameMatching5") return 3000;
+}
+
+/********************************************************************************** */
+/********************************************************************************** */
+
+exports.giveUserPrizes = function(props)
+{
+    var Player = Backtory.Object.extend("players");
+
+    var sortedWinnerIndexes = utility.takeSortedWinners(props.uids, props.userScores, props.userActions);
+    
+    var coinCost = utility.gameCost(props.matchName);
+    var Prize = coinCost * 3;
+
+    for(var i = 0; i < props.uids.length; i++)
+    {
+        var pid = props.pids[sortedWinnerIndexes[i]];
+        
+        var player = new Backtory.Query(Player);
+        player.get(pid, {
+            success: function(tPlayer) {
+
+                var tempI = -1;
+                var ppid = tPlayer.get("_id");
+                for (var t = 0; t < props.pids.length; t++)
+                {
+                    if (ppid == props.pids[sortedWinnerIndexes[t]])
+                    {
+                        tempI = t;
+                        break;
+                    }
+                }
+                
+                if (tempI == 0) // Winner
+                {
+                    var prevCoin = tPlayer.get("coin");
+                    tPlayer.set("coin", prevCoin + Prize);
+                }
+
+                var prevScore = tPlayer.get("score");
+                var newScore = prevScore + props.userScores[props.uids[sortedWinnerIndexes[tempI]]];
+                
+                tPlayer.set("score", newScore);
+                tPlayer.set("level", utility.calcLevel(newScore));
+
+                tPlayer.save();
+            }
+        });
+    }
+}
+
+exports.takeSortedWinners = function (uids, userScores, userActions)
+{
+    var sortedIndexes = [0,1,2,3];
+
+    for (var i = 0; i < uids.length; i++)
+        for (var j = i + 1; j < uids.length; j++)
+        {
+            var t1 = uids[sortedIndexes[i]];
+            var t2 = uids[sortedIndexes[j]];
+            if (userScores[uids[sortedIndexes[i]]] < userScores[uids[sortedIndexes[j]]] ||
+                (userScores[uids[sortedIndexes[i]]] == userScores[uids[sortedIndexes[j]]] && userActions[uids[sortedIndexes[i]]] < userActions[uids[sortedIndexes[j]]]))
+            {
+                var temp = sortedIndexes[i];
+                sortedIndexes[i] = sortedIndexes[j];
+                sortedIndexes[j] = temp;
+            }
+        }
+
+    return sortedIndexes;
+}
+
+exports.calcLevel = function (score)
+{
+    var lvl = 1;
+    var startIndex = 0;
+    var addingValue = 100;
+
+    while( score > startIndex + addingValue)
+    {
+        lvl++;
+        startIndex += addingValue;
+        addingValue = addingValue * 1.5;
+    }
+
+    return lvl;
+}
+
 //var pids = ["5b4457b74f83de0001e9bd59","5b445c735ce7180001bfaf7c","5b445c624f83de0001e9d101"];
 
 //this.setRoundParticipants("5b4f5bb6b291a40001c7ef1b","Driving",pids);
 //let alaki = {val:false};
 //this.sendGetParagraphsRequest(4, ["doctor","problem","blood","appointment","results","emergency","medication","test","stress","antihistamine","sleep","breath","medicine"], alaki);
+
+//var participants = ["5b6c34a70e66e7000165e8ae","5b6c2b270b088c0001d3abf8","5b6c29b70b088c0001d3a1f0"];
+//var name = "GameMatching1";
+
+//utility.getCoinFromUsers(name, participants);
+
+//var tempProps = 
+//{
+//    uids: ["5b6c34a6e4b09aa3e74ca08f","5b6c2b26e4b09aa3e74c919b","5b6c29b6e4b02ae9e75bcba6"],
+//    pids: ["5b6c34a70e66e7000165e8ae","5b6c2b270b088c0001d3abf8","5b6c29b70b088c0001d3a1f0"],
+//    userScores: {"5b6c34a6e4b09aa3e74ca08f": 110,"5b6c2b26e4b09aa3e74c919b":60,"5b6c29b6e4b02ae9e75bcba6":80},
+//    userActions: {"5b6c34a6e4b09aa3e74ca08f": 5,"5b6c2b26e4b09aa3e74c919b":5,"5b6c29b6e4b02ae9e75bcba6":3},
+//    matchName : "GameMatching1"
+//};
+
+//utility.giveUserPrizes(tempProps);
