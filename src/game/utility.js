@@ -502,7 +502,7 @@ exports.setRoundParticipants = function(gameId, topic, pids)
 /********************************************************************************** */
 /********************************************************************************** */
 
-exports.getCoinFromUsers = function (matchmakingName, participants)
+exports.getCoinFromUsers = function (matchmakingName, participants, context)
 {
     var Player = Backtory.Object.extend("players");
 
@@ -510,7 +510,11 @@ exports.getCoinFromUsers = function (matchmakingName, participants)
 
     for(var i = 0; i < participants.length; i++)
     {
+        context.log("i:" + i);
+
         var pid = this.getUserPid(participants[i]);
+
+        context.log("pid" + pid); 
         
         var player = new Backtory.Query(Player);
         player.get(pid, {
