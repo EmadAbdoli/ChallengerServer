@@ -953,9 +953,47 @@ var newReq2 =
     }
 }
 
+var req1 = {
+    "message":"PutWord",
+    "userId":"5b445c73e4b0a2a06398f8a0",
+    "challengeId":"5b73b979e4b0d99b00f16bb4",
+    "data":{
+        "sequence":"24",
+        "blankIndex":"9",
+        "wordToPut":"\"in\""},
+    "properties":{
+        "uids":["5b445c73e4b0a2a06398f8a0","5b6c290ce4b09aa3e74c8c30","5b547ff7e4b0712f42c49855"],
+        "pids":["5b445c735ce7180001bfaf7c","5b6c290d0b088c0001d39de2","5b547ff8b291a40001e53f28"],
+        "matchName":"GameMatching1",
+        "userScores":{"5b445c73e4b0a2a06398f8a0":70,"5b6c290ce4b09aa3e74c8c30":90,"5b547ff7e4b0712f42c49855":95},
+        "userActions":{"5b445c73e4b0a2a06398f8a0":4,"5b6c290ce4b09aa3e74c8c30":6,"5b547ff7e4b0712f42c49855":5},
+        "choices":{"5b547ff7e4b0712f42c49855":"0","5b6c290ce4b09aa3e74c8c30":"0","5b445c73e4b0a2a06398f8a0":"1"},
+        "topics":["Driving","Shopping","College Life"],
+        "topic":"Driving","chosenKeywords":{"5b547ff7e4b0712f42c49855":["space","police","campus","warning","learner","license","accident","apartment","insurance","appointment"]},
+        "keywordsGameId":216,"gameId":"5b73b9790bc5b6000132237a","startTime":1534310835,
+        "theText":"A: So how did %BLANK% do on my %BLANK% test? B: %BLANK% %BLANK% want the %BLANK% A: Of course, I do. B: Well, you really didn't do all that well. A: How bad did I do? B: To be %BLANK% honest, you %BLANK% your test. A: How? B: There %BLANK% a number of reasons. A: What were they? B: %BLANK% you just can't drive. A: Can I have another try? B: You can take it %BLANK% a couple weeks.",
+        "blankKeys":{"13":"I","31":"driving","41":"Do","55":"you","69":"truth?","160":"completely","185":"failed","220":"were","266":"Basically,","344":"in"},
+        "commonKeys":["in","Basically,","completely","Do","were","failed","I","truth?","you","driving"],
+        "turnUid":"5b445c73e4b0a2a06398f8a0","turn":0,
+        "sequence":24,
+        "lastTurnStartTime":1534311067,
+        "filledBlanks":{"0":"I","1":"driving","2":"Do","3":"you","4":"truth?","5":"completely","6":"failed","7":"were","8":"Basically,"},
+        "filledBlanksShare":{},
+        "filledBlankOwners":{"0":"5b547ff7e4b0712f42c49855","1":"5b547ff7e4b0712f42c49855","2":"5b547ff7e4b0712f42c49855","3":"5b445c73e4b0a2a06398f8a0","4":"5b445c73e4b0a2a06398f8a0","5":"5b6c290ce4b09aa3e74c8c30","6":"5b547ff7e4b0712f42c49855","7":"5b6c290ce4b09aa3e74c8c30","8":"5b547ff7e4b0712f42c49855"},
+        "filledBlankSeqs":{"0":20,"1":5,"2":16,"3":17,"4":21,"5":10,"6":11,"7":22,"8":23},
+        "filledBlankStates":{"0":0,"1":1,"2":1,"3":1,"4":0,"5":1,"6":1,"7":0,"8":0},
+        "rejectedWords":[[3,"Basically,",1],[2,"I",1],[0,"you",1]],
+        "rejectionOwners":["5b445c73e4b0a2a06398f8a0","5b6c290ce4b09aa3e74c8c30","5b6c290ce4b09aa3e74c8c30"],
+        "rejectionVotes":[{"5b445c73e4b0a2a06398f8a0":1,"5b547ff7e4b0712f42c49855":1,"5b6c290ce4b09aa3e74c8c30":0},{"5b6c290ce4b09aa3e74c8c30":1,"5b547ff7e4b0712f42c49855":1,"5b445c73e4b0a2a06398f8a0":1},{"5b6c290ce4b09aa3e74c8c30":1,"5b547ff7e4b0712f42c49855":1,"5b445c73e4b0a2a06398f8a0":0}],
+        "userPostCounts":{"5b445c73e4b0a2a06398f8a0":3,"5b6c290ce4b09aa3e74c8c30":4,"5b547ff7e4b0712f42c49855":5},
+        "userRejectCounts":{"5b445c73e4b0a2a06398f8a0":1,"5b6c290ce4b09aa3e74c8c30":2,"5b547ff7e4b0712f42c49855":0},
+        "userJudgedVotes":{"5b445c73e4b0a2a06398f8a0":[2,1],"5b6c290ce4b09aa3e74c8c30":[2,1],"5b547ff7e4b0712f42c49855":[3,0]}
+    }
+}
+
 var formParams = {};
 formParams.topic = "Health";
 formParams.keywords = '["doctor","problem","blood","appointment","results","emergency","medication","test","insurance","pressure","problems","stomach","professor","stress","antihistamine","sleep","breath","medicine","feeling","good","lately","health","effects","infection","chest","information","prescription","itching","trouble"]';
 
 
-//this.gameEventController(reqbody7);
+//this.gameEventController(req1);

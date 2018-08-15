@@ -325,7 +325,7 @@ exports.doFinishingTasks = function (props, userId)
 {
     eventsHelper.checkTrueWords(props, true);
 
-    utility.giveUserPrizes(props);
+    //utility.giveUserPrizes(props);
 
     var d = new Date();
     var seconds = Math.round(d.getTime() / 1000);

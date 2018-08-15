@@ -540,48 +540,49 @@ exports.gameCost = function (matchmakingName)
 
 exports.giveUserPrizes = function(props)
 {
-    var Player = Backtory.Object.extend("players");
-
     var sortedWinnerIndexes = utility.takeSortedWinners(props.uids, props.userScores, props.userActions);
     
     var coinCost = utility.gameCost(props.matchName);
     var Prize = coinCost * 3;
 
-    for(var i = 0; i < props.uids.length; i++)
-    {
-        var pid = props.pids[sortedWinnerIndexes[i]];
+    utility.setEachUserScores(0, sortedWinnerIndexes, props, Prize)
+}
+
+exports.setEachUserScores = function (i, sortedWinnerIndexes, props, Prize)
+{
+    if ( i >= props.pids.length)
+        return;
+
+    var Player = Backtory.Object.extend("players");
+    var player = new Backtory.Query(Player);
+    
+    var pid = props.pids[sortedWinnerIndexes[i]];
         
-        var player = new Backtory.Query(Player);
-        player.get(pid, {
-            success: function(tPlayer) {
+    player.get(pid, {
+        success: function(tPlayer) {
 
-                var tempI = -1;
-                var ppid = tPlayer.get("_id");
-                for (var t = 0; t < props.pids.length; t++)
-                {
-                    if (ppid == props.pids[sortedWinnerIndexes[t]])
-                    {
-                        tempI = t;
-                        break;
-                    }
-                }
-                
-                if (tempI == 0) // Winner
-                {
-                    var prevCoin = tPlayer.get("coin");
-                    tPlayer.set("coin", prevCoin + Prize);
-                }
-
-                var prevScore = tPlayer.get("score");
-                var newScore = prevScore + props.userScores[props.uids[sortedWinnerIndexes[tempI]]];
-                
-                tPlayer.set("score", newScore);
-                tPlayer.set("level", utility.calcLevel(newScore));
-
-                tPlayer.save();
+            if (i == 0) // Winner
+            {
+                var prevCoin = tPlayer.get("coin");
+                tPlayer.set("coin", prevCoin + Prize);
             }
-        });
-    }
+            var prevScore = tPlayer.get("score");
+            var newScore = prevScore + props.userScores[props.uids[sortedWinnerIndexes[i]]];
+            
+            tPlayer.set("score", newScore);
+            tPlayer.set("level", utility.calcLevel(newScore));
+            tPlayer.save({
+                success:function(alaki)
+                {
+                    setTimeout( utility.setEachUserScores(i+1, sortedWinnerIndexes, props, Prize) , 0 );
+                },
+                error:function(err)
+                {
+                    console.log(err);
+                }
+            });
+        }
+    });
 }
 
 exports.takeSortedWinners = function (uids, userScores, userActions)
