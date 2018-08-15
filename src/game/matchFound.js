@@ -13,7 +13,6 @@ var topicCount = 11;
 //********************************************************************************************************** */
 //********************************************************************************************************** */
 
-// on MatchFound we call this function
 // For server
 exports.onMatchFoundController = function (requestBody, context) {
 // For Local
@@ -29,10 +28,8 @@ exports.onMatchFoundController = function (requestBody, context) {
     var Game = Backtory.Object.extend("games");
     var game = new Game();
 
-    //context.log("before setGameTypeRelations...");
-
-    utility.setGameTypeRelations(game, gameTypeId, matchId, participants, context);
-    utility.getCoinFromUsers(matchmakingName, participants, context);
+    utility.setGameTypeRelations(game, gameTypeId, matchId, participants);
+    //utility.getCoinFromUsers(matchmakingName, participants);
     
     /*waitUntil()
         .interval(50)
@@ -65,8 +62,6 @@ exports.onMatchFoundController = function (requestBody, context) {
         return (game.get("_id") != null ? true : false);
     })
     .done(function(tt) {
-
-        //context.log("After All....");
 
         var rndNumbers = [];
         rndNumbers[0] = utility.getRandomInt(topicCount);
@@ -146,16 +141,6 @@ exports.onMatchFoundController = function (requestBody, context) {
             userJudgedVotes: tempUserJudgedVotes // [trueCounts, falseCounts]
         });
 
-        
-        //props = {
-        //    "choices": {},
-        //    "topics": [],
-        //    "topic" : "",
-        //    "chosenKeywords": {},
-        //    "keywordsGameId" : "",
-        //    "gameId" : game.get("_id")
-        //};
-
         var selectedTopics = 
         [
             keywordsFile.topics[rndNumbers[0]],
@@ -164,24 +149,7 @@ exports.onMatchFoundController = function (requestBody, context) {
         ];
 
         var tResult = {message: selectedTopics, participants: participants};
-        //var tResult = {message: selectedTopics};
-
-        /*
-        {
-            "message":["Voting","College Life","Small Talk"],
-            "properties":{
-                "choices":{},
-                "topics":[],
-                "topic":"",
-                "chosenKeywords":{},
-                "keywordsGameId":"",
-                "gameId":"5b4e1ff50f747e00015a75cf"
-            }
-        }
-        */
         
-        // Return selected topics for this challenge
-        // Todo: for push code on server uncomment this line
         // For Local
         //console.log(tResult);
         // For Server
@@ -209,18 +177,18 @@ var reqbody = {
     "matchmakingName": "GameMatching1",
     "participants":
         [
-            {"userId":"5b445c62e4b0a2a06398f896",
+            {"userId":"5b6c290ce4b09aa3e74c8c30",
             "skill":0,
-            "metaData":'["milad222","5b445c624f83de0001e9d101",\"1\"]'
+            "metaData":'["emadAbdoli","5b6c290d0b088c0001d39de2",\"1\"]'
         },
             {"userId":"5b445c73e4b0a2a06398f8a0",
             "skill":0,
             "metaData":'["zahra222","5b445c735ce7180001bfaf7c",\"2\"]'
         },
         {
-            "userId":"5b4457b7e4b0712f42bad646",
+            "userId":"5b66f2ebe4b04f9269b15593",
             "skill":0,
-            "metaData": '["emad666","5b4457b74f83de0001e9bd59",\"2\"]'
+            "metaData": '["Fortest","5b66f2eb0b088c0001ad4b59",\"2\"]'
         }
         ]
 };

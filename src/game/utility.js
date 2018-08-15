@@ -115,10 +115,8 @@ exports.calcTopic = function (choices) // Designed for 3 Topics
 /********************************************************************************** */
 /********************************************************************************** */
 
-exports.setGameRelations = function(gid, participants, context)
+exports.setGameRelations = function(gid, participants)
 {
-    context.log("In setGameRelations: " + gid.toString());
-
     var Game = Backtory.Object.extend("games");
     var game = new Game();
     var gamePlayerRelation = game.relation("players");
@@ -144,7 +142,7 @@ exports.setGameRelations = function(gid, participants, context)
 /********************************************************************************** */
 /********************************************************************************** */
 
-exports.setGameTypeRelations = function(game, gameTypeId, matchId, participants, context)
+exports.setGameTypeRelations = function(game, gameTypeId, matchId, participants)
 {
     var GameType = Backtory.Object.extend("gameType");
 
@@ -162,8 +160,8 @@ exports.setGameTypeRelations = function(game, gameTypeId, matchId, participants,
 
             game.save();
             
-            utility.setGameRelations(game.get("_id"), participants, context);
-            utility.setPlayersRelations(game.get("_id"), participants, context);
+            utility.setGameRelations(game.get("_id"), participants);
+            utility.setPlayersRelations(game.get("_id"), participants);
         }
     });
 }
@@ -171,10 +169,8 @@ exports.setGameTypeRelations = function(game, gameTypeId, matchId, participants,
 /********************************************************************************** */
 /********************************************************************************** */
 
-exports.setPlayersRelations = function(gid, participants, context)
+exports.setPlayersRelations = function(gid, participants)
 {
-    context.log("In setGameRelations: " + gid.toString());
-
     var Game = Backtory.Object.extend("games");
     var Player = Backtory.Object.extend("players");
     
@@ -502,27 +498,26 @@ exports.setRoundParticipants = function(gameId, topic, pids)
 /********************************************************************************** */
 /********************************************************************************** */
 
-exports.getCoinFromUsers = function (matchmakingName, participants, context)
+exports.getCoinFromUsers = function (matchmakingName, participants)
 {
     var Player = Backtory.Object.extend("players");
+    var player = new Backtory.Query(Player);
 
     var coinCost = utility.gameCost(matchmakingName);
 
     for(var i = 0; i < participants.length; i++)
     {
-        context.log("i:" + i);
-
         var pid = this.getUserPid(participants[i]);
 
-        context.log("pid" + pid); 
-        
-        var player = new Backtory.Query(Player);
+        //context.log("pid" + pid); 
         player.get(pid, {
             success: function(tPlayer) {
                 
                 var prevCoin = tPlayer.get("coin");
                 tPlayer.set("coin", prevCoin - coinCost);
-                tPlayer.save();
+                tPlayer.save({
+                    success:function(alaki){}
+                });
             }
         });
     }
