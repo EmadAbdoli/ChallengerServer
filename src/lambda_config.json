@@ -18,5 +18,10 @@
     "handlerName": "game/gameEvent.gameEventController",
     "timeLimitInMilliSeconds": 5000,
     "authenticationMode": "PUBLIC"
+  },
+  "testForBackAdmin": {
+    "handlerName": "game/matchFound.testFunctionForBacktoryAdmin",
+    "timeLimitInMilliSeconds": 1000,
+    "authenticationMode": "PUBLIC"
   }
 }
