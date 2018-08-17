@@ -158,7 +158,7 @@ exports.onMatchFoundController = function (requestBody, context) {
     });
 };
 
-exports.testFunctionForBacktoryAdmin = function ()
+exports.testFunctionForBacktoryAdmin = function (requestBody, context)
 {
     context.succeed("OK");
 }
