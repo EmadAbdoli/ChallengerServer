@@ -390,7 +390,7 @@ exports.sendGetParagraphsRequest = function(keywordsGameId, keywordsUnion, check
                     }
                 });
 
-                if (blankCounter >= 3) break;
+                if (blankCounter >= 2) break;
             }
 
             if (blankCounter <= utility.minBlanksCount)
