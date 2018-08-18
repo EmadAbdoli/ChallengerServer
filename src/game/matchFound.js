@@ -123,6 +123,7 @@ exports.onMatchFoundController = function (requestBody, context) {
             startTime: 0,
             theText: "",
             blankKeys: {},
+            keywordBlankKeys: {},
             commonKeys: [],
             turnUid: -1,
             turn: -1,

@@ -337,47 +337,61 @@ exports.sendGetParagraphsRequest = function(keywordsGameId, keywordsUnion, check
                 }
             }
 
-            var pindex = utility.getRandomInt(paragraphs.length);
-            var theText = paragraphs[pindex];
-
-            console.log(theText);
-
-            var textKeys = theText.split(" ");
-            for(var i = 0; i < keywordsFile.forbiddenBlanks.length; i++)
-            {
-                var index = textKeys.indexOf(keywordsFile.forbiddenBlanks[i]);
-                while (index != -1)
-                {
-                    textKeys.splice(index, 1);
-                    index = textKeys.indexOf(keywordsFile.forbiddenBlanks[i]);
-                }
-            }
-
             var blanksKeys = {};
+            var keywordBlankKeys = {};
             var commonKeys = [];
-
+            var theText;
             var blankCounter = 0;
-            keywordsUnion.forEach(keyword => {
+            var textKeys;
 
-                var temp = keyword;
-                var bySpace = false;
-                if (keyword.length <= 3) { temp = " "+keyword+" "; bySpace = true;}
-                var index = theText.search(temp);
+            for (var p = 0; p < paragraphs.length; p++)
+            {
+                blankCounter = 0;
+                theText = "";
+                blanksKeys = {};
+                keywordBlankKeys = {};
 
-                if (index != -1)
+                var pindex = utility.getRandomInt(paragraphs.length);
+                theText = paragraphs[pindex];
+
+                console.log(theText);
+
+                var textKeys = theText.split(" ");
+                for(var i = 0; i < keywordsFile.forbiddenBlanks.length; i++)
                 {
-                    if (bySpace == true)
-                        theText = theText.replace(temp.toLowerCase(), " %BLANK% ");
-                    else
-                        theText = theText.replace(temp.toLowerCase(), "%BLANK%");
-
-                    blankCounter++;
-                    blanksKeys[index] = keyword;
-
-                    var index = textKeys.indexOf(keyword);
-                    if (index != -1)    textKeys.splice(index, 1);
+                    var index = textKeys.indexOf(keywordsFile.forbiddenBlanks[i]);
+                    while (index != -1)
+                    {
+                        textKeys.splice(index, 1);
+                        index = textKeys.indexOf(keywordsFile.forbiddenBlanks[i]);
+                    }
                 }
-            });
+
+                keywordsUnion.forEach(keyword => {
+
+                    var temp = keyword;
+                    var bySpace = false;
+                    if (keyword.length <= 3) { temp = " "+keyword+" "; bySpace = true;}
+                    var index = theText.search(temp);
+
+                    if (index != -1)
+                    {
+                        if (bySpace == true)
+                            theText = theText.replace(temp.toLowerCase(), " %BLANK% ");
+                        else
+                            theText = theText.replace(temp.toLowerCase(), "%BLANK%");
+
+                        blankCounter++;
+                        blanksKeys[index] = keyword;
+                        keywordBlankKeys[index] = keyword;
+
+                        var index = textKeys.indexOf(keyword);
+                        if (index != -1)    textKeys.splice(index, 1);
+                    }
+                });
+
+                if (blankCounter >= 3) break;
+            }
 
             if (blankCounter <= utility.minBlanksCount)
             {
@@ -410,6 +424,7 @@ exports.sendGetParagraphsRequest = function(keywordsGameId, keywordsUnion, check
             }
 
             checker.blanksKeys = blanksKeys;
+            checker.keywordBlankKeys = keywordBlankKeys;
             checker.commonKeys = commonKeys;
             checker.theText = theText;
 

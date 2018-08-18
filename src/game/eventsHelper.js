@@ -77,11 +77,11 @@ exports.gettingTextReady = function (props, context, userId)
         }
     }
 
-    let checker = {val: false, blanksKeys: {}, commonKeys: [], theText: ""};
+    let checker = {val: false, blanksKeys: {}, commonKeys: [], keywordBlankKeys: {}, theText: ""};
     utility.sendGetParagraphsRequest(props.keywordsGameId, keywordsUnion, checker);
 
     waitUntil()
-    .interval(100)
+    .interval(50)
     .times(Infinity)
     .condition(function() {
         return (checker.val == true ? true : false);
@@ -96,6 +96,7 @@ exports.gettingTextReady = function (props, context, userId)
         }
 
         props.blankKeys = checker.blanksKeys;
+        props.keywordBlankKeys = checker.keywordBlankKeys;
         props.commonKeys = checker.commonKeys;
         props.theText = checker.theText;
 
@@ -109,7 +110,7 @@ exports.gettingTextReady = function (props, context, userId)
         props.startTime = seconds;
 
         result = { operation : 'textReady', userId: userId,
-                    blanksKeys: blanksKeyArr, commonKeys: checker.commonKeys, theText: checker.theText,
+                    blanksKeys: blanksKeyArr, keywordBlankKeys: checker.keywordBlankKeys, commonKeys: checker.commonKeys, theText: checker.theText,
                     turnUid: props.uids[0], sequence: props.sequence
                     };
 

@@ -628,12 +628,12 @@ var reqbody2 = {
 }
 
 var reqbody3 = {
-    "message":"KeywordSelTimeout",
+    "message":"selectedKeywords",
     "userId":"5b445c62e4b0a2a06398f896",
     "challengeId":"5b4f31c7e4b0115f590dda9d",
     "data":{
-        "sequence": 1
-        //"userKeywords":"[\"president\",\"obama\",\"voting\",\"year\",\"polling\",\"questions\",\"news\",\"new\",\"faith\",\"volunteering\"]"
+        "sequence": 1,
+        "userKeywords":"[\"president\",\"obama\",\"voting\",\"year\",\"polling\",\"questions\",\"news\",\"new\",\"faith\",\"volunteering\"]"
     },
     "properties":{
         "uids": ["5b4457b7e4b0712f42bad646","5b445c73e4b0a2a06398f8a0","5b445c62e4b0a2a06398f896"],
@@ -653,6 +653,7 @@ var reqbody3 = {
         "gameId":"5b4f31c76374f60001d52af9",
         "theText": "",
         "blankKeys": {},
+        "keywordBlankKeys": {},
         "commonKeys": [],
         "turnUid": -1,
         "turn": -1,
@@ -996,4 +997,4 @@ formParams.topic = "Health";
 formParams.keywords = '["doctor","problem","blood","appointment","results","emergency","medication","test","insurance","pressure","problems","stomach","professor","stress","antihistamine","sleep","breath","medicine","feeling","good","lately","health","effects","infection","chest","information","prescription","itching","trouble"]';
 
 
-//this.gameEventController(req1);
+//this.gameEventController(reqbody3);
