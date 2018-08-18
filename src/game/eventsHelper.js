@@ -96,7 +96,7 @@ exports.gettingTextReady = function (props, context, userId)
         }
 
         let testChecker = {val: false, preTest: {}, postTest: {}};
-        utility.getQuizSentences(commonKeys, keywordBlankKeys, testChecker, props.keywordsGameId);
+        utility.getQuizSentences(checker.commonKeys, checker.keywordBlankKeys, testChecker, props.keywordsGameId);
 
         waitUntil()
         .interval(50)
@@ -123,8 +123,8 @@ exports.gettingTextReady = function (props, context, userId)
             props.startTime = seconds;
 
             result = { operation : 'textReady', userId: userId,
-                        blanksKeys: blanksKeyArr, keywordBlankKeys: checker.keywordBlankKeys, commonKeys: checker.commonKeys, theText: checker.theText,
-                        turnUid: props.uids[0], sequence: props.sequence
+                        blanksKeys: blanksKeyArr, keywordBlankKeys: checker.keywordBlankKeys, commonKeys: checker.commonKeys, theText: checker.theText, 
+                        preTest: props.preTest, postTest: props.postTest, turnUid: props.uids[0], sequence: props.sequence
                         };
 
             var tResult = {message: JSON.stringify(result), properties: props};
