@@ -95,31 +95,45 @@ exports.gettingTextReady = function (props, context, userId)
             blanksKeyArr.push(checker.blanksKeys[blanksKeywordsKeys[i]]);
         }
 
-        props.blankKeys = checker.blanksKeys;
-        props.keywordBlankKeys = checker.keywordBlankKeys;
-        props.commonKeys = checker.commonKeys;
-        props.theText = checker.theText;
+        let testChecker = {val: false, preTest: {}, postTest: {}};
+        utility.getQuizSentences(commonKeys, keywordBlankKeys, testChecker, props.keywordsGameId);
 
-        var d = new Date();
-        var seconds = Math.round(d.getTime() / 1000);
-        
-        props.lastTurnStartTime = seconds;
-        props.turnUid = props.uids[0];
-        props.turn = 0;
-        props.sequence = props.sequence + 1;
-        props.startTime = seconds;
+        waitUntil()
+        .interval(50)
+        .times(Infinity)
+        .condition(function() {
+            return (testChecker.val == true ? true : false);
+        })
+        .done(function(temp) {
 
-        result = { operation : 'textReady', userId: userId,
-                    blanksKeys: blanksKeyArr, keywordBlankKeys: checker.keywordBlankKeys, commonKeys: checker.commonKeys, theText: checker.theText,
-                    turnUid: props.uids[0], sequence: props.sequence
-                    };
+            props.preTest = testChecker.preTest;
+            props.postTest = testChecker.postTest;
+            props.blankKeys = checker.blanksKeys;
+            props.keywordBlankKeys = checker.keywordBlankKeys;
+            props.commonKeys = checker.commonKeys;
+            props.theText = checker.theText;
 
-        var tResult = {message: JSON.stringify(result), properties: props};
-        // For Local
-        //console.log(tResult);
-        // For Server
-        context.log(tResult);
-        context.succeed(tResult);
+            var d = new Date();
+            var seconds = Math.round(d.getTime() / 1000);
+            
+            props.lastTurnStartTime = seconds;
+            props.turnUid = props.uids[0];
+            props.turn = 0;
+            props.sequence = props.sequence + 1;
+            props.startTime = seconds;
+
+            result = { operation : 'textReady', userId: userId,
+                        blanksKeys: blanksKeyArr, keywordBlankKeys: checker.keywordBlankKeys, commonKeys: checker.commonKeys, theText: checker.theText,
+                        turnUid: props.uids[0], sequence: props.sequence
+                        };
+
+            var tResult = {message: JSON.stringify(result), properties: props};
+            // For Local
+            //console.log(tResult);
+            // For Server
+            context.log(tResult);
+            context.succeed(tResult);
+        });
     });
 }
 

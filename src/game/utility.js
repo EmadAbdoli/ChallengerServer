@@ -292,6 +292,84 @@ exports.sendNewGameRequest = function(topic, tKeywords, tkeywordsGameId)
 /********************************************************************************** */
 /********************************************************************************** */
 
+exports.getQuizSentences = function (commonKeys, keywordBlankKeys, testChecker, keywordsGameId)
+{
+    var wordsCounter = 0;
+    var testingWords = [];
+    for (var keywordBlankKey in keywordBlankKeys)
+    {
+        testingWords.push(keywordBlankKeys[keywordBlankKey]);
+        wordsCounter++;
+
+        if (wordsCounter >= 3) break;
+    }
+
+    for (var i = 0; i < 3 - wordsCounter; i++)
+    {
+        var tIndex = utility.getRandomInt(commonKeys.length);
+        if (testingWords.indexOf(commonKeys[tIndex]) != -1)
+        {
+            testingWords.push(commonKeys[tIndex]);
+        }
+    }
+
+    var respCount = 0;
+    for (var i = 0; i < testingWords.length; i++)
+    {
+        var formParams = {};
+        formParams.game_id = keywordsGameId;
+        formParams.keywords = '[';
+        formParams.keywords += '"' + testingWords[i] + '"';
+        formParams.keywords += ']';
+        
+        request({
+            url: "http://216.158.80.50/text_parser/get_containing_sentences",
+            headers: {'content-type' : 'application/x-www-form-urlencoded'},
+            method: "POST",
+            form: formParams,
+        }, function (error, response, body){
+            if (error == null)
+            {
+                var firstCharCode = body.charCodeAt(0);
+                if (firstCharCode == 65279) { // remove first Character...
+                    body = body.substring(1);
+                }
+    
+                var myBody = JSON.parse(body);
+                var sentences = myBody.sentences;
+
+                var testWordIndex = -1;
+                for (var j = 0; j < 3; j++)
+                    if (sentences[0].search(testingWords[j]) != -1 && sentences[1].search(testingWords[j]) != -1 && sentences[2].search(testingWords[j]) != -1) testWordIndex = j;
+
+                var involvingCounts = -1;
+                for(var j = 0; j < sentences.length; j++)
+                {
+                    if (sentences[j].search(testingWords[testWordIndex]) == -1) break;
+                    involvingCounts = j+1;
+                }
+
+                var preTest = utility.getRandomInt(involvingCounts);
+                var postTest = preTest;
+                while(postTest == preTest)
+                {
+                    postTest = utility.getRandomInt(involvingCounts);
+                }
+
+                //testChecker = {val: false, preTest: {}, postTest: {}};
+                testChecker.preTest[testingWords[testWordIndex]] = sentences[preTest];
+                testChecker.postTest[testingWords[testWordIndex]] = sentences[postTest];
+
+                respCount++;
+                if (respCount == 3)
+                {
+                    testChecker.val = true;
+                }
+            }
+        });
+    }
+}
+
 exports.sendGetParagraphsRequest = function(keywordsGameId, keywordsUnion, checker)
 {
     var formParams = {};
@@ -658,3 +736,10 @@ exports.calcLevel = function (score)
 //};
 
 //utility.giveUserPrizes(tempProps);
+
+//var keywordBlankKeys = {"153":"checking","250":"deposit","281":"accounts"};
+//var commonKeys = ["your","just","you?","will","are","least","in"];
+//let testChecker = {val: false, preTest: {}, postTest: {}};
+//var keywordsGameId = 249;
+
+//utility.getQuizSentences(commonKeys, keywordBlankKeys, testChecker, keywordsGameId);

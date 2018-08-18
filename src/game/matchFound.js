@@ -124,6 +124,8 @@ exports.onMatchFoundController = function (requestBody, context) {
             theText: "",
             blankKeys: {},
             keywordBlankKeys: {},
+            preTest: {},
+            postTest: {},
             commonKeys: [],
             turnUid: -1,
             turn: -1,
