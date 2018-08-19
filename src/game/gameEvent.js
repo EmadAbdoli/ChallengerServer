@@ -1024,9 +1024,22 @@ var request =
     }
 }
 
+var request2 =
+{
+    "message":"selectedKeywords",
+    "userId":"5b74234fe4b0f0c9b088a802",
+    "challengeId":"5b791656e4b0b4c34a483698",
+    "data":{
+        "userKeywords":"[\"fever\",\"center\",\"stress\",\"stomach\",\"headache\",\"facility\",\"breathing\",\"allergies\",\"cholesterol\",\"appointment\"]"
+    },
+    "properties":{
+        "uids":["5b74234fe4b0f0c9b088a802","5b74227de4b0e4894d24b21e","5b76a3d3e4b0cac0e1672427"],"pids":["5b7423500bc5b6000134a077","5b74227d0bc5b60001349b6e","5b76a3d3ac14870001594f1f"],"matchName":"GameMatching1","userScores":{"5b74234fe4b0f0c9b088a802":0,"5b74227de4b0e4894d24b21e":0,"5b76a3d3e4b0cac0e1672427":0},"userActions":{"5b74234fe4b0f0c9b088a802":0,"5b74227de4b0e4894d24b21e":0,"5b76a3d3e4b0cac0e1672427":0},"choices":{"5b74234fe4b0f0c9b088a802":"0","5b74227de4b0e4894d24b21e":"1","5b76a3d3e4b0cac0e1672427":"2"},"topics":["Voting","College Life","Health"],"topic":"Health","chosenKeywords":{"5b76a3d3e4b0cac0e1672427":["stress","cholesterol","terrible","specialist","help","fruits","facility","center","fever","headache"],"5b74227de4b0e4894d24b21e":["food","help","stress","stomach","terrible","symptoms","breathing","allergies","specialist","vegetables"]},"keywordsGameId":260,"gameId":"5b79165726e159000186cec1","startTime":0,"theText":"","blankKeys":{},"keywordBlankKeys":{},"preTest":{},"postTest":{},"commonKeys":[],"turnUid":-1,"turn":-1,"sequence":2,"lastTurnStartTime":-1,"filledBlanks":{},"filledBlanksShare":{},"filledBlankOwners":{},"filledBlankSeqs":{},"filledBlankStates":{},"rejectedWords":[],"rejectionOwners":[],"rejectionVotes":[],"userPostCounts":{"5b74234fe4b0f0c9b088a802":0,"5b74227de4b0e4894d24b21e":0,"5b76a3d3e4b0cac0e1672427":0},"userRejectCounts":{"5b74234fe4b0f0c9b088a802":0,"5b74227de4b0e4894d24b21e":0,"5b76a3d3e4b0cac0e1672427":0},"userJudgedVotes":{"5b74234fe4b0f0c9b088a802":[0,0],"5b74227de4b0e4894d24b21e":[0,0],"5b76a3d3e4b0cac0e1672427":[0,0]}
+    }
+};
+
 var formParams = {};
 formParams.topic = "Health";
 formParams.keywords = '["doctor","problem","blood","appointment","results","emergency","medication","test","insurance","pressure","problems","stomach","professor","stress","antihistamine","sleep","breath","medicine","feeling","good","lately","health","effects","infection","chest","information","prescription","itching","trouble"]';
 
 
-//this.gameEventController(request);
+//this.gameEventController(request2);

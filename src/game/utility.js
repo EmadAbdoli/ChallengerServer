@@ -353,14 +353,18 @@ exports.getQuizSentences = function (commonKeys, keywordBlankKeys, testChecker, 
 
                     var preTest = utility.getRandomInt(involvingCounts);
                     var postTest = preTest;
-                    while(postTest == preTest)
+                    var counter = 0;
+                    while(postTest == preTest && counter <= 20)
                     {
                         postTest = utility.getRandomInt(involvingCounts);
+                        counter++;
                     }
 
-                    //testChecker = {val: false, preTest: {}, postTest: {}};
-                    testChecker.preTest[testingWords[testWordIndex]] = sentences[preTest];
-                    testChecker.postTest[testingWords[testWordIndex]] = sentences[postTest];
+                    if (preTest != postTest)
+                    {
+                        testChecker.preTest[testingWords[testWordIndex]] = sentences[preTest];
+                        testChecker.postTest[testingWords[testWordIndex]] = sentences[postTest];
+                    }
                 }
 
                 respCount++;
