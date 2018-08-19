@@ -113,18 +113,9 @@ exports.gettingTextReady = function (props, context, userId)
             props.commonKeys = checker.commonKeys;
             props.theText = checker.theText;
 
-            var d = new Date();
-            var seconds = Math.round(d.getTime() / 1000);
-            
-            props.lastTurnStartTime = seconds;
-            props.turnUid = props.uids[0];
-            props.turn = 0;
-            props.sequence = props.sequence + 1;
-            props.startTime = seconds;
-
             result = { operation : 'textReady', userId: userId,
                         blanksKeys: blanksKeyArr, keywordBlankKeys: checker.keywordBlankKeys, commonKeys: checker.commonKeys, theText: checker.theText, 
-                        preTest: props.preTest, postTest: props.postTest, turnUid: props.uids[0], sequence: props.sequence
+                        preTest: props.preTest, postTest: props.postTest /*turnUid: props.uids[0], sequence: props.sequence*/
                         };
 
             var tResult = {message: JSON.stringify(result), properties: props};

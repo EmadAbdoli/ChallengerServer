@@ -163,6 +163,46 @@ exports.gameEventController = function (requestBody, context) {
 
         /************************************************************************************ */
         /************************************************************************************ */
+
+        case "preTestAnswer":
+
+            var userAnswers = JSON.parse(requestBody.data.userTestAnswers);
+
+            if ((userId in props.usersPreTestAnswers) == true)
+            {
+                result = {operation: 'invalidOperationPreTest', userId: userId};
+            }
+            else
+            {
+                props.usersPreTestAnswers[userId] = userAnswers;
+
+                // Fill This Function...
+                //eventsHelper.saveUserPreTest(userId, userAnswers, props.gameId);
+
+                if (Object.keys(props.usersPreTestAnswers).length == utility.playerCounts)
+                {
+                    var d = new Date();
+                    var seconds = Math.round(d.getTime() / 1000);
+                    
+                    props.lastTurnStartTime = seconds;
+                    props.turnUid = props.uids[0];
+                    props.turn = 0;
+                    props.sequence = props.sequence + 1;
+                    props.startTime = seconds;
+
+                    result = { operation : 'preTestReady', userId: userId, turnUid: props.uids[0], sequence: props.sequence};
+                }
+                else
+                {
+                    result = { operation : 'preTestAnswerRecieved', userId: userId};
+                }
+            }
+
+
+            break;
+
+        /************************************************************************************ */
+        /************************************************************************************ */
         /************************************************************************************ */
         /************************************************************************************ */
         /************************************************************************************ */

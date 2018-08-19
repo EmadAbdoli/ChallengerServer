@@ -126,6 +126,8 @@ exports.onMatchFoundController = function (requestBody, context) {
             keywordBlankKeys: {},
             preTest: {},
             postTest: {},
+            usersPreTestAnswers: {},
+            usersPostTestAnswers: {},
             commonKeys: [],
             turnUid: -1,
             turn: -1,
