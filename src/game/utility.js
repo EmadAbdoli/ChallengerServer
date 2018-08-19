@@ -340,25 +340,28 @@ exports.getQuizSentences = function (commonKeys, keywordBlankKeys, testChecker, 
 
                 var testWordIndex = -1;
                 for (var j = 0; j < 3; j++)
-                    if (sentences[0].search(testingWords[j]) != -1 && sentences[1].search(testingWords[j]) != -1 && sentences[2].search(testingWords[j]) != -1) testWordIndex = j;
+                    if (sentences[0].search(testingWords[j]) != -1 && sentences[1].search(testingWords[j]) != -1) testWordIndex = j;
 
-                var involvingCounts = -1;
-                for(var j = 0; j < sentences.length; j++)
+                if (testWordIndex != -1)
                 {
-                    if (sentences[j].search(testingWords[testWordIndex]) == -1) break;
-                    involvingCounts = j+1;
-                }
+                    var involvingCounts = -1;
+                    for(var j = 0; j < sentences.length; j++)
+                    {
+                        if (sentences[j].search(testingWords[testWordIndex]) == -1) break;
+                        involvingCounts = j+1;
+                    }
 
-                var preTest = utility.getRandomInt(involvingCounts);
-                var postTest = preTest;
-                while(postTest == preTest)
-                {
-                    postTest = utility.getRandomInt(involvingCounts);
-                }
+                    var preTest = utility.getRandomInt(involvingCounts);
+                    var postTest = preTest;
+                    while(postTest == preTest)
+                    {
+                        postTest = utility.getRandomInt(involvingCounts);
+                    }
 
-                //testChecker = {val: false, preTest: {}, postTest: {}};
-                testChecker.preTest[testingWords[testWordIndex]] = sentences[preTest];
-                testChecker.postTest[testingWords[testWordIndex]] = sentences[postTest];
+                    //testChecker = {val: false, preTest: {}, postTest: {}};
+                    testChecker.preTest[testingWords[testWordIndex]] = sentences[preTest];
+                    testChecker.postTest[testingWords[testWordIndex]] = sentences[postTest];
+                }
 
                 respCount++;
                 if (respCount == 3)
