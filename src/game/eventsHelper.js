@@ -96,7 +96,7 @@ exports.gettingTextReady = function (props, context, userId)
         }
 
         let testChecker = {val: false, preTest: {}, postTest: {}};
-        utility.getQuizSentences(checker.commonKeys, checker.keywordBlankKeys, testChecker, props.keywordsGameId);
+        utility.getQuizSentences(keywordsUnion, checker.keywordBlankKeys, testChecker, props.keywordsGameId);
 
         waitUntil()
         .interval(50)

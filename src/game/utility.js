@@ -292,7 +292,7 @@ exports.sendNewGameRequest = function(topic, tKeywords, tkeywordsGameId)
 /********************************************************************************** */
 /********************************************************************************** */
 
-exports.getQuizSentences = function (commonKeys, keywordBlankKeys, testChecker, keywordsGameId)
+exports.getQuizSentences = function (keywordsUnion, keywordBlankKeys, testChecker, keywordsGameId)
 {
     var wordsCounter = 0;
     var testingWords = [];
@@ -306,10 +306,14 @@ exports.getQuizSentences = function (commonKeys, keywordBlankKeys, testChecker, 
 
     for (var i = 0; i < 3 - wordsCounter; i++)
     {
-        var tIndex = utility.getRandomInt(commonKeys.length);
-        if (testingWords.indexOf(commonKeys[tIndex]) != -1)
+        var tIndex = utility.getRandomInt(keywordsUnion.length);
+        if (testingWords.indexOf(keywordsUnion[tIndex]) == -1)
         {
-            testingWords.push(commonKeys[tIndex]);
+            testingWords.push(keywordsUnion[tIndex]);
+        }
+        else
+        {
+            i--;
         }
     }
 

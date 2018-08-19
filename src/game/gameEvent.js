@@ -1037,9 +1037,22 @@ var request2 =
     }
 };
 
+var request3 =
+{
+    "message":"selectedKeywords",
+    "userId":"5b74227de4b0e4894d24b21e",
+    "challengeId":"5b792dd7e4b0b4c34a486916",
+    "data":{
+        "userKeywords":"[\"city\",\"plane\",\"museum\",\"flight\",\"tickets\",\"customs\",\"country\",\"traveler\",\"passport\",\"afternoon\"]"
+    },
+    "properties":{
+        "uids":["5b74227de4b0e4894d24b21e","5b74234fe4b0f0c9b088a802","5b76a3d3e4b0cac0e1672427"],"pids":["5b74227d0bc5b60001349b6e","5b7423500bc5b6000134a077","5b76a3d3ac14870001594f1f"],"matchName":"GameMatching1","userScores":{"5b74227de4b0e4894d24b21e":0,"5b74234fe4b0f0c9b088a802":0,"5b76a3d3e4b0cac0e1672427":0},"userActions":{"5b74227de4b0e4894d24b21e":0,"5b74234fe4b0f0c9b088a802":0,"5b76a3d3e4b0cac0e1672427":0},"choices":{"5b76a3d3e4b0cac0e1672427":"1","5b74227de4b0e4894d24b21e":"1","5b74234fe4b0f0c9b088a802":"0"},"topics":["At the Bank","Travel","Driving"],"topic":"Travel","chosenKeywords":{"5b76a3d3e4b0cac0e1672427":["afternoon","reservation","passport","something","transportation","information","tickets","traveler","museum","countries"],"5b74234fe4b0f0c9b088a802":["city","baggage","tickets","morning","favorite","traveler","something","different","afternoon","transportation"]},"keywordsGameId":264,"gameId":"5b792dd7ac14870001f8b254","startTime":0,"theText":"","blankKeys":{},"keywordBlankKeys":{},"preTest":{},"postTest":{},"commonKeys":[],"turnUid":-1,"turn":-1,"sequence":2,"lastTurnStartTime":-1,"filledBlanks":{},"filledBlanksShare":{},"filledBlankOwners":{},"filledBlankSeqs":{},"filledBlankStates":{},"rejectedWords":[],"rejectionOwners":[],"rejectionVotes":[],"userPostCounts":{"5b74227de4b0e4894d24b21e":0,"5b74234fe4b0f0c9b088a802":0,"5b76a3d3e4b0cac0e1672427":0},"userRejectCounts":{"5b74227de4b0e4894d24b21e":0,"5b74234fe4b0f0c9b088a802":0,"5b76a3d3e4b0cac0e1672427":0},"userJudgedVotes":{"5b74227de4b0e4894d24b21e":[0,0],"5b74234fe4b0f0c9b088a802":[0,0],"5b76a3d3e4b0cac0e1672427":[0,0]}
+    }
+};
+
 var formParams = {};
 formParams.topic = "Health";
 formParams.keywords = '["doctor","problem","blood","appointment","results","emergency","medication","test","insurance","pressure","problems","stomach","professor","stress","antihistamine","sleep","breath","medicine","feeling","good","lately","health","effects","infection","chest","information","prescription","itching","trouble"]';
 
 
-//this.gameEventController(request2);
+//this.gameEventController(request3);
