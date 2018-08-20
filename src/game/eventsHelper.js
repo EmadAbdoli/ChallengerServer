@@ -132,6 +132,37 @@ exports.gettingTextReady = function (props, context, userId)
 //********************************************************************************************************** */
 //********************************************************************************************************** */
 
+eventsHelper.saveUserPreTest = function (userId, userAnswers, gameId, uids, pids)
+{
+    var pid = utility.getPidFromUid(userId, uids, pids);
+
+    var PreTestTable = Backtory.Object.extend("preTest");
+    var Player = Backtory.Object.extend("players");
+    var Game = Backtory.Object.extend("games");
+    
+    var preTestTable = new PreTestTable();
+    var player = new Player();
+    var game = new Game();
+
+    player.set("_id", pid);
+    game.set("_id", gameId);
+
+    preTestTable.set("pid", player);
+    preTestTable.set("gid", game);
+    preTestTable.set("q1", userAnswers[0]);
+    preTestTable.set("q2", userAnswers[1]);
+    preTestTable.set("q3", userAnswers[2]);
+    
+    preTestTable.save({
+        success: function(preTestOb) {},
+        error: function(error) {}
+    });
+}
+
+//********************************************************************************************************** */
+//********************************************************************************************************** */
+//********************************************************************************************************** */
+
 exports.findingVotesResult = function (props)
 {
     var rejectIndex = props.rejectedWords.length;    
@@ -357,3 +388,11 @@ exports.doFinishingTasks = function (props, userId)
 //********************************************************************************************************** */
 //********************************************************************************************************** */
 //********************************************************************************************************** */
+
+var uids = ["5b445c73e4b0a2a06398f8a0","5b6c290ce4b09aa3e74c8c30","5b547ff7e4b0712f42c49855"];
+var pids = ["5b445c735ce7180001bfaf7c","5b6c290d0b088c0001d39de2","5b547ff8b291a40001e53f28"];
+var useId = "5b445c73e4b0a2a06398f8a0";
+var gamId = "5b6eac240b088c00014c70cf";
+var userAnswers = [1,2,-1];
+
+//eventsHelper.saveUserPreTest(useId, userAnswers, gamId, uids, pids);

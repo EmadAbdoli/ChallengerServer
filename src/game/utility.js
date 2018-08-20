@@ -65,6 +65,14 @@ exports.getUserPid = function(participant)
     return myMetadata[1];
 }
 
+exports.getPidFromUid = function(uid, uids, pids)
+{
+    for(var i = 0; i < utility.playerCounts; i++)
+    {
+        if (uids[i] == uid) return pids[i];
+    }
+}
+
 /********************************************************************************** */
 /********************************************************************************** */
 

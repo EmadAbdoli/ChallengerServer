@@ -177,7 +177,7 @@ exports.gameEventController = function (requestBody, context) {
                 props.usersPreTestAnswers[userId] = userAnswers;
 
                 // Fill This Function...
-                //eventsHelper.saveUserPreTest(userId, userAnswers, props.gameId);
+                eventsHelper.saveUserPreTest(userId, userAnswers, props.gameId, props.uids, props.pids);
 
                 if (Object.keys(props.usersPreTestAnswers).length == utility.playerCounts)
                 {
