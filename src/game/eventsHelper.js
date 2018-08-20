@@ -132,29 +132,34 @@ exports.gettingTextReady = function (props, context, userId)
 //********************************************************************************************************** */
 //********************************************************************************************************** */
 
-eventsHelper.saveUserPreTest = function (userId, userAnswers, gameId, uids, pids)
+exports.saveUserTest = function (userId, userAnswers, gameId, uids, pids, isPreTest)
 {
     var pid = utility.getPidFromUid(userId, uids, pids);
 
-    var PreTestTable = Backtory.Object.extend("preTest");
+    var TestTable;
+    if (isPreTest == true)
+        TestTable = Backtory.Object.extend("preTest");
+    else
+        TestTable = Backtory.Object.extend("postTest");
+
     var Player = Backtory.Object.extend("players");
     var Game = Backtory.Object.extend("games");
     
-    var preTestTable = new PreTestTable();
+    var testTable = new TestTable();
     var player = new Player();
     var game = new Game();
 
     player.set("_id", pid);
     game.set("_id", gameId);
 
-    preTestTable.set("pid", player);
-    preTestTable.set("gid", game);
-    preTestTable.set("q1", userAnswers[0]);
-    preTestTable.set("q2", userAnswers[1]);
-    preTestTable.set("q3", userAnswers[2]);
+    testTable.set("pid", player);
+    testTable.set("gid", game);
+    testTable.set("q1", userAnswers[0]);
+    testTable.set("q2", userAnswers[1]);
+    testTable.set("q3", userAnswers[2]);
     
-    preTestTable.save({
-        success: function(preTestOb) {},
+    testTable.save({
+        success: function(testObj) {},
         error: function(error) {}
     });
 }

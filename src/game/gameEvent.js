@@ -163,6 +163,10 @@ exports.gameEventController = function (requestBody, context) {
 
         /************************************************************************************ */
         /************************************************************************************ */
+        /************************************************************************************ */
+        /************************************************************************************ */
+        /************************************************************************************ */
+        /************************************************************************************ */
 
         case "preTestAnswer":
 
@@ -176,8 +180,7 @@ exports.gameEventController = function (requestBody, context) {
             {
                 props.usersPreTestAnswers[userId] = userAnswers;
 
-                // Fill This Function...
-                eventsHelper.saveUserPreTest(userId, userAnswers, props.gameId, props.uids, props.pids);
+                eventsHelper.saveUserTest(userId, userAnswers, props.gameId, props.uids, props.pids, true);
 
                 if (Object.keys(props.usersPreTestAnswers).length == utility.playerCounts)
                 {
@@ -200,6 +203,30 @@ exports.gameEventController = function (requestBody, context) {
 
 
             break;
+
+
+        /************************************************************************************ */
+        /************************************************************************************ */
+
+        case "postTestAnswer":
+
+            var userAnswers = JSON.parse(requestBody.data.userTestAnswers);
+
+            if ((userId in props.usersPostTestAnswers) == true)
+            {
+                result = {operation: 'invalidOperationPostTest', userId: userId};
+            }
+            else
+            {
+                props.usersPostTestAnswers[userId] = userAnswers;
+
+                eventsHelper.saveUserTest(userId, userAnswers, props.gameId, props.uids, props.pids, false);
+                
+                result = { operation : 'postTestAnswerRecieved', userId: userId};
+            }
+
+
+        break;
 
         /************************************************************************************ */
         /************************************************************************************ */
