@@ -53,7 +53,7 @@ exports.selectingSubject = function (props, context, userId, userChoice)
         // For Local
         //console.log(tResult);
         // For Server
-        context.log(tResult);
+        //context.log(tResult);
         context.succeed(tResult);
     });
 }
@@ -122,7 +122,7 @@ exports.gettingTextReady = function (props, context, userId)
             // For Local
             //console.log(tResult);
             // For Server
-            context.log(tResult);
+            //context.log(tResult);
             context.succeed(tResult);
         });
     });
@@ -386,6 +386,8 @@ exports.doFinishingTasks = function (props, userId)
                 userRejects: props.userRejectCounts,
                 userJudgedVotes: props.userJudgedVotes
             };
+
+    utility.saveGamedData(props);
 
     return result;
 }

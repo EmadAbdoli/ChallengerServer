@@ -660,6 +660,9 @@ exports.giveUserPrizes = function(props)
     utility.setEachUserScores(0, sortedWinnerIndexes, props, Prize)
 }
 
+/********************************************************************************** */
+/********************************************************************************** */
+
 exports.setEachUserScores = function (i, sortedWinnerIndexes, props, Prize)
 {
     if ( i >= props.pids.length)
@@ -697,6 +700,9 @@ exports.setEachUserScores = function (i, sortedWinnerIndexes, props, Prize)
     });
 }
 
+/********************************************************************************** */
+/********************************************************************************** */
+
 exports.takeSortedWinners = function (uids, userScores, userActions)
 {
     var sortedIndexes = [0,1,2,3];
@@ -718,6 +724,9 @@ exports.takeSortedWinners = function (uids, userScores, userActions)
     return sortedIndexes;
 }
 
+/********************************************************************************** */
+/********************************************************************************** */
+
 exports.calcLevel = function (score)
 {
     var lvl = 1;
@@ -733,6 +742,65 @@ exports.calcLevel = function (score)
 
     return lvl;
 }
+
+/********************************************************************************** */
+/********************************************************************************** */
+
+exports.saveGamedData = function (props)
+{
+    /*
+    //uids: tuids,
+    //pids: tpids,
+    //userScores: tempUserScore,
+    //userActions: tempUserAction,
+    //topic: "",
+    chosenKeywords: {},
+    keywordsGameId: "",
+    //gameId: game.get("_id"),
+    blankKeys: {},
+    keywordBlankKeys: {},
+    commonKeys: [],
+    //userPostCounts: tempUserPostCounts,
+    //userRejectCounts: tempUserRejectCounts,
+    //userJudgedVotes: tempUserJudgedVotes // [trueCounts, falseCounts]
+    */
+    var Player = Backtory.Object.extend("players");
+
+    var GameData = Backtory.Object.extend("gameData");
+    var gameData = new GameData();
+    
+    var Game = Backtory.Object.extend("games");
+    var game = new Game();
+    game.set("_id", props.gameId);
+
+    gameData.set("gid", game);
+    gameData.set("topic", props.topic);
+
+    var index = 1;
+    props.uids.forEach(uid => {
+        
+        var pid = utility.getPidFromUid(uid, props.uids, props.pids);
+        var pName = "p" + index.toString();
+        
+        var player = new Player();
+        player.set("_id",pid);
+
+        gameData.set(pName, player);
+        gameData.set(pName+"score", props.userScores[uid]);
+        gameData.set(pName+"actions", props.userActions[uid]);
+        gameData.set(pName+"posts", props.userPostCounts[uid]);
+        gameData.set(pName+"rejects", props.userRejectCounts[uid]);
+        gameData.set(pName+"truevotes", props.userJudgedVotes[uid][0]);
+        gameData.set(pName+"falsevotes", props.userJudgedVotes[uid][1]);
+        
+        index++;
+    });
+
+    gameData.save();
+}
+
+/********************************************************************************** */
+/********************************************************************************** */
 
 //var pids = ["5b4457b74f83de0001e9bd59","5b445c735ce7180001bfaf7c","5b445c624f83de0001e9d101"];
 

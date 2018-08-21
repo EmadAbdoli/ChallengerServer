@@ -629,7 +629,7 @@ exports.gameEventController = function (requestBody, context) {
         // For Local
         //console.log(tResult);
         // For Server
-        context.log(tResult);
+        //context.log(tResult);
         context.succeed(tResult);
     }
 };
@@ -1122,4 +1122,4 @@ formParams.topic = "Health";
 formParams.keywords = '["doctor","problem","blood","appointment","results","emergency","medication","test","insurance","pressure","problems","stomach","professor","stress","antihistamine","sleep","breath","medicine","feeling","good","lately","health","effects","infection","chest","information","prescription","itching","trouble"]';
 
 
-//this.gameEventController(request3);
+//this.gameEventController(req1);
