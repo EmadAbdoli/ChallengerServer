@@ -629,7 +629,7 @@ exports.gameEventController = function (requestBody, context) {
         // For Local
         //console.log(tResult);
         // For Server
-        //context.log(tResult);
+        context.log(tResult);
         context.succeed(tResult);
     }
 };
