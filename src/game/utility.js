@@ -254,9 +254,7 @@ exports.setgameKeywordsId = function(gameId, keywordsGameId)
     game.set("_id", gameId);
     game.set("keywordsGameId", keywordsGameId.toString());
 
-    game.save({
-        success:function(tempGame){}
-    });
+    game.save();
 }
 
 /********************************************************************************** */

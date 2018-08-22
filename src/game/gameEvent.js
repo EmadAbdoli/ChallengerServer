@@ -61,7 +61,7 @@ exports.gameEventController = function (requestBody, context) {
 
             if (props.topic != "")
             {
-                result = {operation: 'invalidOperation1', userId: userId};
+                result = {operation: 'invalidOperationInSubjectSelection', userId: userId};
             }
             else
             {
@@ -97,7 +97,7 @@ exports.gameEventController = function (requestBody, context) {
 
             if (requestSeq != tempSeq)
             {
-                result = {operation: 'invalidOperation3', userId: userId};
+                result = {operation: 'invalidOperationInTimeoutSubject', userId: userId};
             }
             else
             {
@@ -121,7 +121,7 @@ exports.gameEventController = function (requestBody, context) {
 
             if ((userId in props.chosenKeywords) == true)
             {
-                result = {operation: 'invalidOperation2', userId: userId};
+                result = {operation: 'invalidOperationInSelectingKeywords', userId: userId};
             }
             else
             {
@@ -150,7 +150,7 @@ exports.gameEventController = function (requestBody, context) {
 
             if (requestSeq != tempSeq)
             {
-                result = {operation: 'invalidOperation3', userId: userId};
+                result = {operation: 'invalidOperationInTimeoutKeySelection', userId: userId};
             }
             else
             {
@@ -242,7 +242,7 @@ exports.gameEventController = function (requestBody, context) {
 
             if (requestSeq != tempSeq)
             {
-                result = {operation: 'invalidOperation3', userId: userId};
+                result = {operation: 'invalidOperationPassTurn', userId: userId};
             }
             else
             {
@@ -288,7 +288,7 @@ exports.gameEventController = function (requestBody, context) {
 
             if (requestSeq != tempSeq)
             {
-                result = {operation: 'invalidOperation3', userId: userId};
+                result = {operation: 'invalidOperationTurnTimeout', userId: userId};
             }
             else
             {
@@ -333,7 +333,7 @@ exports.gameEventController = function (requestBody, context) {
 
             if (requestSeq != tempSeq)
             {
-                result = {operation: 'invalidOperation3', userId: userId};
+                result = {operation: 'invalidOperationPutWord', userId: userId};
             }
             else
             {
@@ -424,7 +424,7 @@ exports.gameEventController = function (requestBody, context) {
 
             if (requestSeq != tempSeq)
             {
-                result = {operation: 'invalidOperation3', userId: userId};
+                result = {operation: 'invalidOperationRejectWord', userId: userId};
             }
             else
             {
@@ -520,7 +520,7 @@ exports.gameEventController = function (requestBody, context) {
 
             if (requestSeq != tempSeq)
             {
-                result = {operation: 'invalidOperation3', userId: userId};
+                result = {operation: 'invalidOperationRejectVote', userId: userId};
             }
             else
             {
@@ -579,7 +579,7 @@ exports.gameEventController = function (requestBody, context) {
 
             if (requestSeq != tempSeq)
             {
-                result = {operation: 'invalidOperation3', userId: userId};
+                result = {operation: 'invalidOperationTimeoutRejectVote', userId: userId};
             }
             else
             {
@@ -602,7 +602,7 @@ exports.gameEventController = function (requestBody, context) {
 
             if (requestSeq != tempSeq)
             {
-                result = {operation: 'invalidOperation3', userId: userId};
+                result = {operation: 'invalidOperationTheEnd', userId: userId};
             }
             else
             {
@@ -1122,4 +1122,37 @@ formParams.topic = "Health";
 formParams.keywords = '["doctor","problem","blood","appointment","results","emergency","medication","test","insurance","pressure","problems","stomach","professor","stress","antihistamine","sleep","breath","medicine","feeling","good","lately","health","effects","infection","chest","information","prescription","itching","trouble"]';
 
 
-//this.gameEventController(req1);
+
+var reqqq =
+{
+    "message":"SubjectSelection",
+    "userId":"5b76dd58e4b0e4894d2639f3","challengeId":"5b7d5a1ae4b0b4c34a5207e3",
+    "data":{
+        "choice":"2",
+        "topics":"[\"Travel\",\"Small Talk\",\"Driving\"]"},
+    "properties":{
+        "uids":["5b76dd58e4b0e4894d2639f3","5b7aa569e4b0cac0e169a0d6","5b76a3d3e4b0cac0e1672427"],
+        "pids":["5b76dd580bc5b60001430ce0","5b7aa5690bc5b6000156b6e1","5b76a3d3ac14870001594f1f"],
+        "matchName":"GameMatching1",
+        "userScores":{"5b76dd58e4b0e4894d2639f3":0,"5b7aa569e4b0cac0e169a0d6":0,"5b76a3d3e4b0cac0e1672427":0},
+        "userActions":{"5b76dd58e4b0e4894d2639f3":0,"5b7aa569e4b0cac0e169a0d6":0,"5b76a3d3e4b0cac0e1672427":0},
+        "choices":{"5b76a3d3e4b0cac0e1672427":"2","5b7aa569e4b0cac0e169a0d6":"0"},
+        "topics":["Travel","Small Talk","Driving"],
+        "topic":"",
+        "chosenKeywords":{},
+        "keywordsGameId":"",
+        "gameId":"5b7d5a1a0bc5b600010e4796","startTime":0,
+        "theText":"","blankKeys":{},"keywordBlankKeys":{},
+        "preTest":{},"postTest":{},"usersPreTestAnswers":{},"usersPostTestAnswers":{},
+        "commonKeys":[],
+        "turnUid":-1,"turn":-1,"sequence":1,"lastTurnStartTime":-1,
+        "filledBlanks":{},"filledBlanksShare":{},"filledBlankOwners":{},"filledBlankSeqs":{},"filledBlankStates":{},
+        "rejectedWords":[],"rejectionOwners":[],
+        "rejectionVotes":[],
+        "userPostCounts":{"5b76dd58e4b0e4894d2639f3":0,"5b7aa569e4b0cac0e169a0d6":0,"5b76a3d3e4b0cac0e1672427":0},
+        "userRejectCounts":{"5b76dd58e4b0e4894d2639f3":0,"5b7aa569e4b0cac0e169a0d6":0,"5b76a3d3e4b0cac0e1672427":0},
+        "userJudgedVotes":{"5b76dd58e4b0e4894d2639f3":[0,0],"5b7aa569e4b0cac0e169a0d6":[0,0],"5b76a3d3e4b0cac0e1672427":[0,0]}
+    }
+}
+
+//this.gameEventController(reqqq);
