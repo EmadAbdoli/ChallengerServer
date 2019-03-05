@@ -6,4 +6,6 @@ exports.add = function(requestBody, context) {
     context.log("Second number = " + y);
     context.log("Answer = " + (x+y));
     context.succeed(x+y);
+	
+	;;
 };
